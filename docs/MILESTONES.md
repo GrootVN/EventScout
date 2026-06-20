@@ -149,6 +149,22 @@ Status: [x]
 
 ---
 
+## M8.6: Aggregator visual QA report
+
+Status: [x]
+
+### Acceptance criteria
+
+- `npm run qa:aggregator` generates HTML and JSON artifacts under `qa-results/`.
+- Report shows enabled providers, pipeline counts, duplicate groups, event rows, and warnings/errors.
+- Report uses the current mock-backed aggregation flow and does not introduce real providers or recommendation logic.
+
+### Required checks
+
+- npm run qa:aggregator
+
+---
+
 ## M9: First real source adapter
 
 Status: [ ]
