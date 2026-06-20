@@ -18,4 +18,4 @@ Every completed update should:
 
 ## Current baseline
 
-The current baseline for the rebuilt and hardened app is `v0.2.0`.
+The current baseline for the rebuilt and hardened app is `v0.2.1`.

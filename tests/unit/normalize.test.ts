@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { normalizeRawEvent } from "../../apps/web/lib/events/normalize";
+import { validateScoutEvent } from "../../apps/web/lib/events/schema";
 
 describe("normalizeRawEvent", () => {
   it("normalizes whitespace, ids, and inferred tags", () => {
@@ -38,5 +39,31 @@ describe("normalizeRawEvent", () => {
     expect(result.city).toBe("Boston");
     expect(result.interests).toContain("newcomer-friendly");
     expect(result.originalSources[0]?.sourceUrl).toBe("https://example.com");
+    expect(validateScoutEvent(result)).toEqual([]);
+  });
+
+  it("fails validation when source attribution is missing", () => {
+    const result = normalizeRawEvent({
+      sourceId: "mock",
+      sourceName: "Mock Local Radar",
+      sourceType: "mock",
+      sourceEventId: "source-2",
+      sourceUrl: "https://example.com/2",
+      fetchedAt: "2026-06-19T12:00:00.000Z",
+      raw: {
+        title: "Community Night",
+        description: "Local meetup",
+        startDateTime: "2026-08-20T19:00:00-04:00",
+        city: "Boston",
+        categories: ["community"]
+      }
+    });
+
+    const invalid = {
+      ...result,
+      originalSources: []
+    };
+
+    expect(validateScoutEvent(invalid)).toContain("originalSources must contain at least one source");
   });
 });

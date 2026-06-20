@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { dedupeEvents } from "../../apps/web/lib/events/dedupe";
+import { dedupeEvents, getDuplicateConfidence, isLikelyDuplicate } from "../../apps/web/lib/events/dedupe";
 import type { ScoutEvent } from "../../apps/web/lib/events/types";
 
 const baseEvent: ScoutEvent = {
@@ -77,5 +77,89 @@ describe("dedupeEvents", () => {
     expect(result).toHaveLength(1);
     expect(result[0]?.confidence).toBe(0.9);
     expect(result[0]?.originalSources).toHaveLength(2);
+  });
+
+  it("handles similar titles, not only exact title matches", () => {
+    const result = dedupeEvents([
+      baseEvent,
+      {
+        ...baseEvent,
+        id: "c",
+        title: "Boston Backend Meet-up for Engineers",
+        sourceId: "rss",
+        sourceName: "City Feed",
+        sourceType: "rss",
+        sourceUrl: "https://city.example.com/events/3",
+        sourceEventId: "rss-3",
+        originalSources: [
+          {
+            sourceId: "rss",
+            sourceName: "City Feed",
+            sourceType: "rss",
+            sourceUrl: "https://city.example.com/events/3",
+            sourceEventId: "rss-3"
+          }
+        ]
+      }
+    ]);
+
+    expect(isLikelyDuplicate(baseEvent, {
+      ...baseEvent,
+      id: "c",
+      title: "Boston Backend Meet-up for Engineers"
+    })).toBe(true);
+    expect(getDuplicateConfidence(baseEvent, {
+      ...baseEvent,
+      id: "c",
+      title: "Boston Backend Meet-up for Engineers"
+    })).toBeGreaterThanOrEqual(0.72);
+    expect(result).toHaveLength(1);
+    expect(result[0]?.originalSources).toHaveLength(2);
+  });
+
+  it("preserves all originalSources across repeated merges", () => {
+    const result = dedupeEvents([
+      baseEvent,
+      {
+        ...baseEvent,
+        id: "b",
+        sourceId: "meetup",
+        sourceName: "Meetup",
+        sourceType: "api",
+        sourceUrl: "https://meetup.com/events/2",
+        sourceEventId: "meetup-2",
+        originalSources: [
+          {
+            sourceId: "meetup",
+            sourceName: "Meetup",
+            sourceType: "api",
+            sourceUrl: "https://meetup.com/events/2",
+            sourceEventId: "meetup-2"
+          }
+        ]
+      },
+      {
+        ...baseEvent,
+        id: "c",
+        title: "Boston Backend Meet-up",
+        sourceId: "rss",
+        sourceName: "City Feed",
+        sourceType: "rss",
+        sourceUrl: "https://city.example.com/events/3",
+        sourceEventId: "rss-3",
+        originalSources: [
+          {
+            sourceId: "rss",
+            sourceName: "City Feed",
+            sourceType: "rss",
+            sourceUrl: "https://city.example.com/events/3",
+            sourceEventId: "rss-3"
+          }
+        ]
+      }
+    ]);
+
+    expect(result).toHaveLength(1);
+    expect(result[0]?.originalSources).toHaveLength(3);
   });
 });

@@ -1,4 +1,5 @@
 import { classifyInterests } from "./classifyInterests";
+import { assertValidScoutEvent } from "./schema";
 import type { RawEvent, ScoutEvent } from "./types";
 import { slugify } from "@/lib/utils/slug";
 
@@ -51,7 +52,7 @@ export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
   const sourceEventId = rawEvent.sourceEventId ?? null;
   const canonicalKey = `${slugify(title)}|${raw.startDateTime.slice(0, 10)}|${slugify(venueName ?? city)}`;
 
-  return {
+  return assertValidScoutEvent({
     id: raw.id ?? `${rawEvent.sourceId}-${sourceEventId ?? slugify(title)}`,
     canonicalKey,
     title,
@@ -95,5 +96,5 @@ export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
     ],
     createdAt,
     updatedAt
-  };
+  });
 }

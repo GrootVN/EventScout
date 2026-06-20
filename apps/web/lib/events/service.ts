@@ -1,6 +1,7 @@
 import { filterEvents } from "./filters";
 import { normalizeRawEvent } from "./normalize";
 import { rankEvents } from "./ranking";
+import { validateScoutEvent } from "./schema";
 import type { EventFilters, RankingInput, ScoutEvent } from "./types";
 import { dedupeEvents } from "./dedupe";
 import { getEnabledProviders } from "@/lib/sources/registry";
@@ -15,6 +16,21 @@ async function fetchAllProviderEvents(input: FetchEventsInput) {
   return settled.flatMap((result) => (result.status === "fulfilled" ? result.value : []));
 }
 
+function normalizeValidEvents(rawEvents: Awaited<ReturnType<typeof fetchAllProviderEvents>>) {
+  return rawEvents.flatMap((rawEvent) => {
+    try {
+      const normalizedEvent = normalizeRawEvent(rawEvent);
+      const errors = validateScoutEvent(normalizedEvent);
+      if (errors.length > 0) {
+        return [];
+      }
+      return [normalizedEvent];
+    } catch {
+      return [];
+    }
+  });
+}
+
 export async function scoutEvents(filters: EventFilters, rankingInput: RankingInput) {
   const rawEvents = await fetchAllProviderEvents({
     city: filters.city ?? rankingInput.userCity ?? "Cincinnati",
@@ -24,7 +40,7 @@ export async function scoutEvents(filters: EventFilters, rankingInput: RankingIn
     keyword: filters.keyword
   });
 
-  const normalized = rawEvents.map(normalizeRawEvent);
+  const normalized = normalizeValidEvents(rawEvents);
   const deduped = dedupeEvents(normalized);
   const filtered = filterEvents(deduped, filters);
   return rankEvents(filtered, rankingInput);

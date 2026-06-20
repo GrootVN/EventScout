@@ -127,6 +127,7 @@ Status: [x]
 ### Required tests
 
 - dedupe.test.ts
+- similar-title dedupe coverage
 
 ---
 
