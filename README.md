@@ -37,6 +37,14 @@ cmd /c npm test
 cmd /c npm run build
 ```
 
+## Versioning
+
+This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
+
+- `PATCH`: fixes, hardening, test coverage, internal refactors
+- `MINOR`: new features or milestone-sized capability additions
+- `MAJOR`: breaking changes to contracts or structure
+
 ## Next milestone
 
 Implement M9 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): the first real source adapter behind a feature flag.

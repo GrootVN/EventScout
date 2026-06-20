@@ -30,6 +30,17 @@ The app should prioritize:
 - All deduplication logic should be testable as pure functions.
 - All ranking logic should be testable as pure functions.
 - Never claim a milestone is complete unless lint, typecheck, tests, and build pass.
+- Every completed update must be pushed to GitHub.
+- Every pushed update must get a semantic version tag.
+
+## Versioning rules
+
+Use Semantic Versioning with `vMAJOR.MINOR.PATCH`.
+
+- Bump `PATCH` for fixes, tests, refactors, and hardening that do not change the intended product surface.
+- Bump `MINOR` for new user-facing features, milestone-sized additions, or new provider support.
+- Bump `MAJOR` only for breaking changes to APIs, data contracts, or repo structure.
+- Update versioned files before tagging and pushing.
 
 ## Required commands
 
