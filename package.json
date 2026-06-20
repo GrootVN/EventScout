@@ -1,0 +1,25 @@
+{
+  "name": "eventscout",
+  "private": true,
+  "version": "0.1.0",
+  "description": "EventScout MVP monorepo",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "workers/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @eventscout/web",
+    "build": "npm run build --workspace @eventscout/web",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "typecheck": "tsc -p apps/web/tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.31",
+    "eslint": "^9.29.0",
+    "typescript": "^5.8.3",
+    "vitest": "^2.1.8"
+  }
+}

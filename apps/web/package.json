@@ -1,0 +1,24 @@
+{
+  "name": "@eventscout/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@eventscout/shared": "0.1.0",
+    "mapbox-gl": "^3.12.0",
+    "next": "^16.0.0",
+    "pg": "^8.16.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/mapbox-gl": "^3.4.1",
+    "@types/pg": "^8.15.4",
+    "@types/react": "19.2.15"
+  }
+}
