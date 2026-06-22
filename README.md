@@ -157,6 +157,26 @@ Notes:
 - The report is useful for deciding which preset entries should be kept, replaced, disabled, or promoted to verified status.
 - See [docs/CITY_PRESETS.md](/C:/Users/nguye/Documents/EventScout/docs/CITY_PRESETS.md) for the current preset inventory and status labels.
 
+## Admin moderation
+
+Set `ADMIN_TOKEN` when you want to protect the curated source and moderation tools:
+
+```bash
+ADMIN_TOKEN="choose-a-long-random-token"
+```
+
+Then open the admin page with the matching query key:
+
+```bash
+/admin?key=choose-a-long-random-token
+```
+
+Notes:
+
+- The admin page shows the moderation queue and trusted source allowlist.
+- The moderation API accepts the token through the `x-admin-token` header or the page query key.
+- When `ADMIN_TOKEN` is empty, the admin tools stay open for local development.
+
 ## Versioning
 
 This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
@@ -167,4 +187,4 @@ This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
 
 ## Next milestone
 
-Implement M14 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): Curated/admin source provider.
+Implement M15 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): Community submissions.

@@ -352,3 +352,29 @@ Status: [x]
 ### Next recommended milestone
 
 - M14: Curated/admin source provider
+
+---
+
+## M14: Curated/admin source provider
+
+Status: [x]
+
+### Acceptance criteria
+
+- Admin access is gated by `ADMIN_TOKEN` when configured.
+- The `/admin` page shows a moderation queue and a trusted source allowlist.
+- Trusted sources can be listed, created, and deactivated through the admin API.
+- Flagged events can be listed and suppressed through the admin API.
+- Mock-only mode still works when the admin token is not set.
+
+### Required checks
+
+- npm run lint
+- npm run typecheck
+- npm test
+- npm run build
+- npm run qa:aggregator
+
+### Next recommended milestone
+
+- M15: Community submissions

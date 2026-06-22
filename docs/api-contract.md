@@ -72,6 +72,36 @@ Suppresses an event from discovery results.
 }
 ```
 
+## `GET /api/admin/trusted-sources`
+
+Returns the curated source allowlist.
+
+## `POST /api/admin/trusted-sources`
+
+Adds or updates a trusted source entry.
+
+```json
+{
+  "source_type": "domain",
+  "source_value": "www.example.com",
+  "source_family": "calendar",
+  "notes": "optional",
+  "active": true
+}
+```
+
+## `DELETE /api/admin/trusted-sources`
+
+Deactivates a trusted source entry by id.
+
+```json
+{
+  "id": "trusted-domain-example-calendar"
+}
+```
+
+or `DELETE /api/admin/trusted-sources?id=trusted-domain-example-calendar`.
+
 ## `GET /api/health`
 
 Basic service/config health snapshot for uptime checks.

@@ -14,6 +14,7 @@ export function Header() {
         <Link href="/">Discover</Link>
         <Link href="/saved">Saved</Link>
         <Link href="/sources">Sources</Link>
+        <Link href="/admin">Admin</Link>
       </nav>
     </header>
   );

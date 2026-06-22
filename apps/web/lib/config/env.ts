@@ -11,6 +11,7 @@ export const env = {
   defaultCity: process.env.NEXT_PUBLIC_DEFAULT_CITY ?? "Cincinnati",
   defaultRegion: process.env.NEXT_PUBLIC_DEFAULT_REGION ?? "OH",
   defaultCountry: process.env.NEXT_PUBLIC_DEFAULT_COUNTRY ?? "USA",
+  adminToken: process.env.ADMIN_TOKEN ?? "",
   ticketmasterApiKey: process.env.TICKETMASTER_API_KEY ?? "",
   meetupAccessToken: process.env.MEETUP_ACCESS_TOKEN ?? "",
   meetupGraphqlEndpoint: process.env.MEETUP_GRAPHQL_ENDPOINT ?? "https://api.meetup.com/gql",

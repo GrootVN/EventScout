@@ -238,11 +238,47 @@ body {
   color: white;
 }
 
+.danger-button {
+  border: 0;
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: "Segoe UI", sans-serif;
+  background: #f8d3ca;
+  color: #8f2f1d;
+}
+
 .event-grid,
 .sources-grid,
 .saved-grid {
   display: grid;
   gap: 1rem;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.admin-form {
+  display: grid;
+  gap: 1rem;
+  margin: 1rem 0 1.25rem;
+}
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.admin-message {
+  margin: 0.5rem 0 0;
+  color: #8f2f1d;
+  font-family: "Segoe UI", sans-serif;
 }
 
 .event-grid {
@@ -318,6 +354,11 @@ body {
   }
 
   .discover-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-grid,
+  .admin-form-grid {
     grid-template-columns: 1fr;
   }
 
