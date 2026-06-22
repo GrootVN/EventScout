@@ -1,6 +1,7 @@
 {
-  "generatedAt": "2026-06-22T15:26:30.536Z",
+  "generatedAt": "2026-06-22T16:51:11.703Z",
   "city": "Cincinnati",
+  "cityPreset": null,
   "enabledProviders": [
     {
       "sourceId": "mock",

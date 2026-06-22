@@ -52,10 +52,12 @@ async function importAggregatorQaWithProviders(
       defaultCountry: "USA",
       ticketmasterApiKey: "",
       meetupAccessToken: "",
+      defaultCityPreset: "cincinnati",
       icsSourceUrls: "",
       rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
+      enableCityPresets: false,
       enableTicketmasterProvider: false,
       enableMeetupProvider: false,
       enableIcsProvider: false,
@@ -84,10 +86,12 @@ async function importTicketmasterProviderWithEnv() {
       defaultCountry: "USA",
       ticketmasterApiKey: "test-key",
       meetupAccessToken: "",
+      defaultCityPreset: "cincinnati",
       icsSourceUrls: "",
       rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
+      enableCityPresets: false,
       enableTicketmasterProvider: true,
       enableMeetupProvider: false,
       enableIcsProvider: false,
@@ -110,10 +114,12 @@ async function importIcsProviderWithEnv(overrides: Record<string, boolean | stri
       defaultCountry: "USA",
       ticketmasterApiKey: "",
       meetupAccessToken: "",
+      defaultCityPreset: "cincinnati",
       icsSourceUrls: "",
       rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
+      enableCityPresets: false,
       enableTicketmasterProvider: false,
       enableMeetupProvider: false,
       enableIcsProvider: false,
@@ -591,6 +597,31 @@ describe("generateAggregatorQaReport", () => {
       )
     ).toBe(true);
     expect(report.events.some((event) => event.sourceName === "Downtown City Events")).toBe(true);
+  });
+
+  it("includes city preset summary when presets are enabled", async () => {
+    const { generateAggregatorQaReport, renderAggregatorQaHtml } = await importAggregatorQaWithProviders(
+      [mockProvider],
+      {
+        enableCityPresets: true
+      }
+    );
+
+    const report = await generateAggregatorQaReport({ city: "Cincinnati" });
+    const html = renderAggregatorQaHtml(report);
+
+    expect(report.cityPreset).toMatchObject({
+      cityId: "cincinnati",
+      cityName: "Cincinnati",
+      region: "OH",
+      country: "USA",
+      defaultRadiusMiles: 25,
+      icsSourceCount: 2,
+      rssSourceCount: 2,
+      ticketmasterEnabled: false
+    });
+    expect(html).toContain("City Preset");
+    expect(html).toContain("Cincinnati");
   });
 
   it("warns about skipped recurring ICS records", async () => {

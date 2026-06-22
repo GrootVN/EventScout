@@ -1,9 +1,11 @@
 import { env } from "@/lib/config/env";
+import { getActiveCityPreset } from "@/lib/sources/localPresetProvider";
 
 export type IcsSourceConfig = {
   sourceId: string;
   sourceName: string;
   url: string;
+  enabled?: boolean;
   city?: string;
   region?: string;
   country?: string;
@@ -35,7 +37,31 @@ function parseSourceUrls(rawValue: string) {
     .filter((entry) => entry.length > 0);
 }
 
+function isEnabledEntry(entry: { enabled?: boolean }) {
+  return entry.enabled !== false;
+}
+
+function isValidSourceConfig(config: IcsSourceConfig) {
+  return clean(config.sourceId).length > 0 && clean(config.sourceName).length > 0 && isValidUrl(config.url);
+}
+
+function dedupeSourceConfigs(configs: IcsSourceConfig[]) {
+  const merged = new Map<string, IcsSourceConfig>();
+  for (const config of configs) {
+    if (!isValidSourceConfig(config) || !isEnabledEntry(config)) {
+      continue;
+    }
+
+    if (!merged.has(config.sourceId)) {
+      merged.set(config.sourceId, config);
+    }
+  }
+
+  return [...merged.values()];
+}
+
 export function getIcsSourceConfigs() {
+  const presetConfigs = getActiveCityPreset()?.sources.ics ?? [];
   const parsedConfigs: IcsSourceConfig[] = parseSourceUrls(env.icsSourceUrls).flatMap((url, index) => {
     if (!isValidUrl(url)) {
       return [];
@@ -54,7 +80,7 @@ export function getIcsSourceConfigs() {
     ];
   });
 
-  return [...DEFAULT_ICS_SOURCE_CONFIGS, ...parsedConfigs];
+  return dedupeSourceConfigs([...DEFAULT_ICS_SOURCE_CONFIGS, ...presetConfigs, ...parsedConfigs]);
 }
 
 export const ICS_SOURCE_CONFIGS = getIcsSourceConfigs();

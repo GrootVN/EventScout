@@ -273,3 +273,29 @@ Status: [x]
 ### Next recommended milestone
 
 - M12: Local city source preset pack
+
+---
+
+## M12: Local city source preset pack
+
+Status: [x]
+
+### Acceptance criteria
+
+- A local city preset can bundle ICS and RSS source configs for Cincinnati.
+- City presets stay disabled by default and do not break mock-only mode.
+- The preset contains at least five configured local sources, including disabled examples.
+- QA shows the active preset summary alongside provider counts.
+- The source page surfaces the active preset bundle and its source inventory.
+
+### Required checks
+
+- npm run lint
+- npm run typecheck
+- npm test
+- npm run build
+- npm run qa:aggregator
+
+### Next recommended milestone
+
+- M13: Meetup provider

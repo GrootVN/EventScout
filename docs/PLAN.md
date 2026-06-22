@@ -13,8 +13,9 @@ The repo has been refocused around a newcomer-first discovery experience with:
 - A real Ticketmaster adapter behind `ENABLE_TICKETMASTER_PROVIDER`
 - A generic ICS calendar provider behind `ENABLE_ICS_PROVIDER`
 - A generic RSS/Atom provider behind `ENABLE_RSS_PROVIDER`
+- A Cincinnati city preset pack behind `ENABLE_CITY_PRESETS`
 - A manual Ticketmaster live smoke QA script for real-key validation
 
 ## Next milestone
 
-M12: local city source preset pack.
+M13: Meetup provider.

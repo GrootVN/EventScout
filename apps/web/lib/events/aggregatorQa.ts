@@ -9,6 +9,7 @@ import { getEnabledProviders } from "@/lib/sources/registry";
 import { consumeTicketmasterProviderDiagnostics } from "@/lib/sources/ticketmasterProvider";
 import { consumeIcsProviderDiagnostics } from "@/lib/sources/icsProvider";
 import { consumeRssProviderDiagnostics } from "@/lib/sources/rssProvider";
+import { getActiveCityPresetSummary } from "@/lib/sources/localPresetProvider";
 import type { EventSourceProvider, FetchEventsInput } from "@/lib/sources/provider";
 
 type ProviderSummary = {
@@ -36,6 +37,17 @@ type DuplicateGroup = {
   sources: OriginalSource[];
 };
 
+type CityPresetSummary = {
+  cityId: string;
+  cityName: string;
+  region: string;
+  country: string;
+  defaultRadiusMiles: number;
+  icsSourceCount: number;
+  rssSourceCount: number;
+  ticketmasterEnabled: boolean;
+};
+
 type EventRow = {
   id: string;
   title: string;
@@ -52,6 +64,7 @@ type EventRow = {
 export type AggregatorQaReport = {
   generatedAt: string;
   city: string;
+  cityPreset: CityPresetSummary | null;
   enabledProviders: ProviderSummary[];
   rawEventCount: number;
   validNormalizedCount: number;
@@ -159,6 +172,7 @@ export async function generateAggregatorQaReport(
   input: FetchEventsInput = defaultFetchInput()
 ): Promise<AggregatorQaReport> {
   const providers = getEnabledProviders();
+  const cityPreset = getActiveCityPresetSummary();
   const warnings: string[] = [];
   const errors: string[] = [];
 
@@ -246,6 +260,7 @@ export async function generateAggregatorQaReport(
   return {
     generatedAt: new Date().toISOString(),
     city: input.city,
+    cityPreset,
     enabledProviders: createProviderSummaries(providers, rawEvents, normalizedEvents, dedupedEvents),
     rawEventCount: rawEvents.length,
     validNormalizedCount: normalizedEvents.length,
@@ -306,6 +321,27 @@ function renderProviderList(providers: ProviderSummary[]) {
             `
           )
           .join("")}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderCityPresetSummary(preset: CityPresetSummary | null) {
+  if (!preset) {
+    return "<p>City presets are disabled or no preset is active.</p>";
+  }
+
+  return `
+    <table>
+      <tbody>
+        <tr><th>City</th><td>${escapeHtml(preset.cityName)}</td></tr>
+        <tr><th>Preset ID</th><td>${escapeHtml(preset.cityId)}</td></tr>
+        <tr><th>Region</th><td>${escapeHtml(preset.region)}</td></tr>
+        <tr><th>Country</th><td>${escapeHtml(preset.country)}</td></tr>
+        <tr><th>Radius</th><td>${preset.defaultRadiusMiles} miles</td></tr>
+        <tr><th>ICS Sources</th><td>${preset.icsSourceCount}</td></tr>
+        <tr><th>RSS Sources</th><td>${preset.rssSourceCount}</td></tr>
+        <tr><th>Ticketmaster Enabled</th><td>${preset.ticketmasterEnabled ? "Yes" : "No"}</td></tr>
       </tbody>
     </table>
   `;
@@ -537,6 +573,11 @@ export function renderAggregatorQaHtml(report: AggregatorQaReport) {
         <div class="card"><span class="label">Final Count</span><span class="value">${report.finalCount}</span></div>
         <div class="card"><span class="label">Duplicate Groups</span><span class="value">${report.duplicateGroups.length}</span></div>
       </div>
+
+      <section>
+        <h2>City Preset</h2>
+        ${renderCityPresetSummary(report.cityPreset)}
+      </section>
 
       <section>
         <h2>Enabled Providers</h2>

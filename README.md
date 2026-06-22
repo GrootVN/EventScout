@@ -106,6 +106,23 @@ Notes:
 - `pubDate` and `updated` are treated as feed metadata, not as event dates.
 - `RSS_SOURCE_URLS` can be a comma, semicolon, or newline separated list of feed URLs.
 
+## City source presets
+
+Enable the Cincinnati launch preset when you want the ICS and RSS adapters to load a curated local source bundle:
+
+```bash
+ENABLE_CITY_PRESETS=true
+DEFAULT_CITY_PRESET="cincinnati"
+npm run qa:aggregator
+```
+
+Notes:
+
+- Mock-only mode still works when city presets are disabled.
+- The preset currently ships with Cincinnati-specific ICS and RSS examples, plus disabled placeholder examples for future verification.
+- The source page shows the active preset summary and the preset source bundle.
+- See [docs/CITY_PRESETS.md](/C:/Users/nguye/Documents/EventScout/docs/CITY_PRESETS.md) for the current preset inventory.
+
 ## Versioning
 
 This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
@@ -116,4 +133,4 @@ This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
 
 ## Next milestone
 
-Implement M12 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): local city source preset pack.
+Implement M13 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): Meetup provider.
