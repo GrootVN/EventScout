@@ -53,6 +53,7 @@ async function importAggregatorQaWithProviders(
       ticketmasterApiKey: "",
       meetupAccessToken: "",
       icsSourceUrls: "",
+      rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
       enableTicketmasterProvider: false,
@@ -84,6 +85,7 @@ async function importTicketmasterProviderWithEnv() {
       ticketmasterApiKey: "test-key",
       meetupAccessToken: "",
       icsSourceUrls: "",
+      rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
       enableTicketmasterProvider: true,
@@ -109,6 +111,7 @@ async function importIcsProviderWithEnv(overrides: Record<string, boolean | stri
       ticketmasterApiKey: "",
       meetupAccessToken: "",
       icsSourceUrls: "",
+      rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
       enableTicketmasterProvider: false,
@@ -431,6 +434,163 @@ describe("generateAggregatorQaReport", () => {
       )
     ).toBe(true);
     expect(report.events.some((event) => event.sourceName === "ICS Calendar 1")).toBe(true);
+  });
+
+  it("includes RSS provider counts, warnings, and source links when enabled with fixtures", async () => {
+    const rssFixtureProvider: EventSourceProvider = {
+      sourceId: "rss",
+      sourceName: "RSS Feed",
+      sourceType: "rss",
+      enabled: true,
+      async fetchEvents() {
+        return [
+          {
+            sourceId: "rss",
+            sourceName: "Downtown City Events",
+            sourceType: "rss" as const,
+            sourceEventId: "rss-1",
+            sourceUrl: "https://example.com/events/welcome-coffee",
+            fetchedAt: "2026-06-19T12:00:00.000Z",
+            raw: {
+              id: "rss-1",
+              title: "Neighborhood Welcome Coffee",
+              description: "A newcomer-friendly coffee hour.",
+              startDateTime: "2026-06-23T22:30:00.000Z",
+              endDateTime: "2026-06-23T23:30:00.000Z",
+              timezone: "UTC",
+              venueName: "Central Library",
+              address: "800 Vine St, Cincinnati, OH 45202",
+              city: "Cincinnati",
+              region: "OH",
+              country: "USA",
+              priceType: "unknown" as const,
+              minPrice: null,
+              maxPrice: null,
+              currency: null,
+              categories: ["community"],
+              interests: ["community", "newcomer-friendly"],
+              confidence: 0.78
+            }
+          },
+          {
+            sourceId: "rss",
+            sourceName: "Downtown City Events",
+            sourceType: "rss" as const,
+            sourceEventId: "rss-2",
+            sourceUrl: "",
+            fetchedAt: "2026-06-19T12:00:00.000Z",
+            raw: {
+              id: "rss-2",
+              title: "Volunteer Fair at the Park",
+              description: "The feed includes a date, but no source URL.",
+              startDateTime: "2026-06-24T18:00:00.000Z",
+              endDateTime: null,
+              timezone: "UTC",
+              venueName: "Riverfront Park",
+              address: "1 River Rd, Cincinnati, OH",
+              city: "Cincinnati",
+              region: "OH",
+              country: "USA",
+              priceType: "unknown" as const,
+              minPrice: null,
+              maxPrice: null,
+              currency: null,
+              categories: ["community"],
+              interests: ["community"]
+            }
+          },
+          {
+            sourceId: "rss",
+            sourceName: "Downtown City Events",
+            sourceType: "rss" as const,
+            sourceEventId: "rss-3",
+            sourceUrl: "",
+            fetchedAt: "2026-06-19T12:00:00.000Z",
+            raw: {
+              id: "rss-3",
+              title: "Sunset Concert Series",
+              description: "The feed includes a source URL, but no date.",
+              startDateTime: undefined,
+              endDateTime: null,
+              timezone: "UTC",
+              venueName: "Riverfront Park",
+              address: "1 River Rd, Cincinnati, OH",
+              city: "Cincinnati",
+              region: "OH",
+              country: "USA",
+              priceType: "unknown" as const,
+              minPrice: null,
+              maxPrice: null,
+              currency: null,
+              categories: ["music"],
+              interests: ["music"]
+            }
+          }
+        ];
+      }
+    };
+    const duplicateProvider: EventSourceProvider = {
+      sourceId: "mock-rss",
+      sourceName: "Mock Calendar Mirror",
+      sourceType: "mock",
+      enabled: true,
+      async fetchEvents() {
+        return [
+          {
+            sourceId: "mock-rss",
+            sourceName: "Mock Calendar Mirror",
+            sourceType: "mock" as const,
+            sourceEventId: "mock-rss-1",
+            sourceUrl: "https://example.com/events/welcome-coffee",
+            fetchedAt: "2026-06-19T12:00:00.000Z",
+            raw: {
+              id: "mock-rss-1",
+              title: "Neighborhood Welcome Coffee",
+              description: "A mirror listing for the same event.",
+              startDateTime: "2026-06-23T22:30:00.000Z",
+              endDateTime: "2026-06-23T23:30:00.000Z",
+              timezone: "UTC",
+              venueName: "Central Library",
+              address: "800 Vine St, Cincinnati, OH 45202",
+              city: "Cincinnati",
+              region: "OH",
+              country: "USA",
+              priceType: "unknown" as const,
+              minPrice: null,
+              maxPrice: null,
+              currency: null,
+              categories: ["community"],
+              interests: ["community"]
+            }
+          }
+        ];
+      }
+    };
+
+    const { generateAggregatorQaReport } = await importAggregatorQaWithProviders(
+      [rssFixtureProvider, duplicateProvider]
+    );
+
+    const report = await generateAggregatorQaReport({ city: "Cincinnati" });
+
+    expect(report.enabledProviders.some((provider) => provider.sourceId === "rss")).toBe(true);
+    expect(report.enabledProviders.find((provider) => provider.sourceId === "rss")).toMatchObject({
+      rawCount: 3,
+      validCount: 1,
+      droppedCount: 2,
+      finalContributionCount: 1
+    });
+    expect(report.warnings.some((warning) => warning.includes("sourceUrl is required"))).toBe(true);
+    expect(report.warnings.some((warning) => warning.includes("clear event date"))).toBe(true);
+    expect(report.duplicateGroups.some((group) => group.sourceNames.includes("Downtown City Events"))).toBe(
+      true
+    );
+    expect(
+      report.duplicateGroups.some((group) =>
+        group.sources.some((source) => source.sourceName === "Downtown City Events")
+      )
+    ).toBe(true);
+    expect(report.events.some((event) => event.sourceName === "Downtown City Events")).toBe(true);
   });
 
   it("warns about skipped recurring ICS records", async () => {

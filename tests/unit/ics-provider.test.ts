@@ -14,6 +14,7 @@ async function importIcsProviderWithEnv(overrides: EnvOverrides = {}) {
       ticketmasterApiKey: "",
       meetupAccessToken: "",
       icsSourceUrls: "",
+      rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
       enableTicketmasterProvider: false,

@@ -247,3 +247,29 @@ Status: [x]
 ### Next recommended milestone
 
 - M11: Generic RSS provider
+
+---
+
+## M11: Generic RSS provider
+
+Status: [x]
+
+### Acceptance criteria
+
+- RSS and Atom feeds can be enabled behind `ENABLE_RSS_PROVIDER` and `RSS_SOURCE_URLS`.
+- Semi-structured RSS items normalize into the shared ScoutEvent shape with original source attribution.
+- Items without a clear source URL or event date are skipped with warnings instead of being silently misclassified.
+- Mock-only mode still works when no RSS configuration is present.
+- README and `.env.example` explain setup and manual QA.
+
+### Required checks
+
+- npm run lint
+- npm run typecheck
+- npm test
+- npm run build
+- npm run qa:aggregator
+
+### Next recommended milestone
+
+- M12: Local city source preset pack

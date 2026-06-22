@@ -19,6 +19,7 @@ Event Scout is a newcomer-first local discovery app. It helps someone answer: "W
 - Local saved events
 - A Ticketmaster adapter behind `ENABLE_TICKETMASTER_PROVIDER`
 - A generic ICS calendar adapter behind `ENABLE_ICS_PROVIDER`
+- A generic RSS/Atom adapter behind `ENABLE_RSS_PROVIDER`
 - A sources page showing enabled and planned providers
 - Aggregator QA artifacts with provider counts and merge visibility
 - A manual Ticketmaster smoke QA path that can write live report artifacts
@@ -87,6 +88,24 @@ Notes:
 - Recurring feeds are skipped with warnings instead of being expanded into many instances.
 - `ICS_SOURCE_URLS` can be a comma, semicolon, or newline separated list of feed URLs.
 
+## RSS/Atom provider
+
+Enable the generic RSS provider when you want to ingest semi-structured public feeds that describe local events:
+
+```bash
+ENABLE_RSS_PROVIDER=true
+RSS_SOURCE_URLS="https://example.com/feed.xml"
+npm run qa:aggregator
+```
+
+Notes:
+
+- Mock-only mode still works when `ENABLE_RSS_PROVIDER` is false or `RSS_SOURCE_URLS` is empty.
+- The provider preserves the original item link on every event and skips items without a clear source URL.
+- RSS items must expose a deterministic event date through explicit feed fields or clearly labeled content.
+- `pubDate` and `updated` are treated as feed metadata, not as event dates.
+- `RSS_SOURCE_URLS` can be a comma, semicolon, or newline separated list of feed URLs.
+
 ## Versioning
 
 This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
@@ -97,4 +116,4 @@ This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
 
 ## Next milestone
 
-Implement M11 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): generic RSS provider.
+Implement M12 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): local city source preset pack.

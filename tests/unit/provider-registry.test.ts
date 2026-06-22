@@ -13,6 +13,7 @@ async function importRegistryWithEnv(overrides: EnvOverrides = {}) {
       ticketmasterApiKey: "",
       meetupAccessToken: "",
       icsSourceUrls: "",
+      rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
       enableTicketmasterProvider: false,
@@ -112,6 +113,24 @@ describe("provider registry", () => {
     });
 
     expect(getEnabledProviders().some((provider) => provider.sourceId === "ics")).toBe(false);
+  });
+
+  it("includes RSS when the feature flag and source URLs are present", async () => {
+    const { getEnabledProviders } = await importRegistryWithEnv({
+      enableRssProvider: true,
+      rssSourceUrls: "https://example.com/feeds/city.xml"
+    });
+
+    expect(getEnabledProviders().some((provider) => provider.sourceId === "rss")).toBe(true);
+  });
+
+  it("excludes RSS when the feature flag is enabled but the source list is empty", async () => {
+    const { getEnabledProviders } = await importRegistryWithEnv({
+      enableRssProvider: true,
+      rssSourceUrls: ""
+    });
+
+    expect(getEnabledProviders().some((provider) => provider.sourceId === "rss")).toBe(false);
   });
 
   it("exposes unique provider IDs", async () => {

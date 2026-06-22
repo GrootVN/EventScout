@@ -308,6 +308,32 @@ type IcsRawEvent = {
   url?: string | null;
 };
 
+type RssRawEvent = {
+  id?: string | null;
+  title?: string | null;
+  description?: string | null;
+  startDateTime?: string | null;
+  endDateTime?: string | null;
+  timezone?: string | null;
+  venueName?: string | null;
+  address?: string | null;
+  city?: string | null;
+  region?: string | null;
+  country?: string | null;
+  priceType?: "free" | "paid" | "unknown";
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  currency?: string | null;
+  imageUrl?: string | null;
+  categories?: string[];
+  interests?: string[];
+  confidence?: number;
+  sourceFeedUrl?: string | null;
+  feedTitle?: string | null;
+  publishedAt?: string | null;
+  updatedAt?: string | null;
+};
+
 function normalizeIcsEvent(rawEvent: RawEvent): NormalizableEvent {
   const raw = rawEvent.raw as IcsRawEvent;
   const title = clean(raw.summary);
@@ -349,6 +375,43 @@ function normalizeIcsEvent(rawEvent: RawEvent): NormalizableEvent {
     confidence:
       raw.confidence ??
       (sourceCalendarUrl && eventUrl && sourceCalendarUrl !== eventUrl ? 0.88 : 0.82)
+  };
+}
+
+function normalizeRssEvent(rawEvent: RawEvent): NormalizableEvent {
+  const raw = rawEvent.raw as RssRawEvent;
+  const title = clean(raw.title);
+  if (!title) {
+    throw new Error("RSS event is missing a title");
+  }
+
+  const startDateTime = clean(raw.startDateTime);
+  if (!startDateTime) {
+    throw new Error("RSS event is missing a clear event date");
+  }
+
+  return {
+    id: clean(raw.id) ?? undefined,
+    title,
+    description: clean(raw.description),
+    startDateTime,
+    endDateTime: clean(raw.endDateTime),
+    timezone: clean(raw.timezone),
+    venueName: clean(raw.venueName),
+    address: clean(raw.address),
+    city: clean(raw.city) ?? "Unknown",
+    region: clean(raw.region),
+    country: normalizeCountry(raw.country),
+    latitude: null,
+    longitude: null,
+    priceType: raw.priceType ?? "unknown",
+    minPrice: raw.minPrice ?? null,
+    maxPrice: raw.maxPrice ?? null,
+    currency: clean(raw.currency),
+    imageUrl: clean(raw.imageUrl),
+    categories: normalizeTagList(raw.categories),
+    interests: normalizeTagList(raw.interests),
+    confidence: raw.confidence ?? 0.78
   };
 }
 
@@ -401,6 +464,8 @@ export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
       ? normalizeTicketmasterEvent(rawEvent.raw as TicketmasterRawEvent)
       : rawEvent.sourceId === "ics"
         ? normalizeIcsEvent(rawEvent)
+        : rawEvent.sourceId === "rss"
+          ? normalizeRssEvent(rawEvent)
         : (rawEvent.raw as NormalizableEvent);
   const title = clean(raw.title) ?? "Untitled Event";
   const description = clean(raw.description);
@@ -463,7 +528,13 @@ export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
     interests,
     confidence:
       raw.confidence ??
-      (rawEvent.sourceType === "social" ? 0.55 : rawEvent.sourceType === "ics" ? 0.88 : 0.92),
+      (rawEvent.sourceType === "social"
+        ? 0.55
+        : rawEvent.sourceType === "ics"
+          ? 0.88
+          : rawEvent.sourceType === "rss"
+            ? 0.78
+            : 0.92),
     isNewcomerFriendly: interests.includes("newcomer-friendly"),
     isSoloFriendly: interests.includes("solo-friendly"),
     originalSources: [

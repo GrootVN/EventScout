@@ -14,6 +14,7 @@ export const env = {
   ticketmasterApiKey: process.env.TICKETMASTER_API_KEY ?? "",
   meetupAccessToken: process.env.MEETUP_ACCESS_TOKEN ?? "",
   icsSourceUrls: process.env.ICS_SOURCE_URLS ?? "",
+  rssSourceUrls: process.env.RSS_SOURCE_URLS ?? "",
   enableMockProvider: readFlag("ENABLE_MOCK_PROVIDER", true),
   enableCommunityMockProvider: readFlag("ENABLE_COMMUNITY_MOCK_PROVIDER", true),
   enableTicketmasterProvider: readFlag("ENABLE_TICKETMASTER_PROVIDER", false),

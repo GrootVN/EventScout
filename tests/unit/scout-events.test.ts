@@ -65,6 +65,7 @@ async function importTicketmasterProviderWithEnv() {
       ticketmasterApiKey: "test-key",
       meetupAccessToken: "",
       icsSourceUrls: "",
+      rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
       enableTicketmasterProvider: true,
@@ -90,6 +91,7 @@ async function importIcsProviderWithEnv(overrides: Record<string, boolean | stri
       ticketmasterApiKey: "",
       meetupAccessToken: "",
       icsSourceUrls: "",
+      rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
       enableTicketmasterProvider: false,
@@ -445,5 +447,101 @@ describe("scoutEvents", () => {
 
     expect(events.some((event) => event.sourceId === "ics")).toBe(false);
     expect(events.some((event) => event.sourceId === "mock")).toBe(true);
+  });
+
+  it("works with RSS enabled using a fixture-backed source and merges duplicates with mock data", async () => {
+    const rssFixtureProvider: EventSourceProvider = {
+      sourceId: "rss",
+      sourceName: "Downtown City Events",
+      sourceType: "rss",
+      enabled: true,
+      async fetchEvents() {
+        return [
+          {
+            sourceId: "rss",
+            sourceName: "Downtown City Events",
+            sourceType: "rss" as const,
+            sourceEventId: "rss-1",
+            sourceUrl: "https://example.com/events/welcome-coffee",
+            fetchedAt: "2026-06-19T12:00:00.000Z",
+            raw: {
+              id: "rss-1",
+              title: "Neighborhood Welcome Coffee",
+              description: "A newcomer-friendly coffee hour.",
+              startDateTime: "2026-06-23T22:30:00.000Z",
+              endDateTime: "2026-06-23T23:30:00.000Z",
+              timezone: "UTC",
+              venueName: "Central Library",
+              address: "800 Vine St, Cincinnati, OH 45202",
+              city: "Cincinnati",
+              region: "OH",
+              country: "USA",
+              priceType: "unknown" as const,
+              minPrice: null,
+              maxPrice: null,
+              currency: null,
+              categories: ["community", "newcomer-friendly"],
+              interests: ["community", "newcomer-friendly"],
+              confidence: 0.78,
+              feedTitle: "Downtown City Events",
+              sourceFeedUrl: "https://example.com/feeds/city.xml"
+            }
+          }
+        ];
+      }
+    };
+    const duplicateMockProvider: EventSourceProvider = {
+      sourceId: "mock-rss",
+      sourceName: "Mock Calendar Mirror",
+      sourceType: "mock",
+      enabled: true,
+      async fetchEvents() {
+        return [
+          {
+            sourceId: "mock-rss",
+            sourceName: "Mock Calendar Mirror",
+            sourceType: "mock" as const,
+            sourceEventId: "mock-rss-1",
+            sourceUrl: "https://example.com/events/welcome-coffee",
+            fetchedAt: "2026-06-19T12:00:00.000Z",
+            raw: {
+              id: "mock-rss-1",
+              title: "Neighborhood Welcome Coffee",
+              description: "A mirror listing for the same event.",
+              startDateTime: "2026-06-23T22:30:00.000Z",
+              endDateTime: "2026-06-23T23:30:00.000Z",
+              timezone: "UTC",
+              venueName: "Central Library",
+              address: "800 Vine St, Cincinnati, OH 45202",
+              city: "Cincinnati",
+              region: "OH",
+              country: "USA",
+              priceType: "unknown" as const,
+              minPrice: null,
+              maxPrice: null,
+              currency: null,
+              categories: ["community"],
+              interests: ["community"]
+            }
+          }
+        ];
+      }
+    };
+
+    const { scoutEvents } = await importScoutEventsWithProviders([rssFixtureProvider, duplicateMockProvider]);
+    const events = await scoutEvents({ city: "Cincinnati" }, { interests: [], userCity: "Cincinnati" });
+
+    expect(events.some((event) => event.originalSources.some((source) => source.sourceId === "rss"))).toBe(true);
+    const mergedEvent = events.find((event) =>
+      event.originalSources.some((source) => source.sourceId === "rss") &&
+      event.originalSources.some((source) => source.sourceId === "mock-rss")
+    );
+    expect(mergedEvent).toBeDefined();
+    expect(mergedEvent?.originalSources).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ sourceName: "Downtown City Events" }),
+        expect.objectContaining({ sourceName: "Mock Calendar Mirror" })
+      ])
+    );
   });
 });

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:event="https://eventscout.example.com/event">
+  <title>University Events</title>
+  <subtitle>Open talks and maker nights.</subtitle>
+  <link href="https://example.com/feeds/university.xml" rel="self" />
+  <entry>
+    <title>Maker Night at the Library</title>
+    <id>urn:uuid:atom-1</id>
+    <link href="https://example.com/events/maker-night" rel="alternate" />
+    <updated>2026-06-25T12:00:00Z</updated>
+    <summary type="html"><![CDATA[Open lab night for newcomers.]]></summary>
+    <content type="html"><![CDATA[<p>Build something together.</p>]]></content>
+    <event:startDate>2026-06-25T23:00:00Z</event:startDate>
+    <event:endDate>2026-06-26T00:30:00Z</event:endDate>
+    <category term="tech" />
+    <category term="community" />
+  </entry>
+</feed>

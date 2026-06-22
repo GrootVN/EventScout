@@ -8,6 +8,7 @@ import { env } from "@/lib/config/env";
 import { getEnabledProviders } from "@/lib/sources/registry";
 import { consumeTicketmasterProviderDiagnostics } from "@/lib/sources/ticketmasterProvider";
 import { consumeIcsProviderDiagnostics } from "@/lib/sources/icsProvider";
+import { consumeRssProviderDiagnostics } from "@/lib/sources/rssProvider";
 import type { EventSourceProvider, FetchEventsInput } from "@/lib/sources/provider";
 
 type ProviderSummary = {
@@ -223,6 +224,14 @@ export async function generateAggregatorQaReport(
   }
 
   for (const diagnostic of consumeIcsProviderDiagnostics()) {
+    if (diagnostic.level === "warning") {
+      warnings.push(diagnostic.message);
+    } else {
+      errors.push(diagnostic.message);
+    }
+  }
+
+  for (const diagnostic of consumeRssProviderDiagnostics()) {
     if (diagnostic.level === "warning") {
       warnings.push(diagnostic.message);
     } else {
