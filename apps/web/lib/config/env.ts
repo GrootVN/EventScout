@@ -13,6 +13,7 @@ export const env = {
   defaultCountry: process.env.NEXT_PUBLIC_DEFAULT_COUNTRY ?? "USA",
   ticketmasterApiKey: process.env.TICKETMASTER_API_KEY ?? "",
   meetupAccessToken: process.env.MEETUP_ACCESS_TOKEN ?? "",
+  meetupGraphqlEndpoint: process.env.MEETUP_GRAPHQL_ENDPOINT ?? "https://api.meetup.com/gql",
   defaultCityPreset: process.env.DEFAULT_CITY_PRESET ?? "cincinnati",
   icsSourceUrls: process.env.ICS_SOURCE_URLS ?? "",
   rssSourceUrls: process.env.RSS_SOURCE_URLS ?? "",

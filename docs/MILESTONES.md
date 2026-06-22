@@ -326,3 +326,29 @@ Status: [x]
 ### Next recommended milestone
 
 - M13: Meetup provider
+
+---
+
+## M13: Meetup provider
+
+Status: [x]
+
+### Acceptance criteria
+
+- Meetup is disabled by default and only enables when both the feature flag and access token are present.
+- Meetup GraphQL responses normalize into the shared ScoutEvent shape with original source attribution preserved.
+- Missing token, malformed records, GraphQL errors, and network failures do not crash aggregation.
+- Mock-only mode still works when Meetup is disabled or misconfigured.
+- Aggregator QA reports show Meetup provider counts, duplicate groups, and source links.
+
+### Required checks
+
+- npm run lint
+- npm run typecheck
+- npm test
+- npm run build
+- npm run qa:aggregator
+
+### Next recommended milestone
+
+- M14: Curated/admin source provider

@@ -334,6 +334,217 @@ type RssRawEvent = {
   updatedAt?: string | null;
 };
 
+type MeetupRawEvent = {
+  id?: string | null;
+  title?: string | null;
+  description?: string | null;
+  startDateTime?: string | null;
+  endDateTime?: string | null;
+  timezone?: string | null;
+  venueName?: string | null;
+  address?: string | null;
+  city?: string | null;
+  region?: string | null;
+  country?: string | null;
+  neighborhood?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  priceType?: "free" | "paid" | "unknown";
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  currency?: string | null;
+  imageUrl?: string | null;
+  categories?: string[];
+  interests?: string[];
+  confidence?: number;
+  groupName?: string | null;
+  groupUrl?: string | null;
+  groupTopics?: string[];
+  tags?: string[];
+  isRecurring?: boolean;
+};
+
+const MEETUP_TECH_TERMS = ["tech", "software", "developer", "developer", "startup", "coding", "programming"];
+const MEETUP_OUTDOORS_TERMS = ["hiking", "run", "running", "cycling", "bike", "biking", "outdoors", "outdoor"];
+const MEETUP_BOOKS_TERMS = ["book", "books", "reading", "writing", "lecture", "literary", "author"];
+const MEETUP_SOCIAL_TERMS = ["social", "friends", "new in town", "newcomer", "newcomers", "casual", "gathering", "networking"];
+const MEETUP_BUSINESS_TERMS = ["business", "professional", "founder", "entrepreneur", "startup", "product", "career"];
+const MEETUP_WELLNESS_TERMS = ["yoga", "wellness", "meditation", "mindfulness", "fitness"];
+const MEETUP_GAMING_TERMS = ["board game", "board games", "tabletop", "gaming", "game night", "games"];
+const MEETUP_FAMILY_TERMS = ["family", "kids", "children"];
+const MEETUP_ARTS_TERMS = ["arts", "art", "music", "film", "theatre", "theater", "culture"];
+const MEETUP_NEWCOMER_TERMS = [
+  "newcomer",
+  "newcomers",
+  "new in town",
+  "first-timer",
+  "first-timers",
+  "beginner",
+  "beginners",
+  "open to all",
+  "all levels",
+  "all skill levels",
+  "welcome",
+  "welcoming"
+];
+const MEETUP_BEGINNER_TERMS = ["beginner", "beginners", "intro", "introduction", "starter", "first-timer", "first-timers"];
+const MEETUP_RECURRING_TERMS = ["weekly", "monthly", "recurring", "every week", "every month", "regular"];
+
+function normalizeMeetupText(raw: MeetupRawEvent) {
+  return [
+    raw.title,
+    raw.description,
+    raw.groupName,
+    raw.venueName,
+    raw.address,
+    raw.city,
+    raw.region,
+    raw.country,
+    ...(raw.categories ?? []),
+    ...(raw.interests ?? []),
+    ...(raw.groupTopics ?? []),
+    ...(raw.tags ?? [])
+  ]
+    .map((value) => clean(value)?.toLowerCase() ?? null)
+    .filter((value): value is string => Boolean(value))
+    .join(" ");
+}
+
+function hasAnyTerm(text: string, terms: string[]) {
+  return terms.some((term) => text.includes(term));
+}
+
+function deriveMeetupSignals(raw: MeetupRawEvent) {
+  const categories = new Set(normalizeTagList(raw.categories));
+  const interests = new Set(normalizeTagList(raw.interests));
+  const text = normalizeMeetupText(raw);
+
+  if (hasAnyTerm(text, MEETUP_TECH_TERMS)) {
+    categories.add("tech");
+    interests.add("tech");
+    interests.add("networking");
+  }
+  if (hasAnyTerm(text, MEETUP_OUTDOORS_TERMS)) {
+    categories.add("outdoors");
+    interests.add("outdoors");
+    interests.add("fitness");
+  }
+  if (hasAnyTerm(text, MEETUP_BOOKS_TERMS)) {
+    categories.add("books");
+    interests.add("books");
+    interests.add("education");
+  }
+  if (hasAnyTerm(text, MEETUP_SOCIAL_TERMS)) {
+    categories.add("social");
+    interests.add("social");
+  }
+  if (hasAnyTerm(text, MEETUP_BUSINESS_TERMS)) {
+    categories.add("business");
+    interests.add("business");
+    interests.add("networking");
+  }
+  if (hasAnyTerm(text, MEETUP_WELLNESS_TERMS)) {
+    categories.add("wellness");
+    interests.add("wellness");
+    interests.add("fitness");
+  }
+  if (hasAnyTerm(text, MEETUP_GAMING_TERMS)) {
+    categories.add("gaming");
+    interests.add("gaming");
+    interests.add("social");
+  }
+  if (hasAnyTerm(text, MEETUP_FAMILY_TERMS)) {
+    categories.add("family");
+    interests.add("family");
+  }
+  if (hasAnyTerm(text, MEETUP_ARTS_TERMS)) {
+    categories.add("arts");
+    interests.add("arts");
+  }
+  if (hasAnyTerm(text, MEETUP_NEWCOMER_TERMS)) {
+    categories.add("community");
+    interests.add("newcomer-friendly");
+  }
+  if (hasAnyTerm(text, MEETUP_BEGINNER_TERMS)) {
+    interests.add("beginner-friendly");
+    interests.add("newcomer-friendly");
+  }
+  if (raw.isRecurring || hasAnyTerm(text, MEETUP_RECURRING_TERMS)) {
+    interests.add("recurring");
+  }
+  if (raw.priceType === "free") {
+    interests.add("free");
+    interests.add("cheap");
+  }
+
+  const newcomerFriendly =
+    hasAnyTerm(text, MEETUP_NEWCOMER_TERMS) ||
+    hasAnyTerm(text, MEETUP_BEGINNER_TERMS) ||
+    text.includes("open to all") ||
+    text.includes("first-timer") ||
+    text.includes("first-timers") ||
+    text.includes("new in town") ||
+    text.includes("social");
+
+  const soloFriendly =
+    hasAnyTerm(text, MEETUP_SOCIAL_TERMS) ||
+    hasAnyTerm(text, MEETUP_BEGINNER_TERMS) ||
+    text.includes("open to all") ||
+    text.includes("casual") ||
+    text.includes("networking");
+
+  if (soloFriendly) {
+    interests.add("solo-friendly");
+  }
+
+  return {
+    categories: [...categories],
+    interests: [...new Set([...categories, ...interests])],
+    newcomerFriendly,
+    soloFriendly
+  };
+}
+
+function normalizeMeetupEvent(rawEvent: RawEvent): NormalizableEvent {
+  const raw = rawEvent.raw as MeetupRawEvent;
+  const title = clean(raw.title);
+  if (!title) {
+    throw new Error("Meetup event is missing a title");
+  }
+
+  const startDateTime = clean(raw.startDateTime);
+  if (!startDateTime) {
+    throw new Error("Meetup event is missing a start date");
+  }
+
+  const signals = deriveMeetupSignals(raw);
+
+  return {
+    id: clean(raw.id) ?? undefined,
+    title,
+    description: clean(raw.description),
+    startDateTime,
+    endDateTime: clean(raw.endDateTime),
+    timezone: clean(raw.timezone),
+    venueName: clean(raw.venueName),
+    address: clean(raw.address),
+    city: clean(raw.city) ?? "Unknown",
+    region: clean(raw.region),
+    country: normalizeCountry(raw.country),
+    neighborhood: clean(raw.neighborhood),
+    latitude: typeof raw.latitude === "number" ? raw.latitude : null,
+    longitude: typeof raw.longitude === "number" ? raw.longitude : null,
+    priceType: raw.priceType ?? "unknown",
+    minPrice: raw.minPrice ?? null,
+    maxPrice: raw.maxPrice ?? null,
+    currency: clean(raw.currency),
+    imageUrl: clean(raw.imageUrl),
+    categories: signals.categories,
+    interests: signals.interests,
+    confidence: raw.confidence ?? 0.9
+  };
+}
+
 function normalizeIcsEvent(rawEvent: RawEvent): NormalizableEvent {
   const raw = rawEvent.raw as IcsRawEvent;
   const title = clean(raw.summary);
@@ -462,9 +673,11 @@ export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
   const raw =
     rawEvent.sourceId === "ticketmaster"
       ? normalizeTicketmasterEvent(rawEvent.raw as TicketmasterRawEvent)
+      : rawEvent.sourceId === "meetup"
+        ? normalizeMeetupEvent(rawEvent)
       : rawEvent.sourceId === "ics"
         ? normalizeIcsEvent(rawEvent)
-        : rawEvent.sourceId === "rss"
+          : rawEvent.sourceId === "rss"
           ? normalizeRssEvent(rawEvent)
         : (rawEvent.raw as NormalizableEvent);
   const title = clean(raw.title) ?? "Untitled Event";
@@ -476,15 +689,18 @@ export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
   const country = clean(raw.country) ?? "USA";
   const neighborhood = clean(raw.neighborhood);
   const categories = [...new Set((raw.categories ?? []).map((entry) => entry.trim().toLowerCase()))];
-  const interests = [...new Set([
-    ...classifyInterests({
-      title,
-      description,
-      categories,
-      priceType: raw.priceType ?? "unknown"
-    }),
-    ...normalizeTagList(raw.interests)
-  ])];
+  const interests =
+    rawEvent.sourceId === "meetup"
+      ? [...new Set(normalizeTagList(raw.interests))]
+      : [...new Set([
+          ...classifyInterests({
+            title,
+            description,
+            categories,
+            priceType: raw.priceType ?? "unknown"
+          }),
+          ...normalizeTagList(raw.interests)
+        ])];
   const startDateTime = clean(raw.startDateTime);
 
   if (!startDateTime) {
@@ -534,9 +750,17 @@ export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
           ? 0.88
           : rawEvent.sourceType === "rss"
             ? 0.78
+            : rawEvent.sourceId === "meetup"
+              ? 0.9
             : 0.92),
-    isNewcomerFriendly: interests.includes("newcomer-friendly"),
-    isSoloFriendly: interests.includes("solo-friendly"),
+    isNewcomerFriendly:
+      rawEvent.sourceId === "meetup"
+        ? interests.includes("newcomer-friendly")
+        : interests.includes("newcomer-friendly"),
+    isSoloFriendly:
+      rawEvent.sourceId === "meetup"
+        ? interests.includes("solo-friendly")
+        : interests.includes("solo-friendly"),
     originalSources: [
       {
         sourceId: rawEvent.sourceId,

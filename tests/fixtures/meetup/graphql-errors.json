@@ -1,0 +1,11 @@
+{
+  "data": null,
+  "errors": [
+    {
+      "message": "Access denied"
+    },
+    {
+      "message": "Token expired"
+    }
+  ]
+}

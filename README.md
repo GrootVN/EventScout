@@ -18,6 +18,7 @@ Event Scout is a newcomer-first local discovery app. It helps someone answer: "W
 - Event detail pages with source transparency
 - Local saved events
 - A Ticketmaster adapter behind `ENABLE_TICKETMASTER_PROVIDER`
+- A Meetup adapter behind `ENABLE_MEETUP_PROVIDER`
 - A generic ICS calendar adapter behind `ENABLE_ICS_PROVIDER`
 - A generic RSS/Atom adapter behind `ENABLE_RSS_PROVIDER`
 - A sources page showing enabled and planned providers
@@ -70,6 +71,24 @@ Optional query overrides:
 - `TICKETMASTER_QA_LONGITUDE`
 - `TICKETMASTER_QA_RADIUS_MILES`
 - `TICKETMASTER_QA_INTERESTS`
+
+## Meetup provider
+
+Enable the Meetup provider when you want to ingest social and community events from Meetup's token-based GraphQL API:
+
+```bash
+ENABLE_MEETUP_PROVIDER=true
+MEETUP_ACCESS_TOKEN=your_real_token_here
+npm run qa:aggregator
+```
+
+Notes:
+
+- Mock-only mode still works when the flag is off or `MEETUP_ACCESS_TOKEN` is empty.
+- `MEETUP_GRAPHQL_ENDPOINT` defaults to `https://api.meetup.com/gql` and can be overridden for local testing.
+- The provider preserves the original Meetup event URL and source attribution on every normalized event.
+- Tests use mocked GraphQL fixtures only; there is no OAuth login or refresh UI in this milestone.
+- Aggregator QA shows Meetup provider counts, duplicate groups, warnings, and event source links when the provider is enabled.
 
 ## ICS calendar provider
 
@@ -148,4 +167,4 @@ This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
 
 ## Next milestone
 
-Implement M13 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): Meetup provider.
+Implement M14 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): Curated/admin source provider.

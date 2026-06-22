@@ -58,3 +58,9 @@ Each provider must:
 - Handle API failure gracefully
 - Avoid crashing the scout pipeline
 - Respect missing API keys
+
+Meetup-specific notes:
+
+- Keep Meetup disabled by default behind `ENABLE_MEETUP_PROVIDER`.
+- Use `MEETUP_ACCESS_TOKEN` for token-based GraphQL access.
+- Preserve the original Meetup event URL on every raw event so source attribution stays transparent.

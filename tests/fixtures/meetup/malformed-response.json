@@ -1,0 +1,53 @@
+{
+  "data": {
+    "eventSearch": {
+      "edges": [
+        {
+          "node": {
+            "id": "meetup-good-1",
+            "title": "Downtown Tech Social",
+            "description": "A valid meetup record inside a mostly broken payload.",
+            "url": "https://www.meetup.com/downtown-tech-social/events/meetup-good-1",
+            "startDateTime": "2026-06-26T22:00:00.000Z",
+            "timezone": "America/New_York",
+            "venue": {
+              "name": "Union Hall",
+              "city": "Cincinnati",
+              "region": "OH",
+              "country": "USA"
+            },
+            "group": {
+              "name": "Downtown Builders",
+              "topics": [
+                {
+                  "name": "Tech"
+                }
+              ]
+            },
+            "categories": [
+              "tech"
+            ]
+          }
+        },
+        {
+          "node": {
+            "id": "meetup-missing-url",
+            "title": "Broken URL Meetup",
+            "startDateTime": "2026-06-27T22:00:00.000Z"
+          }
+        },
+        {
+          "node": {
+            "id": "meetup-missing-date",
+            "title": "Broken Date Meetup",
+            "url": "https://www.meetup.com/broken-date-meetup/events/meetup-missing-date"
+          }
+        },
+        {
+          "node": null
+        },
+        "not-an-object"
+      ]
+    }
+  }
+}

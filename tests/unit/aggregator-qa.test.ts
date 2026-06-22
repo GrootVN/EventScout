@@ -1,7 +1,9 @@
-import { readFileSync } from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { EventSourceProvider } from "../../apps/web/lib/sources/provider";
 import sampleTicketmasterEvent from "../fixtures/ticketmaster/sample-event.json";
+import meetupSampleResponse from "../fixtures/meetup/sample-events.json";
+import meetupGraphqlErrorsResponse from "../fixtures/meetup/graphql-errors.json";
+import { communityMockProvider } from "../../apps/web/lib/sources/communityMockProvider";
 import { mockProvider } from "../../apps/web/lib/sources/mockProvider";
 
 function makeRawEvent(id: string, overrides: Record<string, unknown> = {}) {
@@ -41,7 +43,8 @@ function makeRawEvent(id: string, overrides: Record<string, unknown> = {}) {
 async function importAggregatorQaWithProviders(
   providers: EventSourceProvider[],
   envOverrides: Record<string, boolean | string> = {},
-  icsModule: Record<string, unknown> | null = null
+  icsModule: Record<string, unknown> | null = null,
+  meetupModule: Record<string, unknown> | null = null
 ) {
   vi.resetModules();
   vi.doMock("@/lib/config/env", () => ({
@@ -52,6 +55,7 @@ async function importAggregatorQaWithProviders(
       defaultCountry: "USA",
       ticketmasterApiKey: "",
       meetupAccessToken: "",
+      meetupGraphqlEndpoint: "https://api.meetup.com/gql",
       defaultCityPreset: "cincinnati",
       icsSourceUrls: "",
       rssSourceUrls: "",
@@ -73,6 +77,9 @@ async function importAggregatorQaWithProviders(
   if (icsModule) {
     vi.doMock("@/lib/sources/icsProvider", () => icsModule);
   }
+  if (meetupModule) {
+    vi.doMock("@/lib/sources/meetupProvider", () => meetupModule);
+  }
   return import("../../apps/web/lib/events/aggregatorQa");
 }
 
@@ -86,6 +93,7 @@ async function importTicketmasterProviderWithEnv() {
       defaultCountry: "USA",
       ticketmasterApiKey: "test-key",
       meetupAccessToken: "",
+      meetupGraphqlEndpoint: "https://api.meetup.com/gql",
       defaultCityPreset: "cincinnati",
       icsSourceUrls: "",
       rssSourceUrls: "",
@@ -114,6 +122,7 @@ async function importIcsProviderWithEnv(overrides: Record<string, boolean | stri
       defaultCountry: "USA",
       ticketmasterApiKey: "",
       meetupAccessToken: "",
+      meetupGraphqlEndpoint: "https://api.meetup.com/gql",
       defaultCityPreset: "cincinnati",
       icsSourceUrls: "",
       rssSourceUrls: "",
@@ -133,8 +142,34 @@ async function importIcsProviderWithEnv(overrides: Record<string, boolean | stri
   return import("../../apps/web/lib/sources/icsProvider");
 }
 
-function fixtureText(name: string) {
-  return readFileSync(new URL(`../fixtures/ics/${name}`, import.meta.url), "utf8");
+async function importMeetupProviderWithEnv(overrides: Record<string, boolean | string> = {}) {
+  vi.resetModules();
+  vi.doMock("@/lib/config/env", () => ({
+    env: {
+      appName: "Event Scout",
+      defaultCity: "Cincinnati",
+      defaultRegion: "OH",
+      defaultCountry: "USA",
+      ticketmasterApiKey: "",
+      meetupAccessToken: "test-token",
+      meetupGraphqlEndpoint: "https://api.meetup.com/gql",
+      defaultCityPreset: "cincinnati",
+      icsSourceUrls: "",
+      rssSourceUrls: "",
+      enableMockProvider: true,
+      enableCommunityMockProvider: true,
+      enableCityPresets: false,
+      enableTicketmasterProvider: false,
+      enableMeetupProvider: true,
+      enableIcsProvider: false,
+      enableRssProvider: false,
+      enableWebsiteProvider: false,
+      enableSocialLeads: false,
+      ...overrides
+    }
+  }));
+
+  return import("../../apps/web/lib/sources/meetupProvider");
 }
 
 afterEach(() => {
@@ -304,6 +339,74 @@ describe("generateAggregatorQaReport", () => {
         group.sources.some((source) => source.sourceName === "Ticketmaster" && source.sourceUrl.includes("ticketmaster.com"))
       )
     ).toBe(true);
+  });
+
+  it("includes Meetup in provider counts and duplicate groups when enabled", async () => {
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => meetupSampleResponse
+    }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    const meetupModule = await importMeetupProviderWithEnv();
+    const { meetupProvider } = meetupModule;
+    const { generateAggregatorQaReport } = await importAggregatorQaWithProviders(
+      [meetupProvider, mockProvider, communityMockProvider],
+      {
+        enableMeetupProvider: true,
+        meetupAccessToken: "test-token"
+      },
+      null,
+      meetupModule
+    );
+
+    const report = await generateAggregatorQaReport({ city: "Cincinnati" });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(report.enabledProviders.some((provider) => provider.sourceId === "meetup")).toBe(true);
+    expect(report.enabledProviders.find((provider) => provider.sourceId === "meetup")).toMatchObject({
+      rawCount: 5,
+      validCount: 5,
+      droppedCount: 0,
+      finalContributionCount: 5
+    });
+    expect(report.duplicateGroups.some((group) => group.sourceNames.includes("Meetup"))).toBe(true);
+    expect(
+      report.duplicateGroups.some((group) =>
+        group.sources.some(
+          (source) =>
+            source.sourceName === "Meetup" &&
+            source.sourceUrl === "https://www.meetup.com/cincinnati-tech-meetup/events/meetup-tech-1"
+        )
+      )
+    ).toBe(true);
+  });
+
+  it("surfaces Meetup GraphQL errors in the QA warnings and errors", async () => {
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => meetupGraphqlErrorsResponse
+    }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    const meetupModule = await importMeetupProviderWithEnv();
+    const { meetupProvider } = meetupModule;
+    const { generateAggregatorQaReport } = await importAggregatorQaWithProviders(
+      [meetupProvider],
+      {
+        enableMeetupProvider: true,
+        meetupAccessToken: "test-token"
+      },
+      null,
+      meetupModule
+    );
+
+    const report = await generateAggregatorQaReport({ city: "Cincinnati" });
+
+    expect(report.errors.some((error) => error.includes("Access denied"))).toBe(true);
+    expect(report.errors.some((error) => error.includes("Token expired"))).toBe(true);
   });
 
   it("includes ICS provider counts and source links when enabled with fixtures", async () => {

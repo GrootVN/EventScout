@@ -1,4 +1,3 @@
-import { readFileSync } from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { communityMockProvider } from "../../apps/web/lib/sources/communityMockProvider";
 import { validateScoutEvent } from "../../apps/web/lib/events/schema";
@@ -7,10 +6,7 @@ import { normalizeRawEvent } from "../../apps/web/lib/events/normalize";
 import { mockProvider } from "../../apps/web/lib/sources/mockProvider";
 import type { EventSourceProvider } from "../../apps/web/lib/sources/provider";
 import sampleTicketmasterEvent from "../fixtures/ticketmaster/sample-event.json";
-
-function fixtureText(name: string) {
-  return readFileSync(new URL(`../fixtures/ics/${name}`, import.meta.url), "utf8");
-}
+import meetupSampleResponse from "../fixtures/meetup/sample-events.json";
 
 function makeProviderEvent(id: string, overrides: Record<string, unknown> = {}) {
   return {
@@ -64,6 +60,7 @@ async function importTicketmasterProviderWithEnv() {
       defaultCountry: "USA",
       ticketmasterApiKey: "test-key",
       meetupAccessToken: "",
+      meetupGraphqlEndpoint: "https://api.meetup.com/gql",
       defaultCityPreset: "cincinnati",
       icsSourceUrls: "",
       rssSourceUrls: "",
@@ -82,6 +79,35 @@ async function importTicketmasterProviderWithEnv() {
   return import("../../apps/web/lib/sources/ticketmasterProvider");
 }
 
+async function importMeetupProviderWithEnv() {
+  vi.resetModules();
+  vi.doMock("@/lib/config/env", () => ({
+    env: {
+      appName: "Event Scout",
+      defaultCity: "Cincinnati",
+      defaultRegion: "OH",
+      defaultCountry: "USA",
+      ticketmasterApiKey: "",
+      meetupAccessToken: "test-token",
+      meetupGraphqlEndpoint: "https://api.meetup.com/gql",
+      defaultCityPreset: "cincinnati",
+      icsSourceUrls: "",
+      rssSourceUrls: "",
+      enableMockProvider: true,
+      enableCommunityMockProvider: true,
+      enableCityPresets: false,
+      enableTicketmasterProvider: false,
+      enableMeetupProvider: true,
+      enableIcsProvider: false,
+      enableRssProvider: false,
+      enableWebsiteProvider: false,
+      enableSocialLeads: false
+    }
+  }));
+
+  return import("../../apps/web/lib/sources/meetupProvider");
+}
+
 async function importIcsProviderWithEnv(overrides: Record<string, boolean | string> = {}) {
   vi.resetModules();
   vi.doMock("@/lib/config/env", () => ({
@@ -92,6 +118,7 @@ async function importIcsProviderWithEnv(overrides: Record<string, boolean | stri
       defaultCountry: "USA",
       ticketmasterApiKey: "",
       meetupAccessToken: "",
+      meetupGraphqlEndpoint: "https://api.meetup.com/gql",
       defaultCityPreset: "cincinnati",
       icsSourceUrls: "",
       rssSourceUrls: "",
@@ -292,6 +319,39 @@ describe("scoutEvents", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(events.length).toBeGreaterThan(0);
     expect(events.some((event) => event.sourceId === "ticketmaster")).toBe(false);
+  });
+
+  it("works with Meetup enabled using mocked GraphQL data and merges duplicates with mock data", async () => {
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => meetupSampleResponse
+    }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { meetupProvider } = await importMeetupProviderWithEnv();
+    const providers = [meetupProvider, mockProvider, communityMockProvider];
+
+    const { scoutEvents } = await importScoutEventsWithProviders(providers);
+    const events = await scoutEvents({ city: "Cincinnati" }, { interests: [], userCity: "Cincinnati" });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(events.some((event) => event.sourceId === "meetup")).toBe(true);
+
+    const mergedEvent = events.find((event) =>
+      event.originalSources.some((source) => source.sourceId === "meetup") &&
+      event.originalSources.some((source) => source.sourceId === "mock") &&
+      event.originalSources.some((source) => source.sourceId === "community-mock")
+    );
+
+    expect(mergedEvent).toBeDefined();
+    expect(mergedEvent?.originalSources).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ sourceName: "Meetup" }),
+        expect.objectContaining({ sourceName: "Mock Local Radar" }),
+        expect.objectContaining({ sourceName: "Community Calendar Mock" })
+      ])
+    );
   });
 
   it("works with ICS enabled using a fixture-backed source and merges duplicates with mock data", async () => {

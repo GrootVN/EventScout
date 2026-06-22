@@ -12,6 +12,7 @@ async function importRegistryWithEnv(overrides: EnvOverrides = {}) {
       defaultCountry: "USA",
       ticketmasterApiKey: "",
       meetupAccessToken: "",
+      meetupGraphqlEndpoint: "https://api.meetup.com/gql",
       defaultCityPreset: "cincinnati",
       icsSourceUrls: "",
       rssSourceUrls: "",
@@ -97,6 +98,24 @@ describe("provider registry", () => {
     expect(getEnabledProviders().some((provider) => provider.sourceId === "ticketmaster")).toBe(
       true
     );
+  });
+
+  it("excludes Meetup when the access token is missing", async () => {
+    const { getEnabledProviders } = await importRegistryWithEnv({
+      enableMeetupProvider: true,
+      meetupAccessToken: ""
+    });
+
+    expect(getEnabledProviders().some((provider) => provider.sourceId === "meetup")).toBe(false);
+  });
+
+  it("includes Meetup when the feature flag and access token are present", async () => {
+    const { getEnabledProviders } = await importRegistryWithEnv({
+      enableMeetupProvider: true,
+      meetupAccessToken: "test-token"
+    });
+
+    expect(getEnabledProviders().some((provider) => provider.sourceId === "meetup")).toBe(true);
   });
 
   it("includes ICS when the feature flag and source URLs are present", async () => {

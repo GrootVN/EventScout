@@ -1,0 +1,237 @@
+{
+  "data": {
+    "eventSearch": {
+      "edges": [
+        {
+          "node": {
+            "id": "meetup-tech-1",
+            "title": "Cincinnati Tech Meetup at Rhinegeist",
+            "description": "A newcomer-friendly tech social with quick intros, demos, and brewery tables.",
+            "url": "https://www.meetup.com/cincinnati-tech-meetup/events/meetup-tech-1",
+            "startDateTime": "2026-06-21T22:00:00.000Z",
+            "endDateTime": "2026-06-22T00:00:00.000Z",
+            "timezone": "America/New_York",
+            "imageUrl": "https://images.meetup.com/tech-1.jpg",
+            "venue": {
+              "name": "Rhinegeist Brewery",
+              "address": "1910 Elm St",
+              "city": {
+                "name": "Cincinnati"
+              },
+              "region": "OH",
+              "country": "USA",
+              "latitude": 39.1134,
+              "longitude": -84.5191
+            },
+            "group": {
+              "id": "group-tech",
+              "name": "Cincinnati Tech Meetup",
+              "url": "https://www.meetup.com/cincinnati-tech-meetup/",
+              "topics": [
+                {
+                  "name": "Tech"
+                },
+                {
+                  "name": "Networking"
+                }
+              ]
+            },
+            "topics": [
+              {
+                "name": "Tech"
+              },
+              {
+                "name": "Startup"
+              }
+            ],
+            "tags": [
+              {
+                "name": "community"
+              }
+            ],
+            "categories": [
+              "tech",
+              "networking"
+            ]
+          }
+        },
+        {
+          "node": {
+            "id": "meetup-run-1",
+            "title": "Sunset Run Club",
+            "description": "A social run with pace groups and a post-run patio hang.",
+            "url": "https://www.meetup.com/sunset-run-club/events/meetup-run-1",
+            "startDateTime": "2026-06-22T23:00:00.000Z",
+            "endDateTime": "2026-06-23T00:00:00.000Z",
+            "timezone": "America/New_York",
+            "venue": {
+              "name": "Smale Riverfront Park",
+              "address": "166 W Mehring Way",
+              "city": "Cincinnati",
+              "region": "OH",
+              "country": "USA",
+              "latitude": 39.0977,
+              "longitude": -84.5166
+            },
+            "group": {
+              "id": "group-run",
+              "name": "Cincinnati Run Club",
+              "url": "https://www.meetup.com/cincinnati-run-club/",
+              "topics": [
+                {
+                  "name": "Running"
+                },
+                {
+                  "name": "Outdoors"
+                }
+              ]
+            },
+            "topics": [
+              {
+                "name": "Running"
+              },
+              {
+                "name": "Fitness"
+              }
+            ],
+            "categories": [
+              "outdoors",
+              "fitness"
+            ]
+          }
+        },
+        {
+          "node": {
+            "id": "meetup-book-1",
+            "title": "Book Club for Newcomers",
+            "description": "A relaxed reading discussion for people new to town.",
+            "url": "https://www.meetup.com/book-club-newcomers/events/meetup-book-1",
+            "startDateTime": "2026-06-23T22:00:00.000Z",
+            "endDateTime": "2026-06-23T23:30:00.000Z",
+            "timezone": "America/New_York",
+            "venue": {
+              "name": "Main Library",
+              "address": "800 Vine St",
+              "city": "Cincinnati",
+              "region": "OH",
+              "country": "USA"
+            },
+            "group": {
+              "id": "group-book",
+              "name": "City Reading Circle",
+              "url": "https://www.meetup.com/city-reading-circle/",
+              "topics": [
+                {
+                  "name": "Books"
+                },
+                {
+                  "name": "Writing"
+                }
+              ]
+            },
+            "topics": [
+              {
+                "name": "Books"
+              },
+              {
+                "name": "Education"
+              }
+            ],
+            "categories": [
+              "books",
+              "education"
+            ]
+          }
+        },
+        {
+          "node": {
+            "id": "meetup-social-1",
+            "title": "Welcome to Town Social Hour",
+            "description": "An open social gathering for newcomers and first-timers.",
+            "url": "https://www.meetup.com/welcome-town-social/events/meetup-social-1",
+            "startDateTime": "2026-06-24T22:30:00.000Z",
+            "endDateTime": "2026-06-24T23:30:00.000Z",
+            "timezone": "America/New_York",
+            "venue": {
+              "name": "Collective Espresso",
+              "address": "123 Main St",
+              "city": "Cincinnati",
+              "region": "OH",
+              "country": "USA"
+            },
+            "group": {
+              "id": "group-social",
+              "name": "New in Town Cincinnati",
+              "url": "https://www.meetup.com/new-in-town-cincinnati/",
+              "topics": [
+                {
+                  "name": "Social"
+                },
+                {
+                  "name": "Community"
+                }
+              ]
+            },
+            "topics": [
+              {
+                "name": "Social"
+              }
+            ],
+            "tags": [
+              {
+                "name": "newcomer"
+              }
+            ],
+            "categories": [
+              "social",
+              "community"
+            ]
+          }
+        },
+        {
+          "node": {
+            "id": "meetup-wellness-1",
+            "title": "Yoga and Meditation at the Park",
+            "description": "A beginner-friendly wellness session with open mats and calm pacing.",
+            "url": "https://www.meetup.com/yoga-meditation-park/events/meetup-wellness-1",
+            "startDateTime": "2026-06-25T22:00:00.000Z",
+            "endDateTime": "2026-06-25T23:15:00.000Z",
+            "timezone": "America/New_York",
+            "venue": {
+              "name": "Ault Park",
+              "address": "5090 Observatory Ave",
+              "city": "Cincinnati",
+              "region": "OH",
+              "country": "USA"
+            },
+            "group": {
+              "id": "group-wellness",
+              "name": "Cincinnati Wellness Circle",
+              "url": "https://www.meetup.com/cincinnati-wellness-circle/",
+              "topics": [
+                {
+                  "name": "Yoga"
+                },
+                {
+                  "name": "Wellness"
+                }
+              ]
+            },
+            "topics": [
+              {
+                "name": "Yoga"
+              },
+              {
+                "name": "Meditation"
+              }
+            ],
+            "categories": [
+              "wellness",
+              "fitness"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

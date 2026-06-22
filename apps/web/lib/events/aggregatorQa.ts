@@ -7,6 +7,7 @@ import type { OriginalSource, RawEvent, ScoutEvent } from "./types";
 import { env } from "@/lib/config/env";
 import { getEnabledProviders } from "@/lib/sources/registry";
 import { consumeTicketmasterProviderDiagnostics } from "@/lib/sources/ticketmasterProvider";
+import { consumeMeetupProviderDiagnostics } from "@/lib/sources/meetupProvider";
 import { consumeIcsProviderDiagnostics } from "@/lib/sources/icsProvider";
 import { consumeRssProviderDiagnostics } from "@/lib/sources/rssProvider";
 import { getActiveCityPresetSummary } from "@/lib/sources/localPresetProvider";
@@ -229,7 +230,19 @@ export async function generateAggregatorQaReport(
     warnings.push("Ticketmaster provider is enabled but TICKETMASTER_API_KEY is missing; the provider stays disabled.");
   }
 
+  if (env.enableMeetupProvider && !env.meetupAccessToken) {
+    warnings.push("Meetup provider is enabled but MEETUP_ACCESS_TOKEN is missing; the provider stays disabled.");
+  }
+
   for (const diagnostic of consumeTicketmasterProviderDiagnostics()) {
+    if (diagnostic.level === "warning") {
+      warnings.push(diagnostic.message);
+    } else {
+      errors.push(diagnostic.message);
+    }
+  }
+
+  for (const diagnostic of consumeMeetupProviderDiagnostics()) {
     if (diagnostic.level === "warning") {
       warnings.push(diagnostic.message);
     } else {

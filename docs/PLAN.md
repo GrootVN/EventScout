@@ -11,6 +11,7 @@ The repo has been refocused around a newcomer-first discovery experience with:
 - Pure filters, dedupe, ranking, and classification helpers
 - Source transparency in the UI and QA reports
 - A real Ticketmaster adapter behind `ENABLE_TICKETMASTER_PROVIDER`
+- A token-based Meetup adapter behind `ENABLE_MEETUP_PROVIDER`
 - A generic ICS calendar provider behind `ENABLE_ICS_PROVIDER`
 - A generic RSS/Atom provider behind `ENABLE_RSS_PROVIDER`
 - A Cincinnati city preset pack behind `ENABLE_CITY_PRESETS`
@@ -19,4 +20,4 @@ The repo has been refocused around a newcomer-first discovery experience with:
 
 ## Next milestone
 
-M13: Meetup provider.
+M14: Curated/admin source provider.
