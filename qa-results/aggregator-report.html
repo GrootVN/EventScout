@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aggregator QA Report</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4f1ea;
+        --panel: #fffdf8;
+        --text: #1f2933;
+        --muted: #6b7280;
+        --line: #d6d3d1;
+        --accent: #0f766e;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 28rem),
+          linear-gradient(180deg, #f7f4ed 0%, #efe7db 100%);
+      }
+      main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1.25rem 3rem;
+      }
+      h1,
+      h2 {
+        margin: 0 0 0.75rem;
+      }
+      p,
+      li {
+        line-height: 1.5;
+      }
+      .meta {
+        color: var(--muted);
+        margin-bottom: 1.5rem;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 0.75rem;
+        margin: 1.5rem 0 2rem;
+      }
+      .card,
+      section {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+      }
+      .card {
+        padding: 1rem;
+      }
+      .card .label {
+        display: block;
+        color: var(--muted);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .card .value {
+        display: block;
+        margin-top: 0.4rem;
+        font-size: 1.8rem;
+        font-weight: 700;
+      }
+      section {
+        padding: 1.25rem;
+        margin-top: 1rem;
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 0.75rem;
+        border-top: 1px solid var(--line);
+        vertical-align: top;
+        text-align: left;
+      }
+      th {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+      a {
+        color: var(--accent);
+      }
+      ul {
+        margin: 0;
+        padding-left: 1.25rem;
+      }
+      .sources {
+        margin-top: 0.5rem;
+      }
+      .sources li {
+        margin-bottom: 0.35rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Aggregator QA Report</h1>
+      <p class="meta">Generated 2026-06-21T18:30:14.330Z for Cincinnati</p>
+
+      <div class="grid">
+        <div class="card"><span class="label">Enabled Providers</span><span class="value">2</span></div>
+        <div class="card"><span class="label">Raw Event Count</span><span class="value">48</span></div>
+        <div class="card"><span class="label">Valid Normalized</span><span class="value">48</span></div>
+        <div class="card"><span class="label">Dropped Invalid</span><span class="value">0</span></div>
+        <div class="card"><span class="label">Deduped Count</span><span class="value">41</span></div>
+        <div class="card"><span class="label">Final Count</span><span class="value">41</span></div>
+        <div class="card"><span class="label">Duplicate Groups</span><span class="value">6</span></div>
+      </div>
+
+      <section>
+        <h2>Enabled Providers</h2>
+        
+    <table>
+      <thead>
+        <tr>
+          <th>Provider</th>
+          <th>Source ID</th>
+          <th>Type</th>
+          <th>Raw</th>
+          <th>Valid</th>
+          <th>Dropped</th>
+          <th>Final Contribution</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+              <tr>
+                <td>Mock Local Radar</td>
+                <td>mock</td>
+                <td>mock</td>
+                <td>36</td>
+                <td>36</td>
+                <td>0</td>
+                <td>36</td>
+              </tr>
+            
+              <tr>
+                <td>Community Calendar Mock</td>
+                <td>community-mock</td>
+                <td>mock</td>
+                <td>12</td>
+                <td>12</td>
+                <td>0</td>
+                <td>11</td>
+              </tr>
+            
+      </tbody>
+    </table>
+  
+      </section>
+
+      <section>
+        <h2>Duplicate Groups</h2>
+        
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Date</th>
+          <th>Venue</th>
+          <th>City</th>
+          <th>Group Size</th>
+          <th>Merged Variants</th>
+          <th>Provider Sources</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+              <tr>
+                <td>Cincinnati Tech Meetup at Rhinegeist</td>
+                <td>2026-06-21T22:00:00.000Z</td>
+                <td>Rhinegeist Brewery</td>
+                <td>Cincinnati</td>
+                <td>3</td>
+                <td>Cincinnati Tech Meetup at Rhinegeist, Tech Meet-up, Tech Meetup</td>
+                <td>
+                  <ul class="sources">
+                    
+                          <li>
+                            <strong>Community Calendar Mock</strong>
+                            <a href="https://community.example.com/events/tech-meet-up" target="_blank" rel="noreferrer">https://community.example.com/events/tech-meet-up</a>
+                          </li>
+                        
+                          <li>
+                            <strong>Community Calendar Mock</strong>
+                            <a href="https://community.example.com/events/tech-meetup" target="_blank" rel="noreferrer">https://community.example.com/events/tech-meetup</a>
+                          </li>
+                        
+                          <li>
+                            <strong>Mock Local Radar</strong>
+                            <a href="https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=5" target="_blank" rel="noreferrer">https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=5</a>
+                          </li>
+                        
+                  </ul>
+                </td>
+              </tr>
+            
+              <tr>
+                <td>Cincinnati Tech Meetup at Rhinegeist</td>
+                <td>2026-06-30T22:00:00.000Z</td>
+                <td>Rhinegeist Brewery</td>
+                <td>Cincinnati</td>
+                <td>2</td>
+                <td>Cincinnati Tech Meetup, Cincinnati Tech Meetup at Rhinegeist</td>
+                <td>
+                  <ul class="sources">
+                    
+                          <li>
+                            <strong>Community Calendar Mock</strong>
+                            <a href="https://community.example.com/events/cincinnati-tech-meetup" target="_blank" rel="noreferrer">https://community.example.com/events/cincinnati-tech-meetup</a>
+                          </li>
+                        
+                          <li>
+                            <strong>Mock Local Radar</strong>
+                            <a href="https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=16" target="_blank" rel="noreferrer">https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=16</a>
+                          </li>
+                        
+                  </ul>
+                </td>
+              </tr>
+            
+              <tr>
+                <td>Cincinnati Tech Meetup at Rhinegeist</td>
+                <td>2026-07-09T22:00:00.000Z</td>
+                <td>Rhinegeist Brewery</td>
+                <td>Cincinnati</td>
+                <td>2</td>
+                <td>Cincinnati Tech Meetup at Rhinegeist, Tech Meetup at Rhinegeist</td>
+                <td>
+                  <ul class="sources">
+                    
+                          <li>
+                            <strong>Community Calendar Mock</strong>
+                            <a href="https://community.example.com/events/tech-meetup-rhinegeist" target="_blank" rel="noreferrer">https://community.example.com/events/tech-meetup-rhinegeist</a>
+                          </li>
+                        
+                          <li>
+                            <strong>Mock Local Radar</strong>
+                            <a href="https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=27" target="_blank" rel="noreferrer">https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=27</a>
+                          </li>
+                        
+                  </ul>
+                </td>
+              </tr>
+            
+              <tr>
+                <td>Jazz Under the Bridge</td>
+                <td>2026-06-25T23:00:00.000Z</td>
+                <td>Sawyer Point</td>
+                <td>Cincinnati</td>
+                <td>2</td>
+                <td>Jazz Under the Bridge, Jazz Under the Bridge Live Set</td>
+                <td>
+                  <ul class="sources">
+                    
+                          <li>
+                            <strong>Community Calendar Mock</strong>
+                            <a href="https://community.example.com/events/jazz-under-bridge-live-set" target="_blank" rel="noreferrer">https://community.example.com/events/jazz-under-bridge-live-set</a>
+                          </li>
+                        
+                          <li>
+                            <strong>Mock Local Radar</strong>
+                            <a href="https://example.com/events/jazz-under-the-bridge?instance=9" target="_blank" rel="noreferrer">https://example.com/events/jazz-under-the-bridge?instance=9</a>
+                          </li>
+                        
+                  </ul>
+                </td>
+              </tr>
+            
+              <tr>
+                <td>Public Square Night Market</td>
+                <td>2026-06-22T22:00:00.000Z</td>
+                <td>Court Street Plaza</td>
+                <td>Cincinnati</td>
+                <td>2</td>
+                <td>Public Square Night Market, Public Square Night Market at Court Street</td>
+                <td>
+                  <ul class="sources">
+                    
+                          <li>
+                            <strong>Community Calendar Mock</strong>
+                            <a href="https://community.example.com/events/court-street-night-market" target="_blank" rel="noreferrer">https://community.example.com/events/court-street-night-market</a>
+                          </li>
+                        
+                          <li>
+                            <strong>Mock Local Radar</strong>
+                            <a href="https://example.com/events/public-square-night-market?instance=6" target="_blank" rel="noreferrer">https://example.com/events/public-square-night-market?instance=6</a>
+                          </li>
+                        
+                  </ul>
+                </td>
+              </tr>
+            
+              <tr>
+                <td>Sunset Run Club</td>
+                <td>2026-06-19T23:00:00.000Z</td>
+                <td>Smale Riverfront Park</td>
+                <td>Cincinnati</td>
+                <td>2</td>
+                <td>Sunset Run Club, Sunset Run Club at the Riverfront</td>
+                <td>
+                  <ul class="sources">
+                    
+                          <li>
+                            <strong>Community Calendar Mock</strong>
+                            <a href="https://community.example.com/events/sunset-run-club-riverfront" target="_blank" rel="noreferrer">https://community.example.com/events/sunset-run-club-riverfront</a>
+                          </li>
+                        
+                          <li>
+                            <strong>Mock Local Radar</strong>
+                            <a href="https://example.com/events/sunset-run-club?instance=3" target="_blank" rel="noreferrer">https://example.com/events/sunset-run-club?instance=3</a>
+                          </li>
+                        
+                  </ul>
+                </td>
+              </tr>
+            
+      </tbody>
+    </table>
+  
+      </section>
+
+      <section>
+        <h2>Events</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Date</th>
+              <th>Venue</th>
+              <th>City</th>
+              <th>Interests</th>
+              <th>Source</th>
+              <th>Source URL</th>
+              <th>Original Sources</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td>Founders &amp; Freelancers Coffee Club</td>
+          <td>2026-06-19T22:00:00.000Z</td>
+          <td>Collective Espresso</td>
+          <td>Cincinnati</td>
+          <td>beginner-friendly, business, cheap, free, networking, newcomer-friendly, professional, social, solo-friendly, tech</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/founders-freelancers?instance=1" target="_blank" rel="noreferrer">https://example.com/events/founders-freelancers?instance=1</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/founders-freelancers?instance=1" target="_blank" rel="noreferrer">https://example.com/events/founders-freelancers?instance=1</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Beginner Salsa Night</td>
+          <td>2026-06-20T23:00:00.000Z</td>
+          <td>Liberty Hall</td>
+          <td>Cincinnati</td>
+          <td>beginner-friendly, culture, music, newcomer-friendly, nightlife, social, solo-friendly</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/beginner-salsa-night?instance=2" target="_blank" rel="noreferrer">https://example.com/events/beginner-salsa-night?instance=2</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/beginner-salsa-night?instance=2" target="_blank" rel="noreferrer">https://example.com/events/beginner-salsa-night?instance=2</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Sunset Run Club</td>
+          <td>2026-06-19T23:00:00.000Z</td>
+          <td>Smale Riverfront Park</td>
+          <td>Cincinnati</td>
+          <td>cheap, fitness, free, newcomer-friendly, outdoors, social, solo-friendly, wellness</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/sunset-run-club?instance=3" target="_blank" rel="noreferrer">https://example.com/events/sunset-run-club?instance=3</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Community Calendar Mock</strong>
+                      <a href="https://community.example.com/events/sunset-run-club-riverfront" target="_blank" rel="noreferrer">https://community.example.com/events/sunset-run-club-riverfront</a>
+                    </li>
+                  
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/sunset-run-club?instance=3" target="_blank" rel="noreferrer">https://example.com/events/sunset-run-club?instance=3</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>2</td>
+        </tr>
+      
+        <tr>
+          <td>Indie Bookstore Trivia</td>
+          <td>2026-06-21T00:00:00.000Z</td>
+          <td>The Storyline Books</td>
+          <td>Cincinnati</td>
+          <td>books, cheap, free, gaming, quiet</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/indie-bookstore-trivia?instance=4" target="_blank" rel="noreferrer">https://example.com/events/indie-bookstore-trivia?instance=4</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/indie-bookstore-trivia?instance=4" target="_blank" rel="noreferrer">https://example.com/events/indie-bookstore-trivia?instance=4</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Cincinnati Tech Meetup at Rhinegeist</td>
+          <td>2026-06-21T22:00:00.000Z</td>
+          <td>Rhinegeist Brewery</td>
+          <td>Cincinnati</td>
+          <td>beginner-friendly, business, cheap, community, free, networking, newcomer-friendly, social, solo-friendly, tech</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=5" target="_blank" rel="noreferrer">https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=5</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Community Calendar Mock</strong>
+                      <a href="https://community.example.com/events/tech-meet-up" target="_blank" rel="noreferrer">https://community.example.com/events/tech-meet-up</a>
+                    </li>
+                  
+                    <li>
+                      <strong>Community Calendar Mock</strong>
+                      <a href="https://community.example.com/events/tech-meetup" target="_blank" rel="noreferrer">https://community.example.com/events/tech-meetup</a>
+                    </li>
+                  
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=5" target="_blank" rel="noreferrer">https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=5</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>3</td>
+        </tr>
+      
+        <tr>
+          <td>Public Square Night Market</td>
+          <td>2026-06-22T22:00:00.000Z</td>
+          <td>Court Street Plaza</td>
+          <td>Cincinnati</td>
+          <td>casual, cheap, culture, food-drink, free, markets, music</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/public-square-night-market?instance=6" target="_blank" rel="noreferrer">https://example.com/events/public-square-night-market?instance=6</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Community Calendar Mock</strong>
+                      <a href="https://community.example.com/events/court-street-night-market" target="_blank" rel="noreferrer">https://community.example.com/events/court-street-night-market</a>
+                    </li>
+                  
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/public-square-night-market?instance=6" target="_blank" rel="noreferrer">https://example.com/events/public-square-night-market?instance=6</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>2</td>
+        </tr>
+      
+        <tr>
+          <td>Intro to Pottery Wheel</td>
+          <td>2026-06-23T23:00:00.000Z</td>
+          <td>Queen City Clay</td>
+          <td>Cincinnati</td>
+          <td>arts, beginner-friendly, education, newcomer-friendly, solo-friendly</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/intro-pottery-wheel?instance=7" target="_blank" rel="noreferrer">https://example.com/events/intro-pottery-wheel?instance=7</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/intro-pottery-wheel?instance=7" target="_blank" rel="noreferrer">https://example.com/events/intro-pottery-wheel?instance=7</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>City Newcomer Picnic</td>
+          <td>2026-06-24T19:00:00.000Z</td>
+          <td>Ault Park</td>
+          <td>Cincinnati</td>
+          <td>cheap, community, free, networking, newcomer-friendly, outdoors, social, solo-friendly</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/city-newcomer-picnic?instance=8" target="_blank" rel="noreferrer">https://example.com/events/city-newcomer-picnic?instance=8</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/city-newcomer-picnic?instance=8" target="_blank" rel="noreferrer">https://example.com/events/city-newcomer-picnic?instance=8</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Jazz Under the Bridge</td>
+          <td>2026-06-25T23:00:00.000Z</td>
+          <td>Sawyer Point</td>
+          <td>Cincinnati</td>
+          <td>cheap, culture, free, music, newcomer-friendly, social, solo-friendly</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/jazz-under-the-bridge?instance=9" target="_blank" rel="noreferrer">https://example.com/events/jazz-under-the-bridge?instance=9</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Community Calendar Mock</strong>
+                      <a href="https://community.example.com/events/jazz-under-bridge-live-set" target="_blank" rel="noreferrer">https://community.example.com/events/jazz-under-bridge-live-set</a>
+                    </li>
+                  
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/jazz-under-the-bridge?instance=9" target="_blank" rel="noreferrer">https://example.com/events/jazz-under-the-bridge?instance=9</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>2</td>
+        </tr>
+      
+        <tr>
+          <td>Women in Product Happy Hour</td>
+          <td>2026-06-26T22:00:00.000Z</td>
+          <td>Union Hall</td>
+          <td>Cincinnati</td>
+          <td>business, networking, newcomer-friendly, professional, solo-friendly, tech</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/women-in-product-happy-hour?instance=10" target="_blank" rel="noreferrer">https://example.com/events/women-in-product-happy-hour?instance=10</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/women-in-product-happy-hour?instance=10" target="_blank" rel="noreferrer">https://example.com/events/women-in-product-happy-hour?instance=10</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Family Storytime in the Garden</td>
+          <td>2026-06-27T15:00:00.000Z</td>
+          <td>Krohn Conservatory Lawn</td>
+          <td>Cincinnati</td>
+          <td>books, cheap, family, family-friendly, free, outdoors, quiet</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/family-storytime-garden?instance=11" target="_blank" rel="noreferrer">https://example.com/events/family-storytime-garden?instance=11</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/family-storytime-garden?instance=11" target="_blank" rel="noreferrer">https://example.com/events/family-storytime-garden?instance=11</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Founders &amp; Freelancers Coffee Club</td>
+          <td>2026-06-28T22:00:00.000Z</td>
+          <td>Collective Espresso</td>
+          <td>Cincinnati</td>
+          <td>beginner-friendly, business, cheap, free, networking, newcomer-friendly, professional, social, solo-friendly, tech</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/founders-freelancers?instance=12" target="_blank" rel="noreferrer">https://example.com/events/founders-freelancers?instance=12</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/founders-freelancers?instance=12" target="_blank" rel="noreferrer">https://example.com/events/founders-freelancers?instance=12</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Beginner Salsa Night</td>
+          <td>2026-06-29T23:00:00.000Z</td>
+          <td>Liberty Hall</td>
+          <td>Cincinnati</td>
+          <td>beginner-friendly, culture, music, newcomer-friendly, nightlife, social, solo-friendly</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/beginner-salsa-night?instance=13" target="_blank" rel="noreferrer">https://example.com/events/beginner-salsa-night?instance=13</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/beginner-salsa-night?instance=13" target="_blank" rel="noreferrer">https://example.com/events/beginner-salsa-night?instance=13</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Sunset Run Club</td>
+          <td>2026-06-28T23:00:00.000Z</td>
+          <td>Smale Riverfront Park</td>
+          <td>Cincinnati</td>
+          <td>cheap, fitness, free, newcomer-friendly, outdoors, social, solo-friendly, wellness</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/sunset-run-club?instance=14" target="_blank" rel="noreferrer">https://example.com/events/sunset-run-club?instance=14</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/sunset-run-club?instance=14" target="_blank" rel="noreferrer">https://example.com/events/sunset-run-club?instance=14</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Indie Bookstore Trivia</td>
+          <td>2026-06-30T00:00:00.000Z</td>
+          <td>The Storyline Books</td>
+          <td>Cincinnati</td>
+          <td>books, cheap, free, gaming, quiet</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/indie-bookstore-trivia?instance=15" target="_blank" rel="noreferrer">https://example.com/events/indie-bookstore-trivia?instance=15</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/indie-bookstore-trivia?instance=15" target="_blank" rel="noreferrer">https://example.com/events/indie-bookstore-trivia?instance=15</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Cincinnati Tech Meetup at Rhinegeist</td>
+          <td>2026-06-30T22:00:00.000Z</td>
+          <td>Rhinegeist Brewery</td>
+          <td>Cincinnati</td>
+          <td>beginner-friendly, business, cheap, free, networking, newcomer-friendly, social, solo-friendly, tech</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=16" target="_blank" rel="noreferrer">https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=16</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Community Calendar Mock</strong>
+                      <a href="https://community.example.com/events/cincinnati-tech-meetup" target="_blank" rel="noreferrer">https://community.example.com/events/cincinnati-tech-meetup</a>
+                    </li>
+                  
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=16" target="_blank" rel="noreferrer">https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=16</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>2</td>
+        </tr>
+      
+        <tr>
+          <td>Public Square Night Market</td>
+          <td>2026-07-01T22:00:00.000Z</td>
+          <td>Court Street Plaza</td>
+          <td>Cincinnati</td>
+          <td>casual, cheap, culture, food-drink, free, markets, music</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/public-square-night-market?instance=17" target="_blank" rel="noreferrer">https://example.com/events/public-square-night-market?instance=17</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/public-square-night-market?instance=17" target="_blank" rel="noreferrer">https://example.com/events/public-square-night-market?instance=17</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Intro to Pottery Wheel</td>
+          <td>2026-07-02T23:00:00.000Z</td>
+          <td>Queen City Clay</td>
+          <td>Cincinnati</td>
+          <td>arts, beginner-friendly, education, newcomer-friendly, solo-friendly</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/intro-pottery-wheel?instance=18" target="_blank" rel="noreferrer">https://example.com/events/intro-pottery-wheel?instance=18</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/intro-pottery-wheel?instance=18" target="_blank" rel="noreferrer">https://example.com/events/intro-pottery-wheel?instance=18</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>City Newcomer Picnic</td>
+          <td>2026-07-03T19:00:00.000Z</td>
+          <td>Ault Park</td>
+          <td>Cincinnati</td>
+          <td>cheap, community, free, networking, newcomer-friendly, outdoors, social, solo-friendly</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/city-newcomer-picnic?instance=19" target="_blank" rel="noreferrer">https://example.com/events/city-newcomer-picnic?instance=19</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/city-newcomer-picnic?instance=19" target="_blank" rel="noreferrer">https://example.com/events/city-newcomer-picnic?instance=19</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Jazz Under the Bridge</td>
+          <td>2026-07-04T23:00:00.000Z</td>
+          <td>Sawyer Point</td>
+          <td>Cincinnati</td>
+          <td>cheap, culture, free, music, newcomer-friendly, social, solo-friendly</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/jazz-under-the-bridge?instance=20" target="_blank" rel="noreferrer">https://example.com/events/jazz-under-the-bridge?instance=20</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/jazz-under-the-bridge?instance=20" target="_blank" rel="noreferrer">https://example.com/events/jazz-under-the-bridge?instance=20</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Women in Product Happy Hour</td>
+          <td>2026-07-05T22:00:00.000Z</td>
+          <td>Union Hall</td>
+          <td>Cincinnati</td>
+          <td>business, networking, newcomer-friendly, professional, solo-friendly, tech</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/women-in-product-happy-hour?instance=21" target="_blank" rel="noreferrer">https://example.com/events/women-in-product-happy-hour?instance=21</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/women-in-product-happy-hour?instance=21" target="_blank" rel="noreferrer">https://example.com/events/women-in-product-happy-hour?instance=21</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Family Storytime in the Garden</td>
+          <td>2026-07-06T15:00:00.000Z</td>
+          <td>Krohn Conservatory Lawn</td>
+          <td>Cincinnati</td>
+          <td>books, cheap, family, family-friendly, free, outdoors, quiet</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/family-storytime-garden?instance=22" target="_blank" rel="noreferrer">https://example.com/events/family-storytime-garden?instance=22</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/family-storytime-garden?instance=22" target="_blank" rel="noreferrer">https://example.com/events/family-storytime-garden?instance=22</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Founders &amp; Freelancers Coffee Club</td>
+          <td>2026-07-07T22:00:00.000Z</td>
+          <td>Collective Espresso</td>
+          <td>Cincinnati</td>
+          <td>beginner-friendly, business, cheap, free, networking, newcomer-friendly, professional, social, solo-friendly, tech</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/founders-freelancers?instance=23" target="_blank" rel="noreferrer">https://example.com/events/founders-freelancers?instance=23</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/founders-freelancers?instance=23" target="_blank" rel="noreferrer">https://example.com/events/founders-freelancers?instance=23</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Beginner Salsa Night</td>
+          <td>2026-07-08T23:00:00.000Z</td>
+          <td>Liberty Hall</td>
+          <td>Cincinnati</td>
+          <td>beginner-friendly, culture, music, newcomer-friendly, nightlife, social, solo-friendly</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/beginner-salsa-night?instance=24" target="_blank" rel="noreferrer">https://example.com/events/beginner-salsa-night?instance=24</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/beginner-salsa-night?instance=24" target="_blank" rel="noreferrer">https://example.com/events/beginner-salsa-night?instance=24</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Sunset Run Club</td>
+          <td>2026-07-07T23:00:00.000Z</td>
+          <td>Smale Riverfront Park</td>
+          <td>Cincinnati</td>
+          <td>cheap, fitness, free, newcomer-friendly, outdoors, social, solo-friendly, wellness</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/sunset-run-club?instance=25" target="_blank" rel="noreferrer">https://example.com/events/sunset-run-club?instance=25</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/sunset-run-club?instance=25" target="_blank" rel="noreferrer">https://example.com/events/sunset-run-club?instance=25</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Indie Bookstore Trivia</td>
+          <td>2026-07-09T00:00:00.000Z</td>
+          <td>The Storyline Books</td>
+          <td>Cincinnati</td>
+          <td>books, cheap, free, gaming, quiet</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/indie-bookstore-trivia?instance=26" target="_blank" rel="noreferrer">https://example.com/events/indie-bookstore-trivia?instance=26</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/indie-bookstore-trivia?instance=26" target="_blank" rel="noreferrer">https://example.com/events/indie-bookstore-trivia?instance=26</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Cincinnati Tech Meetup at Rhinegeist</td>
+          <td>2026-07-09T22:00:00.000Z</td>
+          <td>Rhinegeist Brewery</td>
+          <td>Cincinnati</td>
+          <td>beginner-friendly, business, cheap, free, networking, newcomer-friendly, social, solo-friendly, startup, tech</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=27" target="_blank" rel="noreferrer">https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=27</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Community Calendar Mock</strong>
+                      <a href="https://community.example.com/events/tech-meetup-rhinegeist" target="_blank" rel="noreferrer">https://community.example.com/events/tech-meetup-rhinegeist</a>
+                    </li>
+                  
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=27" target="_blank" rel="noreferrer">https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=27</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>2</td>
+        </tr>
+      
+        <tr>
+          <td>Public Square Night Market</td>
+          <td>2026-07-10T22:00:00.000Z</td>
+          <td>Court Street Plaza</td>
+          <td>Cincinnati</td>
+          <td>casual, cheap, culture, food-drink, free, markets, music</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/public-square-night-market?instance=28" target="_blank" rel="noreferrer">https://example.com/events/public-square-night-market?instance=28</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/public-square-night-market?instance=28" target="_blank" rel="noreferrer">https://example.com/events/public-square-night-market?instance=28</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Intro to Pottery Wheel</td>
+          <td>2026-07-11T23:00:00.000Z</td>
+          <td>Queen City Clay</td>
+          <td>Cincinnati</td>
+          <td>arts, beginner-friendly, education, newcomer-friendly, solo-friendly</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/intro-pottery-wheel?instance=29" target="_blank" rel="noreferrer">https://example.com/events/intro-pottery-wheel?instance=29</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/intro-pottery-wheel?instance=29" target="_blank" rel="noreferrer">https://example.com/events/intro-pottery-wheel?instance=29</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>City Newcomer Picnic</td>
+          <td>2026-07-12T19:00:00.000Z</td>
+          <td>Ault Park</td>
+          <td>Cincinnati</td>
+          <td>cheap, community, free, networking, newcomer-friendly, outdoors, social, solo-friendly</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/city-newcomer-picnic?instance=30" target="_blank" rel="noreferrer">https://example.com/events/city-newcomer-picnic?instance=30</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/city-newcomer-picnic?instance=30" target="_blank" rel="noreferrer">https://example.com/events/city-newcomer-picnic?instance=30</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Jazz Under the Bridge</td>
+          <td>2026-07-13T23:00:00.000Z</td>
+          <td>Sawyer Point</td>
+          <td>Cincinnati</td>
+          <td>cheap, culture, free, music, newcomer-friendly, social, solo-friendly</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/jazz-under-the-bridge?instance=31" target="_blank" rel="noreferrer">https://example.com/events/jazz-under-the-bridge?instance=31</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/jazz-under-the-bridge?instance=31" target="_blank" rel="noreferrer">https://example.com/events/jazz-under-the-bridge?instance=31</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Women in Product Happy Hour</td>
+          <td>2026-07-14T22:00:00.000Z</td>
+          <td>Union Hall</td>
+          <td>Cincinnati</td>
+          <td>business, networking, newcomer-friendly, professional, solo-friendly, tech</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/women-in-product-happy-hour?instance=32" target="_blank" rel="noreferrer">https://example.com/events/women-in-product-happy-hour?instance=32</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/women-in-product-happy-hour?instance=32" target="_blank" rel="noreferrer">https://example.com/events/women-in-product-happy-hour?instance=32</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Family Storytime in the Garden</td>
+          <td>2026-07-15T15:00:00.000Z</td>
+          <td>Krohn Conservatory Lawn</td>
+          <td>Cincinnati</td>
+          <td>books, cheap, family, family-friendly, free, outdoors, quiet</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/family-storytime-garden?instance=33" target="_blank" rel="noreferrer">https://example.com/events/family-storytime-garden?instance=33</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/family-storytime-garden?instance=33" target="_blank" rel="noreferrer">https://example.com/events/family-storytime-garden?instance=33</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Founders &amp; Freelancers Coffee Club</td>
+          <td>2026-07-16T22:00:00.000Z</td>
+          <td>Collective Espresso</td>
+          <td>Cincinnati</td>
+          <td>beginner-friendly, business, cheap, free, networking, newcomer-friendly, professional, social, solo-friendly, tech</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/founders-freelancers?instance=34" target="_blank" rel="noreferrer">https://example.com/events/founders-freelancers?instance=34</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/founders-freelancers?instance=34" target="_blank" rel="noreferrer">https://example.com/events/founders-freelancers?instance=34</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Beginner Salsa Night</td>
+          <td>2026-07-17T23:00:00.000Z</td>
+          <td>Liberty Hall</td>
+          <td>Cincinnati</td>
+          <td>beginner-friendly, culture, music, newcomer-friendly, nightlife, social, solo-friendly</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/beginner-salsa-night?instance=35" target="_blank" rel="noreferrer">https://example.com/events/beginner-salsa-night?instance=35</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/beginner-salsa-night?instance=35" target="_blank" rel="noreferrer">https://example.com/events/beginner-salsa-night?instance=35</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Sunset Run Club</td>
+          <td>2026-07-16T23:00:00.000Z</td>
+          <td>Smale Riverfront Park</td>
+          <td>Cincinnati</td>
+          <td>cheap, fitness, free, newcomer-friendly, outdoors, social, solo-friendly, wellness</td>
+          <td>Mock Local Radar</td>
+          <td>
+            <a href="https://example.com/events/sunset-run-club?instance=36" target="_blank" rel="noreferrer">https://example.com/events/sunset-run-club?instance=36</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Mock Local Radar</strong>
+                      <a href="https://example.com/events/sunset-run-club?instance=36" target="_blank" rel="noreferrer">https://example.com/events/sunset-run-club?instance=36</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Neighborhood Film on the Lawn</td>
+          <td>2026-06-23T01:00:00.000Z</td>
+          <td>Washington Park</td>
+          <td>Cincinnati</td>
+          <td>cheap, community, film, free, outdoors</td>
+          <td>Community Calendar Mock</td>
+          <td>
+            <a href="https://community.example.com/events/neighborhood-film-lawn" target="_blank" rel="noreferrer">https://community.example.com/events/neighborhood-film-lawn</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Community Calendar Mock</strong>
+                      <a href="https://community.example.com/events/neighborhood-film-lawn" target="_blank" rel="noreferrer">https://community.example.com/events/neighborhood-film-lawn</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Volunteer River Cleanup Morning</td>
+          <td>2026-06-24T13:00:00.000Z</td>
+          <td>Yeatman&#39;s Cove</td>
+          <td>Cincinnati</td>
+          <td>cheap, community, free, outdoors</td>
+          <td>Community Calendar Mock</td>
+          <td>
+            <a href="https://community.example.com/events/volunteer-river-cleanup" target="_blank" rel="noreferrer">https://community.example.com/events/volunteer-river-cleanup</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Community Calendar Mock</strong>
+                      <a href="https://community.example.com/events/volunteer-river-cleanup" target="_blank" rel="noreferrer">https://community.example.com/events/volunteer-river-cleanup</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Global Bites Pop-Up Dinner</td>
+          <td>2026-06-27T23:00:00.000Z</td>
+          <td>Findlay Kitchen</td>
+          <td>Cincinnati</td>
+          <td>community, food-drink</td>
+          <td>Community Calendar Mock</td>
+          <td>
+            <a href="https://community.example.com/events/global-bites-pop-up-dinner" target="_blank" rel="noreferrer">https://community.example.com/events/global-bites-pop-up-dinner</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Community Calendar Mock</strong>
+                      <a href="https://community.example.com/events/global-bites-pop-up-dinner" target="_blank" rel="noreferrer">https://community.example.com/events/global-bites-pop-up-dinner</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Board Game Brunch for New Neighbors</td>
+          <td>2026-06-28T16:00:00.000Z</td>
+          <td>OTR StillHouse</td>
+          <td>Cincinnati</td>
+          <td>community, fitness, food-drink, gaming, outdoors, wellness</td>
+          <td>Community Calendar Mock</td>
+          <td>
+            <a href="https://community.example.com/events/board-game-brunch" target="_blank" rel="noreferrer">https://community.example.com/events/board-game-brunch</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Community Calendar Mock</strong>
+                      <a href="https://community.example.com/events/board-game-brunch" target="_blank" rel="noreferrer">https://community.example.com/events/board-game-brunch</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>Neighborhood Makers Demo Day</td>
+          <td>2026-06-29T22:00:00.000Z</td>
+          <td>Esoteric Brewing</td>
+          <td>Cincinnati</td>
+          <td>arts, cheap, community, free, tech</td>
+          <td>Community Calendar Mock</td>
+          <td>
+            <a href="https://community.example.com/events/makers-demo-day" target="_blank" rel="noreferrer">https://community.example.com/events/makers-demo-day</a>
+            <ul class="sources">
+              
+                    <li>
+                      <strong>Community Calendar Mock</strong>
+                      <a href="https://community.example.com/events/makers-demo-day" target="_blank" rel="noreferrer">https://community.example.com/events/makers-demo-day</a>
+                    </li>
+                  
+            </ul>
+          </td>
+          <td>1</td>
+        </tr>
+      </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Warnings</h2>
+        <ul><li>No warnings.</li></ul>
+      </section>
+
+      <section>
+        <h2>Errors</h2>
+        <ul><li>No errors.</li></ul>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,1487 @@
+{
+  "generatedAt": "2026-06-21T18:30:14.330Z",
+  "city": "Cincinnati",
+  "enabledProviders": [
+    {
+      "sourceId": "mock",
+      "sourceName": "Mock Local Radar",
+      "sourceType": "mock",
+      "rawCount": 36,
+      "validCount": 36,
+      "droppedCount": 0,
+      "finalContributionCount": 36
+    },
+    {
+      "sourceId": "community-mock",
+      "sourceName": "Community Calendar Mock",
+      "sourceType": "mock",
+      "rawCount": 12,
+      "validCount": 12,
+      "droppedCount": 0,
+      "finalContributionCount": 11
+    }
+  ],
+  "rawEventCount": 48,
+  "validNormalizedCount": 48,
+  "droppedInvalidCount": 0,
+  "dedupedCount": 41,
+  "finalCount": 41,
+  "duplicateGroups": [
+    {
+      "dedupeKey": "cincinnati tech meetup at rhinegeist|2026-06-21|rhinegeist brewery",
+      "mergedEventId": "mock-5",
+      "title": "Cincinnati Tech Meetup at Rhinegeist",
+      "date": "2026-06-21T22:00:00.000Z",
+      "venue": "Rhinegeist Brewery",
+      "city": "Cincinnati",
+      "size": 3,
+      "eventIds": [
+        "mock-5",
+        "community-1",
+        "community-2"
+      ],
+      "variantTitles": [
+        "Cincinnati Tech Meetup at Rhinegeist",
+        "Tech Meet-up",
+        "Tech Meetup"
+      ],
+      "sourceNames": [
+        "Community Calendar Mock",
+        "Mock Local Radar"
+      ],
+      "sourceUrls": [
+        "https://community.example.com/events/tech-meet-up",
+        "https://community.example.com/events/tech-meetup",
+        "https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=5"
+      ],
+      "sources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/tech-meet-up",
+          "sourceEventId": "community-source-2"
+        },
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/tech-meetup",
+          "sourceEventId": "community-source-1"
+        },
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=5",
+          "sourceEventId": "mock-source-5"
+        }
+      ]
+    },
+    {
+      "dedupeKey": "cincinnati tech meetup at rhinegeist|2026-06-30|rhinegeist brewery",
+      "mergedEventId": "mock-16",
+      "title": "Cincinnati Tech Meetup at Rhinegeist",
+      "date": "2026-06-30T22:00:00.000Z",
+      "venue": "Rhinegeist Brewery",
+      "city": "Cincinnati",
+      "size": 2,
+      "eventIds": [
+        "mock-16",
+        "community-3"
+      ],
+      "variantTitles": [
+        "Cincinnati Tech Meetup",
+        "Cincinnati Tech Meetup at Rhinegeist"
+      ],
+      "sourceNames": [
+        "Community Calendar Mock",
+        "Mock Local Radar"
+      ],
+      "sourceUrls": [
+        "https://community.example.com/events/cincinnati-tech-meetup",
+        "https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=16"
+      ],
+      "sources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/cincinnati-tech-meetup",
+          "sourceEventId": "community-source-3"
+        },
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=16",
+          "sourceEventId": "mock-source-16"
+        }
+      ]
+    },
+    {
+      "dedupeKey": "cincinnati tech meetup at rhinegeist|2026-07-09|rhinegeist brewery",
+      "mergedEventId": "mock-27",
+      "title": "Cincinnati Tech Meetup at Rhinegeist",
+      "date": "2026-07-09T22:00:00.000Z",
+      "venue": "Rhinegeist Brewery",
+      "city": "Cincinnati",
+      "size": 2,
+      "eventIds": [
+        "mock-27",
+        "community-4"
+      ],
+      "variantTitles": [
+        "Cincinnati Tech Meetup at Rhinegeist",
+        "Tech Meetup at Rhinegeist"
+      ],
+      "sourceNames": [
+        "Community Calendar Mock",
+        "Mock Local Radar"
+      ],
+      "sourceUrls": [
+        "https://community.example.com/events/tech-meetup-rhinegeist",
+        "https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=27"
+      ],
+      "sources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/tech-meetup-rhinegeist",
+          "sourceEventId": "community-source-4"
+        },
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=27",
+          "sourceEventId": "mock-source-27"
+        }
+      ]
+    },
+    {
+      "dedupeKey": "jazz under the bridge|2026-06-25|sawyer point",
+      "mergedEventId": "mock-9",
+      "title": "Jazz Under the Bridge",
+      "date": "2026-06-25T23:00:00.000Z",
+      "venue": "Sawyer Point",
+      "city": "Cincinnati",
+      "size": 2,
+      "eventIds": [
+        "mock-9",
+        "community-5"
+      ],
+      "variantTitles": [
+        "Jazz Under the Bridge",
+        "Jazz Under the Bridge Live Set"
+      ],
+      "sourceNames": [
+        "Community Calendar Mock",
+        "Mock Local Radar"
+      ],
+      "sourceUrls": [
+        "https://community.example.com/events/jazz-under-bridge-live-set",
+        "https://example.com/events/jazz-under-the-bridge?instance=9"
+      ],
+      "sources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/jazz-under-bridge-live-set",
+          "sourceEventId": "community-source-5"
+        },
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/jazz-under-the-bridge?instance=9",
+          "sourceEventId": "mock-source-9"
+        }
+      ]
+    },
+    {
+      "dedupeKey": "public square night market|2026-06-22|court street plaza",
+      "mergedEventId": "mock-6",
+      "title": "Public Square Night Market",
+      "date": "2026-06-22T22:00:00.000Z",
+      "venue": "Court Street Plaza",
+      "city": "Cincinnati",
+      "size": 2,
+      "eventIds": [
+        "mock-6",
+        "community-6"
+      ],
+      "variantTitles": [
+        "Public Square Night Market",
+        "Public Square Night Market at Court Street"
+      ],
+      "sourceNames": [
+        "Community Calendar Mock",
+        "Mock Local Radar"
+      ],
+      "sourceUrls": [
+        "https://community.example.com/events/court-street-night-market",
+        "https://example.com/events/public-square-night-market?instance=6"
+      ],
+      "sources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/court-street-night-market",
+          "sourceEventId": "community-source-6"
+        },
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/public-square-night-market?instance=6",
+          "sourceEventId": "mock-source-6"
+        }
+      ]
+    },
+    {
+      "dedupeKey": "sunset run club|2026-06-19|smale riverfront park",
+      "mergedEventId": "mock-3",
+      "title": "Sunset Run Club",
+      "date": "2026-06-19T23:00:00.000Z",
+      "venue": "Smale Riverfront Park",
+      "city": "Cincinnati",
+      "size": 2,
+      "eventIds": [
+        "mock-3",
+        "community-7"
+      ],
+      "variantTitles": [
+        "Sunset Run Club",
+        "Sunset Run Club at the Riverfront"
+      ],
+      "sourceNames": [
+        "Community Calendar Mock",
+        "Mock Local Radar"
+      ],
+      "sourceUrls": [
+        "https://community.example.com/events/sunset-run-club-riverfront",
+        "https://example.com/events/sunset-run-club?instance=3"
+      ],
+      "sources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/sunset-run-club-riverfront",
+          "sourceEventId": "community-source-7"
+        },
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/sunset-run-club?instance=3",
+          "sourceEventId": "mock-source-3"
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "mock-1",
+      "title": "Founders & Freelancers Coffee Club",
+      "date": "2026-06-19T22:00:00.000Z",
+      "venue": "Collective Espresso",
+      "city": "Cincinnati",
+      "interests": [
+        "beginner-friendly",
+        "business",
+        "cheap",
+        "free",
+        "networking",
+        "newcomer-friendly",
+        "professional",
+        "social",
+        "solo-friendly",
+        "tech"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/founders-freelancers?instance=1",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/founders-freelancers?instance=1",
+          "sourceEventId": "mock-source-1"
+        }
+      ]
+    },
+    {
+      "id": "mock-2",
+      "title": "Beginner Salsa Night",
+      "date": "2026-06-20T23:00:00.000Z",
+      "venue": "Liberty Hall",
+      "city": "Cincinnati",
+      "interests": [
+        "beginner-friendly",
+        "culture",
+        "music",
+        "newcomer-friendly",
+        "nightlife",
+        "social",
+        "solo-friendly"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/beginner-salsa-night?instance=2",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/beginner-salsa-night?instance=2",
+          "sourceEventId": "mock-source-2"
+        }
+      ]
+    },
+    {
+      "id": "mock-3",
+      "title": "Sunset Run Club",
+      "date": "2026-06-19T23:00:00.000Z",
+      "venue": "Smale Riverfront Park",
+      "city": "Cincinnati",
+      "interests": [
+        "cheap",
+        "fitness",
+        "free",
+        "newcomer-friendly",
+        "outdoors",
+        "social",
+        "solo-friendly",
+        "wellness"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/sunset-run-club?instance=3",
+      "originalSourcesCount": 2,
+      "originalSources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/sunset-run-club-riverfront",
+          "sourceEventId": "community-source-7"
+        },
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/sunset-run-club?instance=3",
+          "sourceEventId": "mock-source-3"
+        }
+      ]
+    },
+    {
+      "id": "mock-4",
+      "title": "Indie Bookstore Trivia",
+      "date": "2026-06-21T00:00:00.000Z",
+      "venue": "The Storyline Books",
+      "city": "Cincinnati",
+      "interests": [
+        "books",
+        "cheap",
+        "free",
+        "gaming",
+        "quiet"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/indie-bookstore-trivia?instance=4",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/indie-bookstore-trivia?instance=4",
+          "sourceEventId": "mock-source-4"
+        }
+      ]
+    },
+    {
+      "id": "mock-5",
+      "title": "Cincinnati Tech Meetup at Rhinegeist",
+      "date": "2026-06-21T22:00:00.000Z",
+      "venue": "Rhinegeist Brewery",
+      "city": "Cincinnati",
+      "interests": [
+        "beginner-friendly",
+        "business",
+        "cheap",
+        "community",
+        "free",
+        "networking",
+        "newcomer-friendly",
+        "social",
+        "solo-friendly",
+        "tech"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=5",
+      "originalSourcesCount": 3,
+      "originalSources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/tech-meet-up",
+          "sourceEventId": "community-source-2"
+        },
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/tech-meetup",
+          "sourceEventId": "community-source-1"
+        },
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=5",
+          "sourceEventId": "mock-source-5"
+        }
+      ]
+    },
+    {
+      "id": "mock-6",
+      "title": "Public Square Night Market",
+      "date": "2026-06-22T22:00:00.000Z",
+      "venue": "Court Street Plaza",
+      "city": "Cincinnati",
+      "interests": [
+        "casual",
+        "cheap",
+        "culture",
+        "food-drink",
+        "free",
+        "markets",
+        "music"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/public-square-night-market?instance=6",
+      "originalSourcesCount": 2,
+      "originalSources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/court-street-night-market",
+          "sourceEventId": "community-source-6"
+        },
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/public-square-night-market?instance=6",
+          "sourceEventId": "mock-source-6"
+        }
+      ]
+    },
+    {
+      "id": "mock-7",
+      "title": "Intro to Pottery Wheel",
+      "date": "2026-06-23T23:00:00.000Z",
+      "venue": "Queen City Clay",
+      "city": "Cincinnati",
+      "interests": [
+        "arts",
+        "beginner-friendly",
+        "education",
+        "newcomer-friendly",
+        "solo-friendly"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/intro-pottery-wheel?instance=7",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/intro-pottery-wheel?instance=7",
+          "sourceEventId": "mock-source-7"
+        }
+      ]
+    },
+    {
+      "id": "mock-8",
+      "title": "City Newcomer Picnic",
+      "date": "2026-06-24T19:00:00.000Z",
+      "venue": "Ault Park",
+      "city": "Cincinnati",
+      "interests": [
+        "cheap",
+        "community",
+        "free",
+        "networking",
+        "newcomer-friendly",
+        "outdoors",
+        "social",
+        "solo-friendly"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/city-newcomer-picnic?instance=8",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/city-newcomer-picnic?instance=8",
+          "sourceEventId": "mock-source-8"
+        }
+      ]
+    },
+    {
+      "id": "mock-9",
+      "title": "Jazz Under the Bridge",
+      "date": "2026-06-25T23:00:00.000Z",
+      "venue": "Sawyer Point",
+      "city": "Cincinnati",
+      "interests": [
+        "cheap",
+        "culture",
+        "free",
+        "music",
+        "newcomer-friendly",
+        "social",
+        "solo-friendly"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/jazz-under-the-bridge?instance=9",
+      "originalSourcesCount": 2,
+      "originalSources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/jazz-under-bridge-live-set",
+          "sourceEventId": "community-source-5"
+        },
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/jazz-under-the-bridge?instance=9",
+          "sourceEventId": "mock-source-9"
+        }
+      ]
+    },
+    {
+      "id": "mock-10",
+      "title": "Women in Product Happy Hour",
+      "date": "2026-06-26T22:00:00.000Z",
+      "venue": "Union Hall",
+      "city": "Cincinnati",
+      "interests": [
+        "business",
+        "networking",
+        "newcomer-friendly",
+        "professional",
+        "solo-friendly",
+        "tech"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/women-in-product-happy-hour?instance=10",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/women-in-product-happy-hour?instance=10",
+          "sourceEventId": "mock-source-10"
+        }
+      ]
+    },
+    {
+      "id": "mock-11",
+      "title": "Family Storytime in the Garden",
+      "date": "2026-06-27T15:00:00.000Z",
+      "venue": "Krohn Conservatory Lawn",
+      "city": "Cincinnati",
+      "interests": [
+        "books",
+        "cheap",
+        "family",
+        "family-friendly",
+        "free",
+        "outdoors",
+        "quiet"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/family-storytime-garden?instance=11",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/family-storytime-garden?instance=11",
+          "sourceEventId": "mock-source-11"
+        }
+      ]
+    },
+    {
+      "id": "mock-12",
+      "title": "Founders & Freelancers Coffee Club",
+      "date": "2026-06-28T22:00:00.000Z",
+      "venue": "Collective Espresso",
+      "city": "Cincinnati",
+      "interests": [
+        "beginner-friendly",
+        "business",
+        "cheap",
+        "free",
+        "networking",
+        "newcomer-friendly",
+        "professional",
+        "social",
+        "solo-friendly",
+        "tech"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/founders-freelancers?instance=12",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/founders-freelancers?instance=12",
+          "sourceEventId": "mock-source-12"
+        }
+      ]
+    },
+    {
+      "id": "mock-13",
+      "title": "Beginner Salsa Night",
+      "date": "2026-06-29T23:00:00.000Z",
+      "venue": "Liberty Hall",
+      "city": "Cincinnati",
+      "interests": [
+        "beginner-friendly",
+        "culture",
+        "music",
+        "newcomer-friendly",
+        "nightlife",
+        "social",
+        "solo-friendly"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/beginner-salsa-night?instance=13",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/beginner-salsa-night?instance=13",
+          "sourceEventId": "mock-source-13"
+        }
+      ]
+    },
+    {
+      "id": "mock-14",
+      "title": "Sunset Run Club",
+      "date": "2026-06-28T23:00:00.000Z",
+      "venue": "Smale Riverfront Park",
+      "city": "Cincinnati",
+      "interests": [
+        "cheap",
+        "fitness",
+        "free",
+        "newcomer-friendly",
+        "outdoors",
+        "social",
+        "solo-friendly",
+        "wellness"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/sunset-run-club?instance=14",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/sunset-run-club?instance=14",
+          "sourceEventId": "mock-source-14"
+        }
+      ]
+    },
+    {
+      "id": "mock-15",
+      "title": "Indie Bookstore Trivia",
+      "date": "2026-06-30T00:00:00.000Z",
+      "venue": "The Storyline Books",
+      "city": "Cincinnati",
+      "interests": [
+        "books",
+        "cheap",
+        "free",
+        "gaming",
+        "quiet"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/indie-bookstore-trivia?instance=15",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/indie-bookstore-trivia?instance=15",
+          "sourceEventId": "mock-source-15"
+        }
+      ]
+    },
+    {
+      "id": "mock-16",
+      "title": "Cincinnati Tech Meetup at Rhinegeist",
+      "date": "2026-06-30T22:00:00.000Z",
+      "venue": "Rhinegeist Brewery",
+      "city": "Cincinnati",
+      "interests": [
+        "beginner-friendly",
+        "business",
+        "cheap",
+        "free",
+        "networking",
+        "newcomer-friendly",
+        "social",
+        "solo-friendly",
+        "tech"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=16",
+      "originalSourcesCount": 2,
+      "originalSources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/cincinnati-tech-meetup",
+          "sourceEventId": "community-source-3"
+        },
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=16",
+          "sourceEventId": "mock-source-16"
+        }
+      ]
+    },
+    {
+      "id": "mock-17",
+      "title": "Public Square Night Market",
+      "date": "2026-07-01T22:00:00.000Z",
+      "venue": "Court Street Plaza",
+      "city": "Cincinnati",
+      "interests": [
+        "casual",
+        "cheap",
+        "culture",
+        "food-drink",
+        "free",
+        "markets",
+        "music"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/public-square-night-market?instance=17",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/public-square-night-market?instance=17",
+          "sourceEventId": "mock-source-17"
+        }
+      ]
+    },
+    {
+      "id": "mock-18",
+      "title": "Intro to Pottery Wheel",
+      "date": "2026-07-02T23:00:00.000Z",
+      "venue": "Queen City Clay",
+      "city": "Cincinnati",
+      "interests": [
+        "arts",
+        "beginner-friendly",
+        "education",
+        "newcomer-friendly",
+        "solo-friendly"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/intro-pottery-wheel?instance=18",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/intro-pottery-wheel?instance=18",
+          "sourceEventId": "mock-source-18"
+        }
+      ]
+    },
+    {
+      "id": "mock-19",
+      "title": "City Newcomer Picnic",
+      "date": "2026-07-03T19:00:00.000Z",
+      "venue": "Ault Park",
+      "city": "Cincinnati",
+      "interests": [
+        "cheap",
+        "community",
+        "free",
+        "networking",
+        "newcomer-friendly",
+        "outdoors",
+        "social",
+        "solo-friendly"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/city-newcomer-picnic?instance=19",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/city-newcomer-picnic?instance=19",
+          "sourceEventId": "mock-source-19"
+        }
+      ]
+    },
+    {
+      "id": "mock-20",
+      "title": "Jazz Under the Bridge",
+      "date": "2026-07-04T23:00:00.000Z",
+      "venue": "Sawyer Point",
+      "city": "Cincinnati",
+      "interests": [
+        "cheap",
+        "culture",
+        "free",
+        "music",
+        "newcomer-friendly",
+        "social",
+        "solo-friendly"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/jazz-under-the-bridge?instance=20",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/jazz-under-the-bridge?instance=20",
+          "sourceEventId": "mock-source-20"
+        }
+      ]
+    },
+    {
+      "id": "mock-21",
+      "title": "Women in Product Happy Hour",
+      "date": "2026-07-05T22:00:00.000Z",
+      "venue": "Union Hall",
+      "city": "Cincinnati",
+      "interests": [
+        "business",
+        "networking",
+        "newcomer-friendly",
+        "professional",
+        "solo-friendly",
+        "tech"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/women-in-product-happy-hour?instance=21",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/women-in-product-happy-hour?instance=21",
+          "sourceEventId": "mock-source-21"
+        }
+      ]
+    },
+    {
+      "id": "mock-22",
+      "title": "Family Storytime in the Garden",
+      "date": "2026-07-06T15:00:00.000Z",
+      "venue": "Krohn Conservatory Lawn",
+      "city": "Cincinnati",
+      "interests": [
+        "books",
+        "cheap",
+        "family",
+        "family-friendly",
+        "free",
+        "outdoors",
+        "quiet"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/family-storytime-garden?instance=22",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/family-storytime-garden?instance=22",
+          "sourceEventId": "mock-source-22"
+        }
+      ]
+    },
+    {
+      "id": "mock-23",
+      "title": "Founders & Freelancers Coffee Club",
+      "date": "2026-07-07T22:00:00.000Z",
+      "venue": "Collective Espresso",
+      "city": "Cincinnati",
+      "interests": [
+        "beginner-friendly",
+        "business",
+        "cheap",
+        "free",
+        "networking",
+        "newcomer-friendly",
+        "professional",
+        "social",
+        "solo-friendly",
+        "tech"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/founders-freelancers?instance=23",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/founders-freelancers?instance=23",
+          "sourceEventId": "mock-source-23"
+        }
+      ]
+    },
+    {
+      "id": "mock-24",
+      "title": "Beginner Salsa Night",
+      "date": "2026-07-08T23:00:00.000Z",
+      "venue": "Liberty Hall",
+      "city": "Cincinnati",
+      "interests": [
+        "beginner-friendly",
+        "culture",
+        "music",
+        "newcomer-friendly",
+        "nightlife",
+        "social",
+        "solo-friendly"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/beginner-salsa-night?instance=24",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/beginner-salsa-night?instance=24",
+          "sourceEventId": "mock-source-24"
+        }
+      ]
+    },
+    {
+      "id": "mock-25",
+      "title": "Sunset Run Club",
+      "date": "2026-07-07T23:00:00.000Z",
+      "venue": "Smale Riverfront Park",
+      "city": "Cincinnati",
+      "interests": [
+        "cheap",
+        "fitness",
+        "free",
+        "newcomer-friendly",
+        "outdoors",
+        "social",
+        "solo-friendly",
+        "wellness"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/sunset-run-club?instance=25",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/sunset-run-club?instance=25",
+          "sourceEventId": "mock-source-25"
+        }
+      ]
+    },
+    {
+      "id": "mock-26",
+      "title": "Indie Bookstore Trivia",
+      "date": "2026-07-09T00:00:00.000Z",
+      "venue": "The Storyline Books",
+      "city": "Cincinnati",
+      "interests": [
+        "books",
+        "cheap",
+        "free",
+        "gaming",
+        "quiet"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/indie-bookstore-trivia?instance=26",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/indie-bookstore-trivia?instance=26",
+          "sourceEventId": "mock-source-26"
+        }
+      ]
+    },
+    {
+      "id": "mock-27",
+      "title": "Cincinnati Tech Meetup at Rhinegeist",
+      "date": "2026-07-09T22:00:00.000Z",
+      "venue": "Rhinegeist Brewery",
+      "city": "Cincinnati",
+      "interests": [
+        "beginner-friendly",
+        "business",
+        "cheap",
+        "free",
+        "networking",
+        "newcomer-friendly",
+        "social",
+        "solo-friendly",
+        "startup",
+        "tech"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=27",
+      "originalSourcesCount": 2,
+      "originalSources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/tech-meetup-rhinegeist",
+          "sourceEventId": "community-source-4"
+        },
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/cincinnati-tech-meetup-rhinegeist?instance=27",
+          "sourceEventId": "mock-source-27"
+        }
+      ]
+    },
+    {
+      "id": "mock-28",
+      "title": "Public Square Night Market",
+      "date": "2026-07-10T22:00:00.000Z",
+      "venue": "Court Street Plaza",
+      "city": "Cincinnati",
+      "interests": [
+        "casual",
+        "cheap",
+        "culture",
+        "food-drink",
+        "free",
+        "markets",
+        "music"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/public-square-night-market?instance=28",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/public-square-night-market?instance=28",
+          "sourceEventId": "mock-source-28"
+        }
+      ]
+    },
+    {
+      "id": "mock-29",
+      "title": "Intro to Pottery Wheel",
+      "date": "2026-07-11T23:00:00.000Z",
+      "venue": "Queen City Clay",
+      "city": "Cincinnati",
+      "interests": [
+        "arts",
+        "beginner-friendly",
+        "education",
+        "newcomer-friendly",
+        "solo-friendly"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/intro-pottery-wheel?instance=29",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/intro-pottery-wheel?instance=29",
+          "sourceEventId": "mock-source-29"
+        }
+      ]
+    },
+    {
+      "id": "mock-30",
+      "title": "City Newcomer Picnic",
+      "date": "2026-07-12T19:00:00.000Z",
+      "venue": "Ault Park",
+      "city": "Cincinnati",
+      "interests": [
+        "cheap",
+        "community",
+        "free",
+        "networking",
+        "newcomer-friendly",
+        "outdoors",
+        "social",
+        "solo-friendly"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/city-newcomer-picnic?instance=30",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/city-newcomer-picnic?instance=30",
+          "sourceEventId": "mock-source-30"
+        }
+      ]
+    },
+    {
+      "id": "mock-31",
+      "title": "Jazz Under the Bridge",
+      "date": "2026-07-13T23:00:00.000Z",
+      "venue": "Sawyer Point",
+      "city": "Cincinnati",
+      "interests": [
+        "cheap",
+        "culture",
+        "free",
+        "music",
+        "newcomer-friendly",
+        "social",
+        "solo-friendly"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/jazz-under-the-bridge?instance=31",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/jazz-under-the-bridge?instance=31",
+          "sourceEventId": "mock-source-31"
+        }
+      ]
+    },
+    {
+      "id": "mock-32",
+      "title": "Women in Product Happy Hour",
+      "date": "2026-07-14T22:00:00.000Z",
+      "venue": "Union Hall",
+      "city": "Cincinnati",
+      "interests": [
+        "business",
+        "networking",
+        "newcomer-friendly",
+        "professional",
+        "solo-friendly",
+        "tech"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/women-in-product-happy-hour?instance=32",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/women-in-product-happy-hour?instance=32",
+          "sourceEventId": "mock-source-32"
+        }
+      ]
+    },
+    {
+      "id": "mock-33",
+      "title": "Family Storytime in the Garden",
+      "date": "2026-07-15T15:00:00.000Z",
+      "venue": "Krohn Conservatory Lawn",
+      "city": "Cincinnati",
+      "interests": [
+        "books",
+        "cheap",
+        "family",
+        "family-friendly",
+        "free",
+        "outdoors",
+        "quiet"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/family-storytime-garden?instance=33",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/family-storytime-garden?instance=33",
+          "sourceEventId": "mock-source-33"
+        }
+      ]
+    },
+    {
+      "id": "mock-34",
+      "title": "Founders & Freelancers Coffee Club",
+      "date": "2026-07-16T22:00:00.000Z",
+      "venue": "Collective Espresso",
+      "city": "Cincinnati",
+      "interests": [
+        "beginner-friendly",
+        "business",
+        "cheap",
+        "free",
+        "networking",
+        "newcomer-friendly",
+        "professional",
+        "social",
+        "solo-friendly",
+        "tech"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/founders-freelancers?instance=34",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/founders-freelancers?instance=34",
+          "sourceEventId": "mock-source-34"
+        }
+      ]
+    },
+    {
+      "id": "mock-35",
+      "title": "Beginner Salsa Night",
+      "date": "2026-07-17T23:00:00.000Z",
+      "venue": "Liberty Hall",
+      "city": "Cincinnati",
+      "interests": [
+        "beginner-friendly",
+        "culture",
+        "music",
+        "newcomer-friendly",
+        "nightlife",
+        "social",
+        "solo-friendly"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/beginner-salsa-night?instance=35",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/beginner-salsa-night?instance=35",
+          "sourceEventId": "mock-source-35"
+        }
+      ]
+    },
+    {
+      "id": "mock-36",
+      "title": "Sunset Run Club",
+      "date": "2026-07-16T23:00:00.000Z",
+      "venue": "Smale Riverfront Park",
+      "city": "Cincinnati",
+      "interests": [
+        "cheap",
+        "fitness",
+        "free",
+        "newcomer-friendly",
+        "outdoors",
+        "social",
+        "solo-friendly",
+        "wellness"
+      ],
+      "sourceName": "Mock Local Radar",
+      "sourceUrl": "https://example.com/events/sunset-run-club?instance=36",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "mock",
+          "sourceName": "Mock Local Radar",
+          "sourceType": "mock",
+          "sourceUrl": "https://example.com/events/sunset-run-club?instance=36",
+          "sourceEventId": "mock-source-36"
+        }
+      ]
+    },
+    {
+      "id": "community-8",
+      "title": "Neighborhood Film on the Lawn",
+      "date": "2026-06-23T01:00:00.000Z",
+      "venue": "Washington Park",
+      "city": "Cincinnati",
+      "interests": [
+        "cheap",
+        "community",
+        "film",
+        "free",
+        "outdoors"
+      ],
+      "sourceName": "Community Calendar Mock",
+      "sourceUrl": "https://community.example.com/events/neighborhood-film-lawn",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/neighborhood-film-lawn",
+          "sourceEventId": "community-source-8"
+        }
+      ]
+    },
+    {
+      "id": "community-9",
+      "title": "Volunteer River Cleanup Morning",
+      "date": "2026-06-24T13:00:00.000Z",
+      "venue": "Yeatman's Cove",
+      "city": "Cincinnati",
+      "interests": [
+        "cheap",
+        "community",
+        "free",
+        "outdoors"
+      ],
+      "sourceName": "Community Calendar Mock",
+      "sourceUrl": "https://community.example.com/events/volunteer-river-cleanup",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/volunteer-river-cleanup",
+          "sourceEventId": "community-source-9"
+        }
+      ]
+    },
+    {
+      "id": "community-10",
+      "title": "Global Bites Pop-Up Dinner",
+      "date": "2026-06-27T23:00:00.000Z",
+      "venue": "Findlay Kitchen",
+      "city": "Cincinnati",
+      "interests": [
+        "community",
+        "food-drink"
+      ],
+      "sourceName": "Community Calendar Mock",
+      "sourceUrl": "https://community.example.com/events/global-bites-pop-up-dinner",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/global-bites-pop-up-dinner",
+          "sourceEventId": "community-source-10"
+        }
+      ]
+    },
+    {
+      "id": "community-11",
+      "title": "Board Game Brunch for New Neighbors",
+      "date": "2026-06-28T16:00:00.000Z",
+      "venue": "OTR StillHouse",
+      "city": "Cincinnati",
+      "interests": [
+        "community",
+        "fitness",
+        "food-drink",
+        "gaming",
+        "outdoors",
+        "wellness"
+      ],
+      "sourceName": "Community Calendar Mock",
+      "sourceUrl": "https://community.example.com/events/board-game-brunch",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/board-game-brunch",
+          "sourceEventId": "community-source-11"
+        }
+      ]
+    },
+    {
+      "id": "community-12",
+      "title": "Neighborhood Makers Demo Day",
+      "date": "2026-06-29T22:00:00.000Z",
+      "venue": "Esoteric Brewing",
+      "city": "Cincinnati",
+      "interests": [
+        "arts",
+        "cheap",
+        "community",
+        "free",
+        "tech"
+      ],
+      "sourceName": "Community Calendar Mock",
+      "sourceUrl": "https://community.example.com/events/makers-demo-day",
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "community-mock",
+          "sourceName": "Community Calendar Mock",
+          "sourceType": "mock",
+          "sourceUrl": "https://community.example.com/events/makers-demo-day",
+          "sourceEventId": "community-source-12"
+        }
+      ]
+    }
+  ],
+  "warnings": [],
+  "errors": []
+}

@@ -1,0 +1,13 @@
+node_modules
+.next
+dist
+coverage
+.env
+.env.local
+*.log
+*.tsbuildinfo
+apps/web/app/**/*.js
+apps/web/app/**/*.jsx
+apps/web/app/**/*.d.ts
+apps/web/components/**/*.jsx
+apps/web/lib/**/*.js
