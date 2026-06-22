@@ -1,7 +1,7 @@
 {
   "name": "eventscout",
   "private": true,
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "EventScout MVP monorepo",
   "workspaces": [
     "apps/*",
@@ -14,6 +14,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "qa:aggregator": "vitest run --config vitest.qa.config.ts",
+    "qa:city-preset": "node Scripts/qa-city-preset.cjs",
     "qa:ticketmaster": "node Scripts/qa-ticketmaster.cjs",
     "lint": "eslint .",
     "typecheck": "tsc -p apps/web/tsconfig.json --noEmit"

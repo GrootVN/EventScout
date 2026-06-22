@@ -16,6 +16,7 @@ export const env = {
   defaultCityPreset: process.env.DEFAULT_CITY_PRESET ?? "cincinnati",
   icsSourceUrls: process.env.ICS_SOURCE_URLS ?? "",
   rssSourceUrls: process.env.RSS_SOURCE_URLS ?? "",
+  cityPresetQaLiveFetch: readFlag("CITY_PRESET_QA_LIVE_FETCH", false),
   enableMockProvider: readFlag("ENABLE_MOCK_PROVIDER", true),
   enableCommunityMockProvider: readFlag("ENABLE_COMMUNITY_MOCK_PROVIDER", true),
   enableCityPresets: readFlag("ENABLE_CITY_PRESETS", false),

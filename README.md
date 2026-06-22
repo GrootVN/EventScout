@@ -119,9 +119,24 @@ npm run qa:aggregator
 Notes:
 
 - Mock-only mode still works when city presets are disabled.
-- The preset currently ships with Cincinnati-specific ICS and RSS examples, plus disabled placeholder examples for future verification.
+- The preset currently ships with Cincinnati-specific source inventory entries, but the current URLs are placeholders or disabled until verified.
 - The source page shows the active preset summary and the preset source bundle.
 - See [docs/CITY_PRESETS.md](/C:/Users/nguye/Documents/EventScout/docs/CITY_PRESETS.md) for the current preset inventory.
+
+## City preset validation
+
+Run the city preset QA report when you want to see which Cincinnati sources are verified, placeholder, disabled, or needing manual review:
+
+```bash
+npm run qa:city-preset
+```
+
+Notes:
+
+- The report is metadata-only by default and does not fetch remote URLs unless `CITY_PRESET_QA_LIVE_FETCH=true`.
+- Live fetching is opt-in so broken or placeholder sources never become a surprise in normal development.
+- The report is useful for deciding which preset entries should be kept, replaced, disabled, or promoted to verified status.
+- See [docs/CITY_PRESETS.md](/C:/Users/nguye/Documents/EventScout/docs/CITY_PRESETS.md) for the current preset inventory and status labels.
 
 ## Versioning
 

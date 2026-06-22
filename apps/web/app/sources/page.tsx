@@ -27,7 +27,7 @@ export default async function SourcesPage() {
         <h2>{cityPresetSummary ? cityPresetSummary.cityName : "No preset active"}</h2>
         <p>
           {cityPresetSummary
-            ? `${cityPresetSummary.icsSourceCount} ICS sources and ${cityPresetSummary.rssSourceCount} RSS sources are available from the active preset.`
+            ? `${cityPresetSummary.icsSourceCount} ICS sources and ${cityPresetSummary.rssSourceCount} RSS sources are currently enabled from the active preset.`
             : "Enable city presets to load a launch-city source bundle."}
         </p>
       </section>

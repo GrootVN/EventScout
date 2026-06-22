@@ -13,3 +13,5 @@ apps/web/components/**/*.jsx
 apps/web/lib/**/*.js
 qa-results/ticketmaster-live-report.html
 qa-results/ticketmaster-live-report.json
+qa-results/city-preset-report.html
+qa-results/city-preset-report.json

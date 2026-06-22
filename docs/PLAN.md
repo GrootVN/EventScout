@@ -14,6 +14,7 @@ The repo has been refocused around a newcomer-first discovery experience with:
 - A generic ICS calendar provider behind `ENABLE_ICS_PROVIDER`
 - A generic RSS/Atom provider behind `ENABLE_RSS_PROVIDER`
 - A Cincinnati city preset pack behind `ENABLE_CITY_PRESETS`
+- A Cincinnati city preset validation report behind `npm run qa:city-preset`
 - A manual Ticketmaster live smoke QA script for real-key validation
 
 ## Next milestone

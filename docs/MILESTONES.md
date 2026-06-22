@@ -298,4 +298,31 @@ Status: [x]
 
 ### Next recommended milestone
 
+- M12.1: Real Cincinnati source validation
+
+---
+
+## M12.1: Real Cincinnati source validation
+
+Status: [x]
+
+### Acceptance criteria
+
+- Cincinnati preset source entries expose clear status metadata.
+- Placeholder sources are disabled by default.
+- A city-preset QA report can be generated in metadata-only mode.
+- Live validation is opt-in and does not run unless explicitly enabled.
+- The report classifies sources as verified, placeholder, disabled, or needs review.
+
+### Required checks
+
+- npm run lint
+- npm run typecheck
+- npm test
+- npm run build
+- npm run qa:aggregator
+- npm run qa:city-preset
+
+### Next recommended milestone
+
 - M13: Meetup provider

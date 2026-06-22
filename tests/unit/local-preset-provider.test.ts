@@ -71,6 +71,17 @@ describe("local city presets", () => {
       country: "USA",
       defaultRadiusMiles: 25
     });
+    expect(
+      localPresetProvider.getActiveCityPreset()?.sources.ics.every(
+        (source) => source.status === "placeholder" && source.enabled === false && typeof source.notes === "string"
+      )
+    ).toBe(true);
+    expect(
+      localPresetProvider.getActiveCityPreset()?.sources.rss.every(
+        (source) => source.status === "placeholder" && source.enabled === false && typeof source.notes === "string"
+      )
+    ).toBe(true);
+    expect(localPresetProvider.getActiveCityPreset()?.sources.ticketmaster?.status).toBe("disabled");
   });
 
   it("keeps preset source IDs unique", async () => {
@@ -107,18 +118,8 @@ describe("local city presets", () => {
     const icsConfigs = icsSources.getIcsSourceConfigs();
     const rssConfigs = rssSources.getRssSourceConfigs();
 
-    expect(icsConfigs).toHaveLength(2);
-    expect(rssConfigs).toHaveLength(2);
-    expect(icsConfigs.map((config) => config.sourceId)).toEqual([
-      "cincinnati-public-library-ics",
-      "cincinnati-park-board-ics"
-    ]);
-    expect(rssConfigs.map((config) => config.sourceId)).toEqual([
-      "cincinnati-city-rss",
-      "cincinnati-museum-rss"
-    ]);
-    expect(icsConfigs.every((config) => config.enabled !== false)).toBe(true);
-    expect(rssConfigs.every((config) => config.enabled !== false)).toBe(true);
+    expect(icsConfigs).toEqual([]);
+    expect(rssConfigs).toEqual([]);
   });
 
   it("shows preset grouping in the QA report", async () => {
@@ -132,8 +133,8 @@ describe("local city presets", () => {
     expect(report.cityPreset).toMatchObject({
       cityId: "cincinnati",
       cityName: "Cincinnati",
-      icsSourceCount: 2,
-      rssSourceCount: 2,
+      icsSourceCount: 0,
+      rssSourceCount: 0,
       ticketmasterEnabled: false
     });
     expect(html).toContain("City Preset");

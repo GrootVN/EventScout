@@ -616,8 +616,8 @@ describe("generateAggregatorQaReport", () => {
       region: "OH",
       country: "USA",
       defaultRadiusMiles: 25,
-      icsSourceCount: 2,
-      rssSourceCount: 2,
+      icsSourceCount: 0,
+      rssSourceCount: 0,
       ticketmasterEnabled: false
     });
     expect(html).toContain("City Preset");
