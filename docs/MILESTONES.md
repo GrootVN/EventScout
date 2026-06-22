@@ -207,6 +207,23 @@ Status: [x]
 
 ---
 
+## M9.1: Live Ticketmaster smoke QA
+
+Status: [x]
+
+### Acceptance criteria
+
+- A manual smoke QA path can run Ticketmaster with a real key.
+- The script exits cleanly when Ticketmaster is not configured.
+- Live QA artifacts are written to `qa-results/` and kept out of normal commits.
+- The report shows query input, provider status, counts, warnings/errors, and event source details.
+
+### Required checks
+
+- npm run qa:ticketmaster
+
+---
+
 ## M10: Polish and deployment
 
 Status: [ ]

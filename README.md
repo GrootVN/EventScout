@@ -20,6 +20,7 @@ Event Scout is a newcomer-first local discovery app. It helps someone answer: "W
 - A Ticketmaster adapter behind `ENABLE_TICKETMASTER_PROVIDER`
 - A sources page showing enabled and planned providers
 - Aggregator QA artifacts with provider counts and merge visibility
+- A manual Ticketmaster smoke QA path that can write live report artifacts
 
 ## Quick start
 
@@ -38,7 +39,35 @@ cmd /c npm run lint
 cmd /c npm run typecheck
 cmd /c npm test
 cmd /c npm run build
+cmd /c npm run qa:aggregator
+cmd /c npm run qa:ticketmaster
 ```
+
+## Ticketmaster smoke QA
+
+To run a real Ticketmaster smoke check, set a live key and enable the provider:
+
+```bash
+ENABLE_TICKETMASTER_PROVIDER=true
+TICKETMASTER_API_KEY=your_real_key_here
+npm run qa:ticketmaster
+```
+
+The script writes `qa-results/ticketmaster-live-report.json` and
+`qa-results/ticketmaster-live-report.html`. Those files are ignored by default so live API results do not get committed accidentally.
+
+Optional query overrides:
+
+- `TICKETMASTER_QA_CITY`
+- `TICKETMASTER_QA_REGION`
+- `TICKETMASTER_QA_COUNTRY`
+- `TICKETMASTER_QA_KEYWORD`
+- `TICKETMASTER_QA_START_DATE`
+- `TICKETMASTER_QA_END_DATE`
+- `TICKETMASTER_QA_LATITUDE`
+- `TICKETMASTER_QA_LONGITUDE`
+- `TICKETMASTER_QA_RADIUS_MILES`
+- `TICKETMASTER_QA_INTERESTS`
 
 ## Versioning
 

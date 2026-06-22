@@ -1,0 +1,71 @@
+{
+  "generatedAt": "2026-06-22T04:37:50.958Z",
+  "query": {
+    "city": "Cincinnati",
+    "region": "OH",
+    "country": "USA",
+    "keyword": "music"
+  },
+  "providerEnabled": true,
+  "providerConfigured": true,
+  "enabledProviders": [
+    {
+      "sourceId": "ticketmaster",
+      "sourceName": "Ticketmaster",
+      "sourceType": "api",
+      "enabled": true,
+      "rawCount": 1,
+      "validCount": 1,
+      "droppedCount": 0,
+      "finalContributionCount": 1
+    }
+  ],
+  "ticketmasterProvider": {
+    "sourceId": "ticketmaster",
+    "sourceName": "Ticketmaster",
+    "sourceType": "api",
+    "enabled": true,
+    "rawCount": 1,
+    "validCount": 1,
+    "droppedCount": 0,
+    "finalContributionCount": 1
+  },
+  "rawEventCount": 1,
+  "validNormalizedCount": 1,
+  "droppedInvalidCount": 0,
+  "dedupedCount": 1,
+  "finalCount": 1,
+  "duplicateGroups": [],
+  "events": [
+    {
+      "id": "ticketmaster-123",
+      "title": "Cincinnati Tech Meetup at Rhinegeist",
+      "date": "2026-06-21T22:00:00.000Z",
+      "venue": "Rhinegeist Brewery",
+      "city": "Cincinnati",
+      "sourceName": "Ticketmaster",
+      "sourceUrl": "https://www.ticketmaster.com/cincinnati-tech-meetup-at-rhinegeist/event/123",
+      "imageUrl": "https://img.ticketmaster.com/large.jpg",
+      "categories": [
+        "music"
+      ],
+      "interests": [
+        "music",
+        "newcomer-friendly",
+        "solo-friendly"
+      ],
+      "originalSourcesCount": 1,
+      "originalSources": [
+        {
+          "sourceId": "ticketmaster",
+          "sourceName": "Ticketmaster",
+          "sourceType": "api",
+          "sourceUrl": "https://www.ticketmaster.com/cincinnati-tech-meetup-at-rhinegeist/event/123",
+          "sourceEventId": "ticketmaster-123"
+        }
+      ]
+    }
+  ],
+  "warnings": [],
+  "errors": []
+}
