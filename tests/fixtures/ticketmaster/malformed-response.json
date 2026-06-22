@@ -1,0 +1,38 @@
+{
+  "_embedded": {
+    "events": [
+      null,
+      {
+        "id": "ticketmaster-bad",
+        "name": "Broken Ticketmaster Event"
+      },
+      {
+        "id": "ticketmaster-456",
+        "name": "Ticketmaster Recovery Event",
+        "url": "https://www.ticketmaster.com/ticketmaster-recovery-event/event/456",
+        "dates": {
+          "start": {
+            "dateTime": "2026-06-23T20:00:00Z"
+          }
+        },
+        "_embedded": {
+          "venues": [
+            {
+              "name": "Recovered Venue",
+              "city": {
+                "name": "Cincinnati"
+              },
+              "state": {
+                "stateCode": "OH"
+              },
+              "country": {
+                "countryCode": "US",
+                "name": "United States"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

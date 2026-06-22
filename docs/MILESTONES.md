@@ -188,19 +188,22 @@ Status: [x]
 
 ## M9: First real source adapter
 
-Status: [ ]
+Status: [x]
 
 ### Acceptance criteria
 
 - One real source provider is implemented.
-- Provider is disabled when API key is missing.
-- Provider failures do not crash app.
-- Raw events are normalized into shared Event model.
+- Ticketmaster is disabled by default and stays off when the API key is missing.
+- Provider failures do not crash the app.
+- Raw events are normalized into the shared Event model.
+- QA output includes Ticketmaster when the provider is enabled.
 
 ### Required tests
 
 - provider test with mocked API response
-- normalize.test.ts
+- provider disabled/missing-key coverage
+- Ticketmaster normalization coverage
+- aggregation and QA coverage with mocked Ticketmaster data
 
 ---
 

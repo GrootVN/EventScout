@@ -6,6 +6,7 @@ import { validateScoutEvent } from "./schema";
 import type { OriginalSource, RawEvent, ScoutEvent } from "./types";
 import { env } from "@/lib/config/env";
 import { getEnabledProviders } from "@/lib/sources/registry";
+import { consumeTicketmasterProviderDiagnostics } from "@/lib/sources/ticketmasterProvider";
 import type { EventSourceProvider, FetchEventsInput } from "@/lib/sources/provider";
 
 type ProviderSummary = {
@@ -207,6 +208,18 @@ export async function generateAggregatorQaReport(
 
   const dedupedEvents = dedupeEvents(normalizedEvents);
   const duplicateGroups = buildDuplicateGroups(normalizedEvents, dedupedEvents);
+
+  if (env.enableTicketmasterProvider && !env.ticketmasterApiKey) {
+    warnings.push("Ticketmaster provider is enabled but TICKETMASTER_API_KEY is missing; the provider stays disabled.");
+  }
+
+  for (const diagnostic of consumeTicketmasterProviderDiagnostics()) {
+    if (diagnostic.level === "warning") {
+      warnings.push(diagnostic.message);
+    } else {
+      errors.push(diagnostic.message);
+    }
+  }
 
   if (dedupedEvents.length === 0) {
     warnings.push("Aggregation produced no final events.");

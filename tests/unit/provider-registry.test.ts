@@ -58,6 +58,36 @@ describe("provider registry", () => {
     );
   });
 
+  it("excludes Ticketmaster by default", async () => {
+    const { getEnabledProviders } = await importRegistryWithEnv();
+
+    expect(getEnabledProviders().some((provider) => provider.sourceId === "ticketmaster")).toBe(
+      false
+    );
+  });
+
+  it("excludes Ticketmaster when the API key is missing", async () => {
+    const { getEnabledProviders } = await importRegistryWithEnv({
+      enableTicketmasterProvider: true,
+      ticketmasterApiKey: ""
+    });
+
+    expect(getEnabledProviders().some((provider) => provider.sourceId === "ticketmaster")).toBe(
+      false
+    );
+  });
+
+  it("includes Ticketmaster when the feature flag and API key are present", async () => {
+    const { getEnabledProviders } = await importRegistryWithEnv({
+      enableTicketmasterProvider: true,
+      ticketmasterApiKey: "test-key"
+    });
+
+    expect(getEnabledProviders().some((provider) => provider.sourceId === "ticketmaster")).toBe(
+      true
+    );
+  });
+
   it("exposes unique provider IDs", async () => {
     const { getAllProviders } = await importRegistryWithEnv();
     const providerIds = getAllProviders().map((provider) => provider.sourceId);

@@ -17,6 +17,7 @@ Event Scout is a newcomer-first local discovery app. It helps someone answer: "W
 - URL-driven browsing filters
 - Event detail pages with source transparency
 - Local saved events
+- A Ticketmaster adapter behind `ENABLE_TICKETMASTER_PROVIDER`
 - A sources page showing enabled and planned providers
 - Aggregator QA artifacts with provider counts and merge visibility
 
@@ -49,4 +50,4 @@ This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
 
 ## Next milestone
 
-Implement M9 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): the first real source adapter behind a feature flag.
+Implement M10 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): polish and deployment readiness.

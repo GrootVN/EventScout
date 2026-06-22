@@ -5,6 +5,7 @@ import { dedupeEvents } from "../../apps/web/lib/events/dedupe";
 import { normalizeRawEvent } from "../../apps/web/lib/events/normalize";
 import { mockProvider } from "../../apps/web/lib/sources/mockProvider";
 import type { EventSourceProvider } from "../../apps/web/lib/sources/provider";
+import sampleTicketmasterEvent from "../fixtures/ticketmaster/sample-event.json";
 
 function makeProviderEvent(id: string, overrides: Record<string, unknown> = {}) {
   return {
@@ -46,6 +47,29 @@ async function importScoutEventsWithProviders(providers: EventSourceProvider[]) 
     getEnabledProviders: () => providers
   }));
   return import("../../apps/web/lib/events/service");
+}
+
+async function importTicketmasterProviderWithEnv() {
+  vi.resetModules();
+  vi.doMock("@/lib/config/env", () => ({
+    env: {
+      appName: "Event Scout",
+      defaultCity: "Cincinnati",
+      defaultRegion: "OH",
+      defaultCountry: "USA",
+      ticketmasterApiKey: "test-key",
+      meetupAccessToken: "",
+      enableMockProvider: true,
+      enableCommunityMockProvider: true,
+      enableTicketmasterProvider: true,
+      enableMeetupProvider: false,
+      enableRssProvider: false,
+      enableWebsiteProvider: false,
+      enableSocialLeads: false
+    }
+  }));
+
+  return import("../../apps/web/lib/sources/ticketmasterProvider");
 }
 
 afterEach(() => {
@@ -177,5 +201,57 @@ describe("scoutEvents", () => {
 
     expect(events.some((event) => event.title === "Neighborhood Film on the Lawn")).toBe(true);
     expect(events.some((event) => event.title === "Volunteer River Cleanup Morning")).toBe(true);
+  });
+
+  it("works with Ticketmaster enabled and merges duplicate events from Ticketmaster and mock data", async () => {
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        _embedded: {
+          events: [sampleTicketmasterEvent]
+        }
+      })
+    }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { ticketmasterProvider } = await importTicketmasterProviderWithEnv();
+    const providers = [ticketmasterProvider, mockProvider];
+
+    const { scoutEvents } = await importScoutEventsWithProviders(providers);
+    const events = await scoutEvents({ city: "Cincinnati" }, { interests: [], userCity: "Cincinnati" });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(events.length).toBeLessThanOrEqual(36);
+
+    const mergedEvent = events.find((event) =>
+      event.originalSources.some((source) => source.sourceId === "ticketmaster") &&
+      event.originalSources.some((source) => source.sourceId === "mock")
+    );
+
+    expect(mergedEvent).toBeDefined();
+    expect(mergedEvent?.originalSources).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ sourceName: "Ticketmaster" }),
+        expect.objectContaining({ sourceName: "Mock Local Radar" })
+      ])
+    );
+  });
+
+  it("does not crash when Ticketmaster fails and the rest of aggregation still succeeds", async () => {
+    const fetchMock = vi.fn(async () => {
+      throw new Error("ticketmaster timeout");
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { ticketmasterProvider } = await importTicketmasterProviderWithEnv();
+    const providers = [ticketmasterProvider, mockProvider];
+
+    const { scoutEvents } = await importScoutEventsWithProviders(providers);
+    const events = await scoutEvents({ city: "Cincinnati" }, { interests: [], userCity: "Cincinnati" });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(events.length).toBeGreaterThan(0);
+    expect(events.some((event) => event.sourceId === "ticketmaster")).toBe(false);
   });
 });

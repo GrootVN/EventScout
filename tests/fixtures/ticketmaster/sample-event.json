@@ -1,0 +1,75 @@
+{
+  "id": "ticketmaster-123",
+  "name": "Cincinnati Tech Meetup at Rhinegeist",
+  "url": "https://www.ticketmaster.com/cincinnati-tech-meetup-at-rhinegeist/event/123",
+  "info": "A newcomer-friendly tech social with demos, short intros, and brewery tables.",
+  "pleaseNote": "Doors open at 6:00 PM.",
+  "dates": {
+    "timezone": "America/New_York",
+    "start": {
+      "dateTime": "2026-06-21T22:00:00Z"
+    },
+    "end": {
+      "dateTime": "2026-06-22T00:00:00Z"
+    }
+  },
+  "images": [
+    {
+      "url": "https://img.ticketmaster.com/small.jpg",
+      "width": 200,
+      "height": 112
+    },
+    {
+      "url": "https://img.ticketmaster.com/large.jpg",
+      "width": 1024,
+      "height": 576
+    }
+  ],
+  "classifications": [
+    {
+      "segment": {
+        "name": "Music"
+      },
+      "genre": {
+        "name": "Rock"
+      },
+      "subGenre": {
+        "name": "Alternative"
+      },
+      "type": {
+        "name": "Undefined"
+      }
+    }
+  ],
+  "priceRanges": [
+    {
+      "currency": "USD",
+      "min": 0,
+      "max": 0
+    }
+  ],
+  "_embedded": {
+    "venues": [
+      {
+        "name": "Rhinegeist Brewery",
+        "city": {
+          "name": "Cincinnati"
+        },
+        "state": {
+          "stateCode": "OH"
+        },
+        "country": {
+          "countryCode": "US",
+          "name": "United States"
+        },
+        "address": {
+          "line1": "1910 Elm St"
+        },
+        "location": {
+          "latitude": "39.1134",
+          "longitude": "-84.5191"
+        }
+      }
+    ]
+  }
+}

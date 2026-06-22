@@ -10,7 +10,8 @@ The repo has been refocused around a newcomer-first discovery experience with:
 - Cross-provider mock aggregation with intentional duplicate coverage
 - Pure filters, dedupe, ranking, and classification helpers
 - Source transparency in the UI and QA reports
+- A real Ticketmaster adapter behind `ENABLE_TICKETMASTER_PROVIDER`
 
 ## Next milestone
 
-M9: add the first real external provider adapter behind a feature flag and mocked provider tests.
+M10: polish the browsing experience and tighten deployment readiness.
