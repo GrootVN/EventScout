@@ -11,8 +11,9 @@ The repo has been refocused around a newcomer-first discovery experience with:
 - Pure filters, dedupe, ranking, and classification helpers
 - Source transparency in the UI and QA reports
 - A real Ticketmaster adapter behind `ENABLE_TICKETMASTER_PROVIDER`
+- A generic ICS calendar provider behind `ENABLE_ICS_PROVIDER`
 - A manual Ticketmaster live smoke QA script for real-key validation
 
 ## Next milestone
 
-M10: polish the browsing experience and tighten deployment readiness.
+M11: generic RSS provider.

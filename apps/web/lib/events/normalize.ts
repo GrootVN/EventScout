@@ -24,6 +24,8 @@ type NormalizableEvent = {
   currency?: string | null;
   imageUrl?: string | null;
   categories?: string[];
+  interests?: string[];
+  confidence?: number;
 };
 
 type TicketmasterRawEvent = {
@@ -97,6 +99,34 @@ function normalizeCountry(value: unknown) {
   }
 
   return country;
+}
+
+function normalizeTagList(values: unknown) {
+  if (!Array.isArray(values)) {
+    return [];
+  }
+
+  return values
+    .map((value) => cleanUnknown(value)?.toLowerCase().trim() ?? null)
+    .filter((value): value is string => Boolean(value));
+}
+
+function splitIcsLocation(value: string) {
+  const separators = ["\n", " | ", " - ", " @ "];
+  for (const separator of separators) {
+    if (value.includes(separator)) {
+      const [venueName, ...rest] = value.split(separator);
+      return {
+        venueName: clean(venueName) ?? value,
+        address: clean(rest.join(separator))
+      };
+    }
+  }
+
+  return {
+    venueName: value,
+    address: null
+  };
 }
 
 function toNumber(value: unknown) {
@@ -251,6 +281,77 @@ function selectTicketmasterImage(images: TicketmasterRawEvent["images"]) {
     .sort((left, right) => right.score - left.score)[0]?.url ?? null;
 }
 
+type IcsRawEvent = {
+  uid?: string | null;
+  summary?: string | null;
+  description?: string | null;
+  startDateTime?: string | null;
+  endDateTime?: string | null;
+  timezone?: string | null;
+  venueName?: string | null;
+  address?: string | null;
+  location?: string | null;
+  city?: string | null;
+  region?: string | null;
+  country?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  priceType?: "free" | "paid" | "unknown";
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  currency?: string | null;
+  imageUrl?: string | null;
+  categories?: string[];
+  interests?: string[];
+  confidence?: number;
+  sourceCalendarUrl?: string | null;
+  url?: string | null;
+};
+
+function normalizeIcsEvent(rawEvent: RawEvent): NormalizableEvent {
+  const raw = rawEvent.raw as IcsRawEvent;
+  const title = clean(raw.summary);
+  if (!title) {
+    throw new Error("ICS event is missing SUMMARY");
+  }
+
+  const startDateTime = clean(raw.startDateTime);
+  if (!startDateTime) {
+    throw new Error("ICS event is missing DTSTART");
+  }
+
+  const sourceCalendarUrl = clean(raw.sourceCalendarUrl);
+  const eventUrl = clean(raw.url);
+  const locationText = clean(raw.location);
+  const locationParts = locationText ? splitIcsLocation(locationText) : { venueName: null, address: null };
+
+  return {
+    id: clean(raw.uid) ?? undefined,
+    title,
+    description: clean(raw.description),
+    startDateTime,
+    endDateTime: clean(raw.endDateTime),
+    timezone: clean(raw.timezone),
+    venueName: clean(raw.venueName) ?? locationParts.venueName,
+    address: clean(raw.address) ?? locationParts.address,
+    city: clean(raw.city) ?? "Unknown",
+    region: clean(raw.region),
+    country: normalizeCountry(raw.country),
+    latitude: typeof raw.latitude === "number" ? raw.latitude : null,
+    longitude: typeof raw.longitude === "number" ? raw.longitude : null,
+    priceType: raw.priceType ?? "unknown",
+    minPrice: raw.minPrice ?? null,
+    maxPrice: raw.maxPrice ?? null,
+    currency: clean(raw.currency),
+    imageUrl: clean(raw.imageUrl),
+    categories: normalizeTagList(raw.categories),
+    interests: normalizeTagList(raw.interests),
+    confidence:
+      raw.confidence ??
+      (sourceCalendarUrl && eventUrl && sourceCalendarUrl !== eventUrl ? 0.88 : 0.82)
+  };
+}
+
 function normalizeTicketmasterEvent(rawEvent: TicketmasterRawEvent): NormalizableEvent {
   if (!rawEvent || typeof rawEvent !== "object") {
     throw new Error("Ticketmaster event payload is malformed");
@@ -295,7 +396,12 @@ function normalizeTicketmasterEvent(rawEvent: TicketmasterRawEvent): Normalizabl
 }
 
 export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
-  const raw = rawEvent.sourceId === "ticketmaster" ? normalizeTicketmasterEvent(rawEvent.raw as TicketmasterRawEvent) : (rawEvent.raw as NormalizableEvent);
+  const raw =
+    rawEvent.sourceId === "ticketmaster"
+      ? normalizeTicketmasterEvent(rawEvent.raw as TicketmasterRawEvent)
+      : rawEvent.sourceId === "ics"
+        ? normalizeIcsEvent(rawEvent)
+        : (rawEvent.raw as NormalizableEvent);
   const title = clean(raw.title) ?? "Untitled Event";
   const description = clean(raw.description);
   const venueName = clean(raw.venueName);
@@ -305,23 +411,32 @@ export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
   const country = clean(raw.country) ?? "USA";
   const neighborhood = clean(raw.neighborhood);
   const categories = [...new Set((raw.categories ?? []).map((entry) => entry.trim().toLowerCase()))];
-  const interests = classifyInterests({
-    title,
-    description,
-    categories,
-    priceType: raw.priceType ?? "unknown"
-  });
+  const interests = [...new Set([
+    ...classifyInterests({
+      title,
+      description,
+      categories,
+      priceType: raw.priceType ?? "unknown"
+    }),
+    ...normalizeTagList(raw.interests)
+  ])];
+  const startDateTime = clean(raw.startDateTime);
+
+  if (!startDateTime) {
+    throw new Error(`${rawEvent.sourceType.toUpperCase()} event is missing startDateTime`);
+  }
+
+  const canonicalKey = `${slugify(title)}|${startDateTime.slice(0, 10)}|${slugify(venueName ?? city)}`;
   const createdAt = rawEvent.fetchedAt;
   const updatedAt = rawEvent.fetchedAt;
   const sourceEventId = rawEvent.sourceEventId ?? null;
-  const canonicalKey = `${slugify(title)}|${raw.startDateTime.slice(0, 10)}|${slugify(venueName ?? city)}`;
 
   return assertValidScoutEvent({
     id: raw.id ?? `${rawEvent.sourceId}-${sourceEventId ?? slugify(title)}`,
     canonicalKey,
     title,
     description,
-    startDateTime: raw.startDateTime,
+    startDateTime,
     endDateTime: raw.endDateTime ?? null,
     timezone: raw.timezone ?? "America/New_York",
     venueName,
@@ -346,7 +461,9 @@ export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
     imageUrl: raw.imageUrl ?? null,
     categories,
     interests,
-    confidence: rawEvent.sourceType === "social" ? 0.55 : 0.92,
+    confidence:
+      raw.confidence ??
+      (rawEvent.sourceType === "social" ? 0.55 : rawEvent.sourceType === "ics" ? 0.88 : 0.92),
     isNewcomerFriendly: interests.includes("newcomer-friendly"),
     isSoloFriendly: interests.includes("solo-friendly"),
     originalSources: [

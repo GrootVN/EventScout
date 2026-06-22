@@ -1,4 +1,5 @@
 import { communityMockProvider } from "./communityMockProvider";
+import { icsProvider } from "./icsProvider";
 import type { EventSourceProvider } from "./provider";
 import { meetupProvider } from "./meetupProvider";
 import { mockProvider } from "./mockProvider";
@@ -10,6 +11,7 @@ import { websiteProvider } from "./websiteProvider";
 const providers: EventSourceProvider[] = [
   mockProvider,
   communityMockProvider,
+  icsProvider,
   ticketmasterProvider,
   meetupProvider,
   rssProvider,

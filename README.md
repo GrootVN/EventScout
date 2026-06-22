@@ -18,6 +18,7 @@ Event Scout is a newcomer-first local discovery app. It helps someone answer: "W
 - Event detail pages with source transparency
 - Local saved events
 - A Ticketmaster adapter behind `ENABLE_TICKETMASTER_PROVIDER`
+- A generic ICS calendar adapter behind `ENABLE_ICS_PROVIDER`
 - A sources page showing enabled and planned providers
 - Aggregator QA artifacts with provider counts and merge visibility
 - A manual Ticketmaster smoke QA path that can write live report artifacts
@@ -69,6 +70,23 @@ Optional query overrides:
 - `TICKETMASTER_QA_RADIUS_MILES`
 - `TICKETMASTER_QA_INTERESTS`
 
+## ICS calendar provider
+
+Enable the generic ICS provider when you want to ingest public calendar feeds from cities, libraries, universities, museums, parks, and community groups:
+
+```bash
+ENABLE_ICS_PROVIDER=true
+ICS_SOURCE_URLS="https://example.com/calendar.ics"
+npm run qa:aggregator
+```
+
+Notes:
+
+- Mock-only mode still works when `ENABLE_ICS_PROVIDER` is false or `ICS_SOURCE_URLS` is empty.
+- The provider preserves the original calendar or event URL on every event.
+- Recurring feeds are skipped with warnings instead of being expanded into many instances.
+- `ICS_SOURCE_URLS` can be a comma, semicolon, or newline separated list of feed URLs.
+
 ## Versioning
 
 This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
@@ -79,4 +97,4 @@ This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
 
 ## Next milestone
 
-Implement M10 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): polish and deployment readiness.
+Implement M11 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): generic RSS provider.

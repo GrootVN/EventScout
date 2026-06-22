@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Event Scout//Malformed Calendar//EN
+BEGIN:VEVENT
+UID:broken-1@example.com
+SUMMARY:Missing Date Event
+LOCATION:Unknown Venue - 123 Example St, Cincinnati, OH
+BROKENLINE
+END:VEVENT
+BEGIN:VEVENT
+UID:broken-2@example.com
+DTSTART;TZID=America/New_York:20260623T183000
+LOCATION:Another Venue - 456 Example St, Cincinnati, OH
+END:VEVENT
+END:VCALENDAR

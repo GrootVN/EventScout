@@ -224,14 +224,26 @@ Status: [x]
 
 ---
 
-## M10: Polish and deployment
+## M10: Generic ICS calendar provider
 
-Status: [ ]
+Status: [x]
 
 ### Acceptance criteria
 
-- Mobile layout is clean.
-- Loading, error, and empty states are polished.
-- README explains setup.
-- .env.example is complete.
-- App can be deployed.
+- ICS feeds can be enabled behind `ENABLE_ICS_PROVIDER` and `ICS_SOURCE_URLS`.
+- Public calendar events normalize into the shared ScoutEvent shape with original source attribution.
+- Recurring ICS events are skipped with warnings instead of being expanded into many instances.
+- Mock-only mode still works when no ICS configuration is present.
+- README and `.env.example` explain setup and manual QA.
+
+### Required checks
+
+- npm run lint
+- npm run typecheck
+- npm test
+- npm run build
+- npm run qa:aggregator
+
+### Next recommended milestone
+
+- M11: Generic RSS provider

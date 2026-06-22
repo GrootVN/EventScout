@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { communityMockProvider } from "../../apps/web/lib/sources/communityMockProvider";
 import { validateScoutEvent } from "../../apps/web/lib/events/schema";
@@ -6,6 +7,10 @@ import { normalizeRawEvent } from "../../apps/web/lib/events/normalize";
 import { mockProvider } from "../../apps/web/lib/sources/mockProvider";
 import type { EventSourceProvider } from "../../apps/web/lib/sources/provider";
 import sampleTicketmasterEvent from "../fixtures/ticketmaster/sample-event.json";
+
+function fixtureText(name: string) {
+  return readFileSync(new URL(`../fixtures/ics/${name}`, import.meta.url), "utf8");
+}
 
 function makeProviderEvent(id: string, overrides: Record<string, unknown> = {}) {
   return {
@@ -59,10 +64,12 @@ async function importTicketmasterProviderWithEnv() {
       defaultCountry: "USA",
       ticketmasterApiKey: "test-key",
       meetupAccessToken: "",
+      icsSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
       enableTicketmasterProvider: true,
       enableMeetupProvider: false,
+      enableIcsProvider: false,
       enableRssProvider: false,
       enableWebsiteProvider: false,
       enableSocialLeads: false
@@ -70,6 +77,32 @@ async function importTicketmasterProviderWithEnv() {
   }));
 
   return import("../../apps/web/lib/sources/ticketmasterProvider");
+}
+
+async function importIcsProviderWithEnv(overrides: Record<string, boolean | string> = {}) {
+  vi.resetModules();
+  vi.doMock("@/lib/config/env", () => ({
+    env: {
+      appName: "Event Scout",
+      defaultCity: "Cincinnati",
+      defaultRegion: "OH",
+      defaultCountry: "USA",
+      ticketmasterApiKey: "",
+      meetupAccessToken: "",
+      icsSourceUrls: "",
+      enableMockProvider: true,
+      enableCommunityMockProvider: true,
+      enableTicketmasterProvider: false,
+      enableMeetupProvider: false,
+      enableIcsProvider: false,
+      enableRssProvider: false,
+      enableWebsiteProvider: false,
+      enableSocialLeads: false,
+      ...overrides
+    }
+  }));
+
+  return import("../../apps/web/lib/sources/icsProvider");
 }
 
 afterEach(() => {
@@ -253,5 +286,164 @@ describe("scoutEvents", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(events.length).toBeGreaterThan(0);
     expect(events.some((event) => event.sourceId === "ticketmaster")).toBe(false);
+  });
+
+  it("works with ICS enabled using a fixture-backed source and merges duplicates with mock data", async () => {
+    const duplicateMockProvider: EventSourceProvider = {
+      sourceId: "mock-ics",
+      sourceName: "Mock Calendar Mirror",
+      sourceType: "mock",
+      enabled: true,
+      async fetchEvents() {
+        return [
+          {
+            sourceId: "mock-ics",
+            sourceName: "Mock Calendar Mirror",
+            sourceType: "mock" as const,
+            sourceEventId: "mock-ics-1",
+            sourceUrl: "https://example.com/events/tech-meetup-library",
+            fetchedAt: "2026-06-19T12:00:00.000Z",
+            raw: {
+              id: "mock-ics-1",
+              title: "Cincinnati Tech Meetup at the Library",
+              description: "A mirror listing for the same event.",
+              startDateTime: "2026-06-21T22:00:00.000Z",
+              endDateTime: "2026-06-22T00:00:00.000Z",
+              timezone: "America/New_York",
+              venueName: "Downtown Library",
+              address: "800 Vine St, Cincinnati, OH 45202",
+              city: "Cincinnati",
+              region: "OH",
+              country: "USA",
+              priceType: "free" as const,
+              minPrice: null,
+              maxPrice: null,
+              currency: "USD",
+              categories: ["tech", "community"]
+            }
+          }
+        ];
+      }
+    };
+    const icsFixtureProvider: EventSourceProvider = {
+      sourceId: "ics",
+      sourceName: "ICS Calendar 1",
+      sourceType: "ics",
+      enabled: true,
+      async fetchEvents() {
+        return [
+          {
+            sourceId: "ics",
+            sourceName: "ICS Calendar 1",
+            sourceType: "ics" as const,
+            sourceEventId: "ics-tech-1@example.com",
+            sourceUrl: "https://calendar.example.com/events/tech-meetup-library",
+            fetchedAt: "2026-06-19T12:00:00.000Z",
+            raw: {
+              uid: "ics-tech-1@example.com",
+              summary: "Cincinnati Tech Meetup at the Library",
+              description: "Join neighbors for demos, introductions, and coffee after work.",
+              startDateTime: "2026-06-21T22:00:00.000Z",
+              endDateTime: "2026-06-22T00:00:00.000Z",
+              timezone: "America/New_York",
+              location: "Downtown Library - 800 Vine St, Cincinnati, OH 45202",
+              city: "Cincinnati",
+              region: "OH",
+              country: "USA",
+              priceType: "free" as const,
+              minPrice: null,
+              maxPrice: null,
+              currency: "USD",
+              categories: ["tech", "networking"],
+              interests: ["community-guides"],
+              sourceCalendarUrl: "https://example.com/calendars/civic.ics",
+              confidence: 0.88
+            }
+          },
+          {
+            sourceId: "ics",
+            sourceName: "ICS Calendar 1",
+            sourceType: "ics" as const,
+            sourceEventId: "ics-film-1@example.com",
+            sourceUrl: "https://example.com/calendars/civic.ics",
+            fetchedAt: "2026-06-19T12:00:00.000Z",
+            raw: {
+              uid: "ics-film-1@example.com",
+              summary: "Neighborhood Film Night",
+              description: "Bring a blanket and enjoy a movie under the stars.",
+              startDateTime: "2026-06-22T01:00:00.000Z",
+              endDateTime: "2026-06-22T03:00:00.000Z",
+              timezone: "America/New_York",
+              location: "Washington Park | 1230 Elm St, Cincinnati, OH",
+              city: "Cincinnati",
+              region: "OH",
+              country: "USA",
+              priceType: "free" as const,
+              minPrice: null,
+              maxPrice: null,
+              currency: "USD",
+              categories: ["film", "community"],
+              interests: ["community"],
+              sourceCalendarUrl: "https://example.com/calendars/civic.ics",
+              confidence: 0.82
+            }
+          }
+        ];
+      }
+    };
+
+    const { scoutEvents } = await importScoutEventsWithProviders([icsFixtureProvider, duplicateMockProvider]);
+    const events = await scoutEvents({ city: "Cincinnati" }, { interests: [], userCity: "Cincinnati" });
+
+    expect(events.some((event) => event.originalSources.some((source) => source.sourceId === "ics"))).toBe(true);
+    const mergedEvent = events.find((event) =>
+      event.originalSources.some((source) => source.sourceId === "ics") &&
+      event.originalSources.some((source) => source.sourceId === "mock-ics")
+    );
+    expect(mergedEvent).toBeDefined();
+    expect(mergedEvent?.originalSources).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ sourceName: "ICS Calendar 1" }),
+        expect.objectContaining({ sourceName: "Mock Calendar Mirror" })
+      ])
+    );
+  });
+
+  it("drops malformed ICS records without crashing aggregation", async () => {
+    const malformedIcsProvider: EventSourceProvider = {
+      sourceId: "ics",
+      sourceName: "ICS Calendar 1",
+      sourceType: "ics",
+      enabled: true,
+      async fetchEvents() {
+        return [
+          {
+            sourceId: "ics",
+            sourceName: "ICS Calendar 1",
+            sourceType: "ics" as const,
+            sourceEventId: "broken-1@example.com",
+            sourceUrl: "https://example.com/calendars/malformed.ics",
+            fetchedAt: "2026-06-19T12:00:00.000Z",
+            raw: {
+              uid: "broken-1@example.com",
+              summary: "Missing Date Event",
+              location: "Unknown Venue - 123 Example St, Cincinnati, OH",
+              city: "Cincinnati",
+              region: "OH",
+              country: "USA",
+              categories: ["community"],
+              sourceCalendarUrl: "https://example.com/calendars/malformed.ics",
+              confidence: 0.82
+            }
+          }
+        ];
+      }
+    };
+
+    const { scoutEvents } = await importScoutEventsWithProviders([malformedIcsProvider, mockProvider]);
+    const events = await scoutEvents({ city: "Cincinnati" }, { interests: [], userCity: "Cincinnati" });
+
+    expect(events.some((event) => event.sourceId === "ics")).toBe(false);
+    expect(events.some((event) => event.sourceId === "mock")).toBe(true);
   });
 });

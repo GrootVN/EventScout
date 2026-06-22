@@ -1,0 +1,14 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Event Scout//Recurring Calendar//EN
+BEGIN:VEVENT
+UID:recurring-1@example.com
+SUMMARY:Weekly Coding Meetup
+DESCRIPTION:Occurs weekly and should be skipped by the MVP parser.
+DTSTART;TZID=America/New_York:20260624T183000
+DTEND;TZID=America/New_York:20260624T203000
+LOCATION:Innovation Hub - 123 Main St, Cincinnati, OH
+RRULE:FREQ=WEEKLY;COUNT=10
+URL:https://calendar.example.com/events/recurring-1
+END:VEVENT
+END:VCALENDAR

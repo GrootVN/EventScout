@@ -12,10 +12,12 @@ async function importRegistryWithEnv(overrides: EnvOverrides = {}) {
       defaultCountry: "USA",
       ticketmasterApiKey: "",
       meetupAccessToken: "",
+      icsSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
       enableTicketmasterProvider: false,
       enableMeetupProvider: false,
+      enableIcsProvider: false,
       enableRssProvider: false,
       enableWebsiteProvider: false,
       enableSocialLeads: false,
@@ -66,6 +68,12 @@ describe("provider registry", () => {
     );
   });
 
+  it("excludes ICS by default", async () => {
+    const { getEnabledProviders } = await importRegistryWithEnv();
+
+    expect(getEnabledProviders().some((provider) => provider.sourceId === "ics")).toBe(false);
+  });
+
   it("excludes Ticketmaster when the API key is missing", async () => {
     const { getEnabledProviders } = await importRegistryWithEnv({
       enableTicketmasterProvider: true,
@@ -86,6 +94,24 @@ describe("provider registry", () => {
     expect(getEnabledProviders().some((provider) => provider.sourceId === "ticketmaster")).toBe(
       true
     );
+  });
+
+  it("includes ICS when the feature flag and source URLs are present", async () => {
+    const { getEnabledProviders } = await importRegistryWithEnv({
+      enableIcsProvider: true,
+      icsSourceUrls: "https://example.com/calendars/civic.ics"
+    });
+
+    expect(getEnabledProviders().some((provider) => provider.sourceId === "ics")).toBe(true);
+  });
+
+  it("excludes ICS when the feature flag is enabled but the source list is empty", async () => {
+    const { getEnabledProviders } = await importRegistryWithEnv({
+      enableIcsProvider: true,
+      icsSourceUrls: ""
+    });
+
+    expect(getEnabledProviders().some((provider) => provider.sourceId === "ics")).toBe(false);
   });
 
   it("exposes unique provider IDs", async () => {
