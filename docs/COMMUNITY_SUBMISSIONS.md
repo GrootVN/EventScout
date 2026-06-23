@@ -48,5 +48,4 @@ The submission store is in-memory only. It resets when the process restarts.
 
 ## Next milestone
 
-M16: Source health dashboard.
-
+M17: Source health alerts.

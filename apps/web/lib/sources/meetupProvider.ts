@@ -2,7 +2,7 @@ import { env } from "@/lib/config/env";
 import type { RawEvent } from "@/lib/events/types";
 import type { EventSourceProvider, FetchEventsInput } from "./provider";
 
-type MeetupDiagnostic = {
+export type MeetupDiagnostic = {
   level: "warning" | "error";
   message: string;
 };
@@ -172,8 +172,16 @@ function recordDiagnostic(level: MeetupDiagnostic["level"], message: string) {
   diagnostics.push({ level, message });
 }
 
+function snapshotDiagnostics() {
+  return [...diagnostics];
+}
+
+export function snapshotMeetupProviderDiagnostics() {
+  return snapshotDiagnostics();
+}
+
 export function consumeMeetupProviderDiagnostics() {
-  const current = [...diagnostics];
+  const current = snapshotDiagnostics();
   diagnostics.length = 0;
   return current;
 }

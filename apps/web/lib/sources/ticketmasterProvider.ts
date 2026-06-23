@@ -2,7 +2,7 @@ import { env } from "@/lib/config/env";
 import type { EventSourceProvider, FetchEventsInput } from "./provider";
 import type { RawEvent } from "@/lib/events/types";
 
-type TicketmasterDiagnostic = {
+export type TicketmasterDiagnostic = {
   level: "warning" | "error";
   message: string;
 };
@@ -78,8 +78,16 @@ function recordDiagnostic(level: TicketmasterDiagnostic["level"], message: strin
   diagnostics.push({ level, message });
 }
 
+function snapshotDiagnostics() {
+  return [...diagnostics];
+}
+
+export function snapshotTicketmasterProviderDiagnostics() {
+  return snapshotDiagnostics();
+}
+
 export function consumeTicketmasterProviderDiagnostics() {
-  const current = [...diagnostics];
+  const current = snapshotDiagnostics();
   diagnostics.length = 0;
   return current;
 }

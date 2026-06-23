@@ -41,12 +41,20 @@ function record(level: Diagnostic["level"], message: string) {
   diagnostics[level === "warning" ? "warnings" : "errors"].push(message);
 }
 
-export function consumeCommunitySubmissionProviderDiagnostics() {
-  const current = {
+function snapshotDiagnostics() {
+  return {
     ...diagnostics,
     warnings: [...diagnostics.warnings],
     errors: [...diagnostics.errors]
   };
+}
+
+export function snapshotCommunitySubmissionProviderDiagnostics() {
+  return snapshotDiagnostics();
+}
+
+export function consumeCommunitySubmissionProviderDiagnostics() {
+  const current = snapshotDiagnostics();
 
   const reset = zeroDiagnostics();
   Object.assign(diagnostics, reset);
@@ -123,4 +131,3 @@ export const communitySubmissionProvider: EventSourceProvider = {
   enabled: env.enableCommunitySubmissionsProvider,
   fetchEvents: fetchCommunitySubmissions
 };
-

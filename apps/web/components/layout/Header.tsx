@@ -15,6 +15,7 @@ export function Header() {
         <Link href="/submit">Submit event</Link>
         <Link href="/saved">Saved</Link>
         <Link href="/sources">Sources</Link>
+        <Link href="/health">Health</Link>
         <Link href="/admin">Admin</Link>
       </nav>
     </header>

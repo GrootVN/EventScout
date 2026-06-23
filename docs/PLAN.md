@@ -20,7 +20,8 @@ The repo has been refocused around a newcomer-first discovery experience with:
 - A curated/admin source allowlist and moderation queue behind `/admin`
 - A file-backed curated admin events provider behind `ENABLE_CURATED_PROVIDER`
 - A public community submission flow behind `/submit` and `/api/submissions`
+- A source health dashboard behind `/health` and `/api/health`
 
 ## Next milestone
 
-M16: Source health dashboard.
+M17: Source health alerts.

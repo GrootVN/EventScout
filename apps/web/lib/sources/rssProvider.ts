@@ -5,7 +5,7 @@ import type { EventSourceProvider, FetchEventsInput } from "./provider";
 import { parseRssFeed } from "./rssParser";
 import type { RssSourceConfig } from "@/config/rss-sources";
 
-type Diagnostic = {
+export type RssDiagnostic = {
   level: "warning" | "error";
   message: string;
 };
@@ -36,18 +36,26 @@ type RssParsedPayload = {
   feedTitle: string | null;
 };
 
-const diagnostics: Diagnostic[] = [];
+const diagnostics: RssDiagnostic[] = [];
 
 function clean(value: string | null | undefined) {
   return value?.trim() ?? "";
 }
 
-function recordDiagnostic(level: Diagnostic["level"], message: string) {
+function recordDiagnostic(level: RssDiagnostic["level"], message: string) {
   diagnostics.push({ level, message });
 }
 
+function snapshotDiagnostics() {
+  return [...diagnostics];
+}
+
+export function snapshotRssProviderDiagnostics() {
+  return snapshotDiagnostics();
+}
+
 export function consumeRssProviderDiagnostics() {
-  const current = [...diagnostics];
+  const current = snapshotDiagnostics();
   diagnostics.length = 0;
   return current;
 }

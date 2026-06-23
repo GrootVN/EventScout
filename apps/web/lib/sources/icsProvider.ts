@@ -4,7 +4,7 @@ import { getIcsSourceConfigs } from "@/config/ics-sources";
 import type { EventSourceProvider, FetchEventsInput } from "./provider";
 import { parseIcsCalendar } from "./icsParser";
 
-type Diagnostic = {
+export type IcsDiagnostic = {
   level: "warning" | "error";
   message: string;
 };
@@ -33,18 +33,26 @@ type IcsParsedPayload = {
   country: string | null;
 };
 
-const diagnostics: Diagnostic[] = [];
+const diagnostics: IcsDiagnostic[] = [];
 
 function clean(value: string | null | undefined) {
   return value?.trim() ?? "";
 }
 
-function recordDiagnostic(level: Diagnostic["level"], message: string) {
+function recordDiagnostic(level: IcsDiagnostic["level"], message: string) {
   diagnostics.push({ level, message });
 }
 
+function snapshotDiagnostics() {
+  return [...diagnostics];
+}
+
+export function snapshotIcsProviderDiagnostics() {
+  return snapshotDiagnostics();
+}
+
 export function consumeIcsProviderDiagnostics() {
-  const current = [...diagnostics];
+  const current = snapshotDiagnostics();
   diagnostics.length = 0;
   return current;
 }

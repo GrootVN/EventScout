@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getActiveCityPreset, getActiveCityPresetSummary } from "@/lib/sources/localPresetProvider";
 import { listSourceSummaries } from "@/lib/events/service";
 
@@ -20,6 +21,13 @@ export default async function SourcesPage() {
         <p>
           The app is built around adapters, so sources can be added one by one without changing the browsing UI. Every
           event keeps its original source link.
+        </p>
+        <p>
+          Need a readiness snapshot instead of the inventory view? Open the{" "}
+          <Link href="/health" className="text-link">
+            source health dashboard
+          </Link>
+          .
         </p>
       </section>
       <section className="saved-card">

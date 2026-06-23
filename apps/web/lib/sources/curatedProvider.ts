@@ -11,7 +11,7 @@ type Diagnostic = {
   message: string;
 };
 
-type CuratedProviderDiagnostics = {
+export type CuratedProviderDiagnostics = {
   rawLoadedCount: number;
   approvedCount: number;
   pendingCount: number;
@@ -71,8 +71,20 @@ function readCuratedPayload(payload: string) {
   return parsed;
 }
 
+function snapshotDiagnostics() {
+  return {
+    ...diagnostics,
+    warnings: [...diagnostics.warnings],
+    errors: [...diagnostics.errors]
+  };
+}
+
+export function snapshotCuratedProviderDiagnostics() {
+  return snapshotDiagnostics();
+}
+
 export function consumeCuratedProviderDiagnostics() {
-  const current = diagnostics;
+  const current = snapshotDiagnostics();
   diagnostics = zeroDiagnostics();
   return current;
 }

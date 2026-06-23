@@ -164,3 +164,5 @@ or `DELETE /api/admin/trusted-sources?id=trusted-domain-example-calendar`.
 ## `GET /api/health`
 
 Basic service/config health snapshot for uptime checks.
+
+Returns a `sourceHealth` snapshot with provider readiness, configuration notes, warnings/errors, and per-source counters for curated and community submissions when available.

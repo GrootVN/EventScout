@@ -62,6 +62,8 @@ Each provider must:
 - Avoid crashing the scout pipeline
 - Respect missing API keys
 
+The source health dashboard should summarize whether each provider is ready, disabled, or missing required configuration, and should surface recent warnings and errors without hiding the original source inventory.
+
 Meetup-specific notes:
 
 - Keep Meetup disabled by default behind `ENABLE_MEETUP_PROVIDER`.

@@ -22,6 +22,7 @@ Event Scout is a newcomer-first local discovery app. It helps someone answer: "W
 - A generic ICS calendar adapter behind `ENABLE_ICS_PROVIDER`
 - A generic RSS/Atom adapter behind `ENABLE_RSS_PROVIDER`
 - A sources page showing enabled and planned providers
+- A source health dashboard showing readiness, configuration gaps, and recent diagnostics
 - Aggregator QA artifacts with provider counts and merge visibility
 - A manual Ticketmaster smoke QA path that can write live report artifacts
 - A file-backed curated/admin events provider behind `ENABLE_CURATED_PROVIDER`
@@ -222,4 +223,4 @@ This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
 
 ## Next milestone
 
-Implement M16 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): Source health dashboard.
+Implement M17 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): Source health alerts.

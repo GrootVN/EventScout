@@ -409,6 +409,32 @@ Status: [x]
 
 ---
 
+## M16: Source health dashboard
+
+Status: [x]
+
+### Acceptance criteria
+
+- A source health dashboard summarizes provider readiness in one place.
+- The dashboard distinguishes healthy, warning, needs-config, and disabled providers.
+- Provider diagnostics remain available to the dashboard without breaking aggregation.
+- The `/health` page and `/api/health` route expose the same source health snapshot.
+- Mock-only mode still works when health visibility is queried.
+
+### Required checks
+
+- npm run lint
+- npm run typecheck
+- npm test
+- npm run build
+- npm run qa:aggregator
+
+### Next recommended milestone
+
+- M17: Source health alerts
+
+---
+
 ## M14.1: Curated event ingestion provider
 
 Status: [x]
