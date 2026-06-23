@@ -45,7 +45,8 @@ async function importAggregatorQaWithProviders(
   envOverrides: Record<string, boolean | string> = {},
   icsModule: Record<string, unknown> | null = null,
   meetupModule: Record<string, unknown> | null = null,
-  curatedModule: Record<string, unknown> | null = null
+  curatedModule: Record<string, unknown> | null = null,
+  communityModule: Record<string, unknown> | null = null
 ) {
   vi.resetModules();
   vi.doMock("@/lib/config/env", () => ({
@@ -62,6 +63,7 @@ async function importAggregatorQaWithProviders(
       rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
+      enableCommunitySubmissionsProvider: false,
       enableCityPresets: false,
       enableTicketmasterProvider: false,
       enableMeetupProvider: false,
@@ -84,6 +86,9 @@ async function importAggregatorQaWithProviders(
   if (curatedModule) {
     vi.doMock("@/lib/sources/curatedProvider", () => curatedModule);
   }
+  if (communityModule) {
+    vi.doMock("@/lib/sources/communitySubmissionProvider", () => communityModule);
+  }
   return import("../../apps/web/lib/events/aggregatorQa");
 }
 
@@ -104,6 +109,7 @@ async function importCuratedProviderWithEnv(overrides: Record<string, boolean | 
       curatedEventsPath: "apps/web/data/curated-events.json",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
+      enableCommunitySubmissionsProvider: false,
       enableCuratedProvider: true,
       enableCityPresets: false,
       enableTicketmasterProvider: false,
@@ -135,6 +141,7 @@ async function importTicketmasterProviderWithEnv() {
       rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
+      enableCommunitySubmissionsProvider: false,
       enableCityPresets: false,
       enableTicketmasterProvider: true,
       enableMeetupProvider: false,
@@ -164,6 +171,7 @@ async function importIcsProviderWithEnv(overrides: Record<string, boolean | stri
       rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
+      enableCommunitySubmissionsProvider: false,
       enableCityPresets: false,
       enableTicketmasterProvider: false,
       enableMeetupProvider: false,
@@ -194,6 +202,7 @@ async function importMeetupProviderWithEnv(overrides: Record<string, boolean | s
       rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
+      enableCommunitySubmissionsProvider: false,
       enableCityPresets: false,
       enableTicketmasterProvider: false,
       enableMeetupProvider: true,
@@ -421,6 +430,131 @@ describe("generateAggregatorQaReport", () => {
     expect(report.warnings.some((warning) => warning.includes("Skipped curated event"))).toBe(true);
     expect(report.duplicateGroups.some((group) => group.sourceNames.includes("Curated Admin Events"))).toBe(true);
     expect(report.events.some((event) => event.originalSources.some((source) => source.sourceId === "curated"))).toBe(true);
+  });
+
+  it("includes community submission diagnostics and duplicate groups when enabled", async () => {
+    const communityDiagnostics = {
+      totalSubmissions: 4,
+      pendingCount: 1,
+      approvedCount: 1,
+      rejectedCount: 1,
+      suppressedCount: 1,
+      emittedRawEventCount: 1,
+      invalidConversionCount: 0,
+      warnings: [
+        "Skipped 1 pending community submission.",
+        "Skipped 1 rejected community submission.",
+        "Skipped 1 suppressed community submission."
+      ],
+      errors: []
+    };
+    const communityModule = {
+      communitySubmissionProvider: {
+        sourceId: "community-submissions",
+        sourceName: "Community Submissions",
+        sourceType: "community",
+        enabled: true,
+        async fetchEvents() {
+          return [
+            {
+              sourceId: "community-submissions",
+              sourceName: "Community Submissions",
+              sourceType: "community" as const,
+              sourceEventId: "submission-tech-meetup",
+              sourceUrl: "https://example.com/community/submissions/tech-meetup",
+              fetchedAt: "2026-06-19T12:00:00.000Z",
+              raw: {
+                id: "submission-tech-meetup",
+                title: "Cincinnati Tech Meetup at Rhinegeist",
+                description: "A newcomer-friendly tech social with quick intros, demos, and brewery tables.",
+                startDateTime: "2026-06-21T22:00:00.000Z",
+                endDateTime: "2026-06-22T00:00:00.000Z",
+                timezone: "America/New_York",
+                venueName: "Rhinegeist Brewery",
+                address: "1910 Elm St, Cincinnati, OH 45202",
+                city: "Cincinnati",
+                region: "OH",
+                country: "USA",
+                priceType: "free",
+                minPrice: null,
+                maxPrice: null,
+                currency: "USD",
+                sourceUrl: "https://example.com/community/submissions/tech-meetup",
+                sourceName: "Community Submission",
+                sourceEventId: "submission-tech-meetup",
+                categories: ["tech", "networking", "business"],
+                interests: ["newcomer-friendly", "solo-friendly"],
+                confidence: 0.72,
+                isNewcomerFriendly: true,
+                isSoloFriendly: true,
+                status: "approved"
+              }
+            }
+          ];
+        }
+      },
+      consumeCommunitySubmissionProviderDiagnostics: () => ({ ...communityDiagnostics })
+    };
+
+    const { generateAggregatorQaReport } = await importAggregatorQaWithProviders(
+      [mockProvider, communityModule.communitySubmissionProvider],
+      {
+        enableCommunitySubmissionsProvider: true
+      },
+      null,
+      null,
+      null,
+      communityModule
+    );
+
+    const report = await generateAggregatorQaReport({ city: "Cincinnati" });
+    const communitySummary = report.enabledProviders.find(
+      (provider) => provider.sourceId === "community-submissions"
+    );
+
+    expect(report.communitySubmissionsProvider).toMatchObject({
+      sourceId: "community-submissions",
+      sourceName: "Community Submissions",
+      totalSubmissions: 4,
+      pendingCount: 1,
+      approvedCount: 1,
+      rejectedCount: 1,
+      suppressedCount: 1,
+      emittedRawEventCount: 1,
+      invalidConversionCount: 0
+    });
+    expect(communitySummary).toMatchObject({
+      rawCount: 1,
+      validCount: 1,
+      droppedCount: 0,
+      finalContributionCount: expect.any(Number),
+      totalSubmissions: 4,
+      emittedRawEventCount: 1,
+      invalidConversionCount: 0
+    });
+    expect(communitySummary).toMatchObject({
+      rawCount: 1,
+      validCount: 1,
+      droppedCount: 0,
+      finalContributionCount: expect.any(Number),
+      totalSubmissions: 4,
+      emittedRawEventCount: 1,
+      invalidConversionCount: 0
+    });
+    expect(report.warnings.some((warning) => warning.includes("community submission"))).toBe(true);
+    expect(report.duplicateGroups.some((group) => group.sourceNames.includes("Community Submissions"))).toBe(true);
+    expect(
+      report.duplicateGroups.some((group) =>
+        group.sources.some(
+          (source) =>
+            source.sourceName === "Community Submissions" &&
+            source.sourceUrl === "https://example.com/community/submissions/tech-meetup"
+        )
+      )
+    ).toBe(true);
+    expect(
+      report.events.some((event) => event.originalSources.some((source) => source.sourceId === "community-submissions"))
+    ).toBe(true);
   });
 
   it("includes Meetup in provider counts and duplicate groups when enabled", async () => {

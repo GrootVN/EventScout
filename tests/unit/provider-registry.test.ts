@@ -19,6 +19,7 @@ async function importRegistryWithEnv(overrides: EnvOverrides = {}) {
       curatedEventsPath: "apps/web/data/curated-events.json",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
+      enableCommunitySubmissionsProvider: false,
       enableCuratedProvider: false,
       enableCityPresets: false,
       enableTicketmasterProvider: false,
@@ -72,12 +73,26 @@ describe("provider registry", () => {
     expect(getEnabledProviders().some((provider) => provider.sourceId === "curated")).toBe(false);
   });
 
+  it("excludes the community submissions provider by default", async () => {
+    const { getEnabledProviders } = await importRegistryWithEnv();
+
+    expect(getEnabledProviders().some((provider) => provider.sourceId === "community-submissions")).toBe(false);
+  });
+
   it("includes the curated provider when the feature flag is enabled", async () => {
     const { getEnabledProviders } = await importRegistryWithEnv({
       enableCuratedProvider: true
     });
 
     expect(getEnabledProviders().some((provider) => provider.sourceId === "curated")).toBe(true);
+  });
+
+  it("includes the community submissions provider when the feature flag is enabled", async () => {
+    const { getEnabledProviders } = await importRegistryWithEnv({
+      enableCommunitySubmissionsProvider: true
+    });
+
+    expect(getEnabledProviders().some((provider) => provider.sourceId === "community-submissions")).toBe(true);
   });
 
   it("excludes Ticketmaster by default", async () => {

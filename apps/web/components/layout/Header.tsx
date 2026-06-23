@@ -12,6 +12,7 @@ export function Header() {
       </div>
       <nav className="nav-links" aria-label="Primary">
         <Link href="/">Discover</Link>
+        <Link href="/submit">Submit event</Link>
         <Link href="/saved">Saved</Link>
         <Link href="/sources">Sources</Link>
         <Link href="/admin">Admin</Link>

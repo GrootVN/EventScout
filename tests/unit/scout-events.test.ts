@@ -67,6 +67,7 @@ async function importCuratedProviderWithEnv(overrides: Record<string, boolean | 
       curatedEventsPath: "apps/web/data/curated-events.json",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
+      enableCommunitySubmissionsProvider: false,
       enableCuratedProvider: true,
       enableCityPresets: false,
       enableTicketmasterProvider: false,
@@ -80,6 +81,39 @@ async function importCuratedProviderWithEnv(overrides: Record<string, boolean | 
   }));
 
   return import("../../apps/web/lib/sources/curatedProvider");
+}
+
+async function importCommunitySubmissionProviderWithEnv(overrides: Record<string, boolean | string> = {}) {
+  vi.resetModules();
+  vi.doMock("@/lib/config/env", () => ({
+    env: {
+      appName: "Event Scout",
+      defaultCity: "Cincinnati",
+      defaultRegion: "OH",
+      defaultCountry: "USA",
+      ticketmasterApiKey: "",
+      meetupAccessToken: "",
+      meetupGraphqlEndpoint: "https://api.meetup.com/gql",
+      defaultCityPreset: "cincinnati",
+      icsSourceUrls: "",
+      rssSourceUrls: "",
+      curatedEventsPath: "apps/web/data/curated-events.json",
+      enableMockProvider: true,
+      enableCommunityMockProvider: true,
+      enableCommunitySubmissionsProvider: true,
+      enableCuratedProvider: false,
+      enableCityPresets: false,
+      enableTicketmasterProvider: false,
+      enableMeetupProvider: false,
+      enableIcsProvider: false,
+      enableRssProvider: false,
+      enableWebsiteProvider: false,
+      enableSocialLeads: false,
+      ...overrides
+    }
+  }));
+
+  return import("../../apps/web/lib/sources/communitySubmissionProvider");
 }
 
 async function importTicketmasterProviderWithEnv() {
@@ -98,6 +132,7 @@ async function importTicketmasterProviderWithEnv() {
       rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
+      enableCommunitySubmissionsProvider: false,
       enableCityPresets: false,
       enableTicketmasterProvider: true,
       enableMeetupProvider: false,
@@ -127,6 +162,7 @@ async function importMeetupProviderWithEnv() {
       rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
+      enableCommunitySubmissionsProvider: false,
       enableCityPresets: false,
       enableTicketmasterProvider: false,
       enableMeetupProvider: true,
@@ -156,6 +192,7 @@ async function importIcsProviderWithEnv(overrides: Record<string, boolean | stri
       rssSourceUrls: "",
       enableMockProvider: true,
       enableCommunityMockProvider: true,
+      enableCommunitySubmissionsProvider: false,
       enableCityPresets: false,
       enableTicketmasterProvider: false,
       enableMeetupProvider: false,
@@ -328,6 +365,58 @@ describe("scoutEvents", () => {
     expect(events.some((event) => event.originalSources.some((source) => source.sourceEventId === "curated-riverside-film-preview"))).toBe(false);
     expect(events.some((event) => event.originalSources.some((source) => source.sourceEventId === "curated-park-cleanup-rejected"))).toBe(false);
     expect(events.some((event) => event.originalSources.some((source) => source.sourceEventId === "curated-internal-draft-suppressed"))).toBe(false);
+  });
+
+  it("includes approved community submissions, excludes pending ones, and dedupes with mock data", async () => {
+    const { communitySubmissionProvider } = await importCommunitySubmissionProviderWithEnv();
+    const { createSubmission, approveSubmission, resetSubmissionsForTests } = await import("../../apps/web/lib/submissions/submissionStore");
+    resetSubmissionsForTests();
+
+    const pending = createSubmission({
+      title: "Pending Community Coffee",
+      startDateTime: "2026-06-24T22:30:00.000Z",
+      city: "Cincinnati",
+      sourceUrl: "https://example.com/community/submissions/pending-coffee"
+    });
+    const approved = createSubmission({
+      title: "Cincinnati Tech Meetup at Rhinegeist",
+      description: "A newcomer-friendly tech social with quick intros, demos, and brewery tables.",
+      startDateTime: "2026-06-21T22:00:00.000Z",
+      endDateTime: "2026-06-22T00:00:00.000Z",
+      venueName: "Rhinegeist Brewery",
+      address: "1910 Elm St, Cincinnati, OH 45202",
+      city: "Cincinnati",
+      region: "OH",
+      country: "USA",
+      priceType: "free",
+      sourceUrl: "https://example.com/community/submissions/cincinnati-tech-meetup",
+      categories: ["tech", "networking", "business"],
+      interests: ["newcomer-friendly", "solo-friendly"]
+    });
+    approveSubmission(approved.id, "Approved", "admin");
+
+    const { scoutEvents } = await importScoutEventsWithProviders([mockProvider, communitySubmissionProvider]);
+    const events = await scoutEvents({ city: "Cincinnati" }, { interests: [], userCity: "Cincinnati" });
+
+    expect(events.some((event) => event.originalSources.some((source) => source.sourceId === "community-submissions"))).toBe(true);
+    expect(
+      events.some((event) =>
+        event.originalSources.some((source) => source.sourceId === "community-submissions" && source.sourceEventId === pending.id)
+      )
+    ).toBe(false);
+
+    const mergedEvent = events.find((event) =>
+      event.originalSources.some((source) => source.sourceId === "community-submissions") &&
+      event.originalSources.some((source) => source.sourceId === "mock")
+    );
+
+    expect(mergedEvent).toBeDefined();
+    expect(mergedEvent?.originalSources).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ sourceId: "community-submissions" }),
+        expect.objectContaining({ sourceId: "mock" })
+      ])
+    );
   });
 
   it("does not crash when the curated file is missing", async () => {

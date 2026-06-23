@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-23T02:40:10.021Z",
+  "generatedAt": "2026-06-23T03:11:35.967Z",
   "city": "Cincinnati",
   "cityPreset": null,
   "enabledProviders": [
@@ -23,6 +23,7 @@
     }
   ],
   "curatedProvider": null,
+  "communitySubmissionsProvider": null,
   "rawEventCount": 48,
   "validNormalizedCount": 48,
   "droppedInvalidCount": 0,

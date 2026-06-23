@@ -19,7 +19,8 @@ The repo has been refocused around a newcomer-first discovery experience with:
 - A manual Ticketmaster live smoke QA script for real-key validation
 - A curated/admin source allowlist and moderation queue behind `/admin`
 - A file-backed curated admin events provider behind `ENABLE_CURATED_PROVIDER`
+- A public community submission flow behind `/submit` and `/api/submissions`
 
 ## Next milestone
 
-M15: Community submissions.
+M16: Source health dashboard.

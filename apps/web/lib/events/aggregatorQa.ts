@@ -7,6 +7,7 @@ import { filterSuppressedEvents } from "./suppression";
 import type { OriginalSource, RawEvent, ScoutEvent } from "./types";
 import { env } from "@/lib/config/env";
 import { consumeCuratedProviderDiagnostics } from "@/lib/sources/curatedProvider";
+import { consumeCommunitySubmissionProviderDiagnostics } from "@/lib/sources/communitySubmissionProvider";
 import { getEnabledProviders } from "@/lib/sources/registry";
 import { consumeTicketmasterProviderDiagnostics } from "@/lib/sources/ticketmasterProvider";
 import { consumeMeetupProviderDiagnostics } from "@/lib/sources/meetupProvider";
@@ -23,6 +24,9 @@ type ProviderSummary = {
   validCount: number;
   droppedCount: number;
   finalContributionCount: number;
+  totalSubmissions?: number;
+  emittedRawEventCount?: number;
+  invalidConversionCount?: number;
   rawLoadedCount?: number;
   approvedCount?: number;
   pendingCount?: number;
@@ -76,6 +80,7 @@ export type AggregatorQaReport = {
   cityPreset: CityPresetSummary | null;
   enabledProviders: ProviderSummary[];
   curatedProvider: ProviderSummary | null;
+  communitySubmissionsProvider: ProviderSummary | null;
   rawEventCount: number;
   validNormalizedCount: number;
   droppedInvalidCount: number;
@@ -163,7 +168,8 @@ function createProviderSummaries(
   rawEvents: RawEvent[],
   normalizedEvents: ScoutEvent[],
   dedupedEvents: ScoutEvent[],
-  curatedDiagnostics: ReturnType<typeof consumeCuratedProviderDiagnostics>
+  curatedDiagnostics: ReturnType<typeof consumeCuratedProviderDiagnostics>,
+  communityDiagnostics: ReturnType<typeof consumeCommunitySubmissionProviderDiagnostics>
 ) {
   return providers.map((provider) => {
     const rawCount = rawEvents.filter((event) => event.sourceId === provider.sourceId).length;
@@ -184,6 +190,20 @@ function createProviderSummaries(
             warnings: [],
             errors: []
           };
+    const communityCounts =
+      provider.sourceId === "community-submissions"
+        ? communityDiagnostics
+        : {
+            totalSubmissions: undefined,
+            pendingCount: undefined,
+            approvedCount: undefined,
+            rejectedCount: undefined,
+            suppressedCount: undefined,
+            emittedRawEventCount: undefined,
+            invalidConversionCount: undefined,
+            warnings: [],
+            errors: []
+          };
 
     return {
       sourceId: provider.sourceId,
@@ -193,6 +213,9 @@ function createProviderSummaries(
       validCount,
       droppedCount: rawCount - validCount,
       finalContributionCount,
+      totalSubmissions: communityCounts.totalSubmissions,
+      emittedRawEventCount: communityCounts.emittedRawEventCount,
+      invalidConversionCount: communityCounts.invalidConversionCount,
       rawLoadedCount: curatedCounts.rawLoadedCount,
       approvedCount: curatedCounts.approvedCount,
       pendingCount: curatedCounts.pendingCount,
@@ -262,7 +285,10 @@ export async function generateAggregatorQaReport(
   const visibleDedupedEvents = filterSuppressedEvents(dedupedEvents, suppressedEventIds);
   const duplicateGroups = buildDuplicateGroups(normalizedEvents, visibleDedupedEvents);
   const curatedDiagnostics = consumeCuratedProviderDiagnostics();
+  const communityDiagnostics = consumeCommunitySubmissionProviderDiagnostics();
   const curatedProvider = providers.find((provider) => provider.sourceId === "curated") ?? null;
+  const communitySubmissionsProvider =
+    providers.find((provider) => provider.sourceId === "community-submissions") ?? null;
   const suppressedFinalCount = dedupedEvents.length - visibleDedupedEvents.length;
 
   if (env.enableTicketmasterProvider && !env.ticketmasterApiKey) {
@@ -307,6 +333,8 @@ export async function generateAggregatorQaReport(
 
   warnings.push(...curatedDiagnostics.warnings);
   errors.push(...curatedDiagnostics.errors);
+  warnings.push(...communityDiagnostics.warnings);
+  errors.push(...communityDiagnostics.errors);
 
   if (suppressedFinalCount > 0) {
     warnings.push(
@@ -327,7 +355,8 @@ export async function generateAggregatorQaReport(
       rawEvents,
       normalizedEvents,
       visibleDedupedEvents,
-      curatedDiagnostics
+      curatedDiagnostics,
+      communityDiagnostics
     ),
     curatedProvider:
       curatedProvider && curatedProvider.enabled
@@ -349,6 +378,29 @@ export async function generateAggregatorQaReport(
             rejectedCount: curatedDiagnostics.rejectedCount,
             suppressedCount: curatedDiagnostics.suppressedCount,
             invalidCount: curatedDiagnostics.invalidCount
+          }
+        : null,
+    communitySubmissionsProvider:
+      communitySubmissionsProvider && communitySubmissionsProvider.enabled
+        ? {
+            sourceId: communitySubmissionsProvider.sourceId,
+            sourceName: communitySubmissionsProvider.sourceName,
+            sourceType: communitySubmissionsProvider.sourceType,
+            rawCount: rawEvents.filter((event) => event.sourceId === communitySubmissionsProvider.sourceId).length,
+            validCount: normalizedEvents.filter((event) => event.sourceId === communitySubmissionsProvider.sourceId).length,
+            droppedCount:
+              rawEvents.filter((event) => event.sourceId === communitySubmissionsProvider.sourceId).length -
+              normalizedEvents.filter((event) => event.sourceId === communitySubmissionsProvider.sourceId).length,
+            finalContributionCount: visibleDedupedEvents.filter((event) =>
+              event.originalSources.some((source) => source.sourceId === communitySubmissionsProvider.sourceId)
+            ).length,
+            totalSubmissions: communityDiagnostics.totalSubmissions,
+            emittedRawEventCount: communityDiagnostics.emittedRawEventCount,
+            invalidConversionCount: communityDiagnostics.invalidConversionCount,
+            pendingCount: communityDiagnostics.pendingCount,
+            approvedCount: communityDiagnostics.approvedCount,
+            rejectedCount: communityDiagnostics.rejectedCount,
+            suppressedCount: communityDiagnostics.suppressedCount
           }
         : null,
     rawEventCount: rawEvents.length,
@@ -392,6 +444,9 @@ function renderProviderList(providers: ProviderSummary[]) {
           <th>Valid</th>
           <th>Dropped</th>
           <th>Final Contribution</th>
+          <th>Total Submissions</th>
+          <th>Emitted Raw</th>
+          <th>Invalid Conversions</th>
           <th>Raw Loaded</th>
           <th>Approved</th>
           <th>Pending</th>
@@ -412,6 +467,9 @@ function renderProviderList(providers: ProviderSummary[]) {
                 <td>${provider.validCount}</td>
                 <td>${provider.droppedCount}</td>
                 <td>${provider.finalContributionCount}</td>
+                <td>${provider.totalSubmissions ?? "-"}</td>
+                <td>${provider.emittedRawEventCount ?? "-"}</td>
+                <td>${provider.invalidConversionCount ?? "-"}</td>
                 <td>${provider.rawLoadedCount ?? "-"}</td>
                 <td>${provider.approvedCount ?? "-"}</td>
                 <td>${provider.pendingCount ?? "-"}</td>
@@ -464,6 +522,29 @@ function renderCuratedSummary(provider: ProviderSummary | null) {
         <tr><th>Rejected</th><td>${provider.rejectedCount ?? 0}</td></tr>
         <tr><th>Suppressed</th><td>${provider.suppressedCount ?? 0}</td></tr>
         <tr><th>Invalid</th><td>${provider.invalidCount ?? 0}</td></tr>
+        <tr><th>Final Contribution</th><td>${provider.finalContributionCount}</td></tr>
+      </tbody>
+    </table>
+  `;
+}
+
+function renderCommunitySummary(provider: ProviderSummary | null) {
+  if (!provider) {
+    return "<p>Community submissions provider is disabled or has not produced diagnostics yet.</p>";
+  }
+
+  return `
+    <table>
+      <tbody>
+        <tr><th>Source</th><td>${escapeHtml(provider.sourceName)}</td></tr>
+        <tr><th>Source ID</th><td>${escapeHtml(provider.sourceId)}</td></tr>
+        <tr><th>Total Submissions</th><td>${provider.totalSubmissions ?? 0}</td></tr>
+        <tr><th>Pending</th><td>${provider.pendingCount ?? 0}</td></tr>
+        <tr><th>Approved</th><td>${provider.approvedCount ?? 0}</td></tr>
+        <tr><th>Rejected</th><td>${provider.rejectedCount ?? 0}</td></tr>
+        <tr><th>Suppressed</th><td>${provider.suppressedCount ?? 0}</td></tr>
+        <tr><th>Emitted Raw Events</th><td>${provider.emittedRawEventCount ?? 0}</td></tr>
+        <tr><th>Invalid Conversions</th><td>${provider.invalidConversionCount ?? 0}</td></tr>
         <tr><th>Final Contribution</th><td>${provider.finalContributionCount}</td></tr>
       </tbody>
     </table>
@@ -710,6 +791,11 @@ export function renderAggregatorQaHtml(report: AggregatorQaReport) {
       <section>
         <h2>Curated Diagnostics</h2>
         ${renderCuratedSummary(report.curatedProvider)}
+      </section>
+
+      <section>
+        <h2>Community Submissions Diagnostics</h2>
+        ${renderCommunitySummary(report.communitySubmissionsProvider)}
       </section>
 
       <section>

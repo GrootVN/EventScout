@@ -49,6 +49,8 @@ Candidate event statuses:
 
 Users can submit links or event details.
 
+Community submissions must remain pending until an admin approves them. Approved submissions are converted into curated/community events and then enter the public aggregator alongside other trusted sources.
+
 ## Required provider behavior
 
 Each provider must:
@@ -65,3 +67,4 @@ Meetup-specific notes:
 - Keep Meetup disabled by default behind `ENABLE_MEETUP_PROVIDER`.
 - Use `MEETUP_ACCESS_TOKEN` for token-based GraphQL access.
 - Preserve the original Meetup event URL on every raw event so source attribution stays transparent.
+- Preserve the original community submission source URL on every approved event so source attribution stays transparent.

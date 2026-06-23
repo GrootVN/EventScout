@@ -1,6 +1,8 @@
 import { isAdminPageAuthorized } from "@/lib/admin-auth";
 import { getFlaggedEvents, listTrustedSources } from "@/lib/event-service";
+import { listSubmissions } from "@/lib/submissions/submissionStore";
 import { ModerationList } from "@/components/moderation-list";
+import { CommunitySubmissionsManager } from "@/components/community-submissions-manager";
 import { TrustedSourcesManager } from "@/components/trusted-sources-manager";
 
 type AdminPageProps = {
@@ -24,7 +26,11 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     );
   }
 
-  const [trustedSources, flaggedEvents] = await Promise.all([listTrustedSources(), getFlaggedEvents()]);
+  const [trustedSources, flaggedEvents, pendingSubmissions] = await Promise.all([
+    listTrustedSources(),
+    getFlaggedEvents(),
+    listSubmissions("pending")
+  ]);
 
   return (
     <main className="page-shell">
@@ -39,10 +45,15 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           Curated admin events are file-backed for now and flow through the same ingestion pipeline when
           `ENABLE_CURATED_PROVIDER` is enabled.
         </p>
+        <p>
+          Community submissions are always held in a pending queue first. They do not appear in public discovery until
+          they are approved.
+        </p>
       </section>
       <div className="admin-grid">
         <ModerationList initialEvents={flaggedEvents} adminToken={key} />
         <TrustedSourcesManager initialSources={trustedSources} adminToken={key} />
+        <CommunitySubmissionsManager initialSubmissions={pendingSubmissions} adminToken={key} />
       </div>
     </main>
   );

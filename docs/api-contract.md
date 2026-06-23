@@ -57,6 +57,65 @@ Records user trust/relevance feedback.
 }
 ```
 
+## `POST /api/submissions`
+
+Creates a pending community submission record.
+
+```json
+{
+  "title": "Neighborhood Welcome Coffee",
+  "description": "optional",
+  "startDateTime": "2026-06-24T22:30:00.000Z",
+  "endDateTime": "optional",
+  "timezone": "optional",
+  "venueName": "optional",
+  "address": "optional",
+  "city": "Cincinnati",
+  "region": "OH",
+  "country": "USA",
+  "priceType": "free",
+  "minPrice": null,
+  "maxPrice": null,
+  "currency": "USD",
+  "sourceUrl": "https://example.com/events/coffee",
+  "categories": ["community"],
+  "interests": ["newcomer-friendly"],
+  "submitterName": "optional",
+  "submitterEmail": "optional",
+  "submitterNote": "optional"
+}
+```
+
+Response:
+
+```json
+{
+  "ok": true,
+  "submission": {
+    "id": "submission-1",
+    "status": "pending",
+    "title": "Neighborhood Welcome Coffee"
+  }
+}
+```
+
+## `GET /api/admin/submissions`
+
+Returns community submissions for moderation. Supports an optional `status` query parameter.
+
+## `POST /api/admin/submissions`
+
+Updates a submission status.
+
+```json
+{
+  "submissionId": "submission-1",
+  "action": "approve",
+  "moderationNote": "Looks good",
+  "reviewedBy": "admin"
+}
+```
+
 ## `GET /api/admin/flagged`
 
 Returns low-confidence or frequently-reported records for moderation.

@@ -22,6 +22,7 @@ export const env = {
   cityPresetQaLiveFetch: readFlag("CITY_PRESET_QA_LIVE_FETCH", false),
   enableMockProvider: readFlag("ENABLE_MOCK_PROVIDER", true),
   enableCommunityMockProvider: readFlag("ENABLE_COMMUNITY_MOCK_PROVIDER", true),
+  enableCommunitySubmissionsProvider: readFlag("ENABLE_COMMUNITY_SUBMISSIONS_PROVIDER", false),
   enableCuratedProvider: readFlag("ENABLE_CURATED_PROVIDER", false),
   enableCityPresets: readFlag("ENABLE_CITY_PRESETS", false),
   enableTicketmasterProvider: readFlag("ENABLE_TICKETMASTER_PROVIDER", false),

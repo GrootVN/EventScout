@@ -25,6 +25,7 @@ Event Scout is a newcomer-first local discovery app. It helps someone answer: "W
 - Aggregator QA artifacts with provider counts and merge visibility
 - A manual Ticketmaster smoke QA path that can write live report artifacts
 - A file-backed curated/admin events provider behind `ENABLE_CURATED_PROVIDER`
+- A community submission flow with in-memory moderation
 
 ## Quick start
 
@@ -195,6 +196,22 @@ Notes:
 - Invalid records are dropped with diagnostics instead of crashing the app.
 - See [docs/CURATED_EVENTS.md](/C:/Users/nguye/Documents/EventScout/docs/CURATED_EVENTS.md) for the file format and QA details.
 
+## Community submissions
+
+Users can submit local events from `/submit` without creating accounts:
+
+```bash
+ENABLE_COMMUNITY_SUBMISSIONS_PROVIDER=true
+```
+
+Notes:
+
+- New submissions are stored as `pending` first.
+- Pending submissions do not appear in public discovery until an admin approves them.
+- Approved submissions are converted into community events and enter the same aggregator pipeline as other sources.
+- The moderation store is in-memory only and resets on process restart.
+- See [docs/COMMUNITY_SUBMISSIONS.md](/C:/Users/nguye/Documents/EventScout/docs/COMMUNITY_SUBMISSIONS.md) for the flow, API contract, and limitations.
+
 ## Versioning
 
 This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
@@ -205,4 +222,4 @@ This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
 
 ## Next milestone
 
-Implement M15 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): Community submissions.
+Implement M16 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): Source health dashboard.

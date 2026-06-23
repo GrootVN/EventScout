@@ -717,7 +717,7 @@ function normalizeCuratedEvent(rawEvent: RawEvent): NormalizableEvent {
 
 export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
   const raw =
-    rawEvent.sourceId === "curated"
+    rawEvent.sourceId === "curated" || rawEvent.sourceId === "community-submissions"
       ? normalizeCuratedEvent(rawEvent)
       : rawEvent.sourceId === "ticketmaster"
         ? normalizeTicketmasterEvent(rawEvent.raw as TicketmasterRawEvent)
@@ -738,7 +738,7 @@ export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
   const neighborhood = clean(raw.neighborhood);
   const categories = [...new Set((raw.categories ?? []).map((entry) => entry.trim().toLowerCase()))];
   const interests =
-    rawEvent.sourceId === "curated"
+    rawEvent.sourceId === "curated" || rawEvent.sourceId === "community-submissions"
       ? [...new Set([...categories, ...normalizeTagList(raw.interests)])]
       : rawEvent.sourceId === "meetup"
       ? [...new Set(normalizeTagList(raw.interests))]
@@ -794,7 +794,7 @@ export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
     interests,
     confidence:
       raw.confidence ??
-      (rawEvent.sourceId === "curated"
+      (rawEvent.sourceId === "curated" || rawEvent.sourceId === "community-submissions"
         ? 0.8
         : rawEvent.sourceType === "social"
           ? 0.55
@@ -806,13 +806,13 @@ export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
                 ? 0.9
                 : 0.92),
     isNewcomerFriendly:
-      rawEvent.sourceId === "curated"
+      rawEvent.sourceId === "curated" || rawEvent.sourceId === "community-submissions"
         ? raw.isNewcomerFriendly ?? interests.includes("newcomer-friendly")
         : rawEvent.sourceId === "meetup"
         ? interests.includes("newcomer-friendly")
         : interests.includes("newcomer-friendly"),
     isSoloFriendly:
-      rawEvent.sourceId === "curated"
+      rawEvent.sourceId === "curated" || rawEvent.sourceId === "community-submissions"
         ? raw.isSoloFriendly ?? interests.includes("solo-friendly")
         : rawEvent.sourceId === "meetup"
         ? interests.includes("solo-friendly")

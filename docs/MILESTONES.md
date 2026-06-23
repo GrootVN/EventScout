@@ -381,6 +381,34 @@ Status: [x]
 
 ---
 
+## M15: Community submissions
+
+Status: [x]
+
+### Acceptance criteria
+
+- Public submissions create pending records before any moderation decision.
+- Approved submissions enter the public aggregator pipeline.
+- Rejected and suppressed submissions stay out of discovery.
+- The admin moderation queue can review pending submissions.
+- The public submission page explains that items stay hidden until approved.
+- The submission store is in-memory only for this milestone.
+- QA shows approved community submissions when the provider is enabled.
+
+### Required checks
+
+- npm run lint
+- npm run typecheck
+- npm test
+- npm run build
+- npm run qa:aggregator
+
+### Next recommended milestone
+
+- M16: Source health dashboard
+
+---
+
 ## M14.1: Curated event ingestion provider
 
 Status: [x]
