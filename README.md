@@ -45,11 +45,13 @@ Open [http://localhost:3000](http://localhost:3000).
 cmd /c npm run lint
 cmd /c npm run typecheck
 cmd /c npm test
-cmd /c npm run build
 cmd /c npm run qa:aggregator
+cmd /c npm run build
 cmd /c npm run qa:ticketmaster
 cmd /c npm run check:env
 ```
+
+The GitHub Actions CI workflow runs `check:env`, `lint`, `typecheck`, `test`, `qa:aggregator`, and `build` in that order.
 
 ## Ticketmaster smoke QA
 

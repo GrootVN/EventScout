@@ -21,10 +21,12 @@ Helpful commands:
 - `npm run lint`
 - `npm run typecheck`
 - `npm test`
-- `npm run build`
 - `npm run qa:aggregator`
+- `npm run build`
 - `npm run check:env`
 - `npm run check:env:production` for a manual production-readiness gate after secrets are set
+
+CI runs `check:env`, `lint`, `typecheck`, `test`, `qa:aggregator`, and `build`.
 
 ## Production
 

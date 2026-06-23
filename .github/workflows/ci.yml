@@ -34,5 +34,8 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Aggregator QA
+        run: npm run qa:aggregator
+
       - name: Build
         run: npm run build

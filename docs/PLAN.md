@@ -22,6 +22,7 @@ The repo has been refocused around a newcomer-first discovery experience with:
 - A public community submission flow behind `/submit` and `/api/submissions`
 - A source health dashboard behind `/health` and `/api/health`
 - Production safety hardening for admin access, sample data, health visibility, and QA artifact policy
+- CI now runs `check:env`, `lint`, `typecheck`, `test`, `qa:aggregator`, and `build`
 
 ## Next milestone
 

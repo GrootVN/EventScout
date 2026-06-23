@@ -486,3 +486,28 @@ Status: [x]
 ### Next recommended milestone
 
 - M18: Source run persistence/history
+
+---
+
+## M17.1: CI aggregator QA gate
+
+Status: [x]
+
+### Acceptance criteria
+
+- GitHub Actions runs `npm run qa:aggregator` on each validation pass.
+- Generated QA artifacts remain ignored and do not dirty the repository.
+- CI order stays consistent with the deployment-safety workflow.
+
+### Required checks
+
+- npm run check:env
+- npm run lint
+- npm run typecheck
+- npm test
+- npm run qa:aggregator
+- npm run build
+
+### Next recommended milestone
+
+- M18: Source run persistence/history
