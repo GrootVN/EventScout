@@ -378,3 +378,30 @@ Status: [x]
 ### Next recommended milestone
 
 - M15: Community submissions
+
+---
+
+## M14.1: Curated event ingestion provider
+
+Status: [x]
+
+### Acceptance criteria
+
+- A file-backed curated provider can be enabled behind `ENABLE_CURATED_PROVIDER`.
+- Curated records validate strictly before entering the public pipeline.
+- Only approved curated records become public events.
+- Pending, rejected, and suppressed curated records are counted in QA but do not enter discovery.
+- Aggregator QA reports curated load/status diagnostics and curated duplicate groups.
+- Mock-only mode still works when curated ingestion is disabled or misconfigured.
+
+### Required checks
+
+- npm run lint
+- npm run typecheck
+- npm test
+- npm run build
+- npm run qa:aggregator
+
+### Next recommended milestone
+
+- M15: Community submissions

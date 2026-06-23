@@ -12,6 +12,7 @@ Event Scout should collect events from many sources, but every source must be le
 - Ticketmaster
 - Meetup
 - Organizer-connected Eventbrite
+- Curated/admin file-backed events
 
 ### Tier 2: Public calendar feeds
 

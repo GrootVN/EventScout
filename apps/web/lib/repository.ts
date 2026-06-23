@@ -200,6 +200,7 @@ export interface EventRepository {
   getFacets(query: EventQuery): Promise<EventFacetResponse>;
   getFlaggedEvents(): Promise<EventRecord[]>;
   getReviewQueue(): Promise<EventRecord[]>;
+  listSuppressedEventIds(): Promise<string[]>;
   createFeedback(input: {
     event_id: string;
     type: "not_relevant" | "duplicate" | "wrong_location";
@@ -238,6 +239,10 @@ const repository: EventRepository = {
 
   async getReviewQueue() {
     return getReviewableEvents(await getScoutedEvents());
+  },
+
+  async listSuppressedEventIds() {
+    return [...state.suppressedEventIds];
   },
 
   async createFeedback(input) {

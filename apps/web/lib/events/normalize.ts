@@ -1,4 +1,5 @@
 import { classifyInterests } from "./classifyInterests";
+import type { CuratedEventInput } from "./curatedSchema";
 import { assertValidScoutEvent } from "./schema";
 import type { RawEvent, ScoutEvent } from "./types";
 import { slugify } from "@/lib/utils/slug";
@@ -26,6 +27,8 @@ type NormalizableEvent = {
   categories?: string[];
   interests?: string[];
   confidence?: number;
+  isNewcomerFriendly?: boolean;
+  isSoloFriendly?: boolean;
 };
 
 type TicketmasterRawEvent = {
@@ -364,6 +367,8 @@ type MeetupRawEvent = {
   isRecurring?: boolean;
 };
 
+type CuratedRawEvent = CuratedEventInput;
+
 const MEETUP_TECH_TERMS = ["tech", "software", "developer", "developer", "startup", "coding", "programming"];
 const MEETUP_OUTDOORS_TERMS = ["hiking", "run", "running", "cycling", "bike", "biking", "outdoors", "outdoor"];
 const MEETUP_BOOKS_TERMS = ["book", "books", "reading", "writing", "lecture", "literary", "author"];
@@ -669,17 +674,60 @@ function normalizeTicketmasterEvent(rawEvent: TicketmasterRawEvent): Normalizabl
   };
 }
 
+function normalizeCuratedEvent(rawEvent: RawEvent): NormalizableEvent {
+  const raw = rawEvent.raw as CuratedRawEvent;
+  const title = clean(raw.title);
+  if (!title) {
+    throw new Error("Curated event is missing a title");
+  }
+
+  const startDateTime = clean(raw.startDateTime);
+  if (!startDateTime) {
+    throw new Error("Curated event is missing a start date");
+  }
+
+  const categories = normalizeTagList(raw.categories);
+  const interests = [...new Set([...categories, ...normalizeTagList(raw.interests)])];
+
+  return {
+    id: clean(raw.id) ?? undefined,
+    title,
+    description: clean(raw.description),
+    startDateTime,
+    endDateTime: clean(raw.endDateTime),
+    timezone: clean(raw.timezone),
+    venueName: clean(raw.venueName),
+    address: clean(raw.address),
+    city: clean(raw.city) ?? "Unknown",
+    region: clean(raw.region),
+    country: normalizeCountry(raw.country),
+    neighborhood: null,
+    latitude: typeof raw.latitude === "number" ? raw.latitude : null,
+    longitude: typeof raw.longitude === "number" ? raw.longitude : null,
+    priceType: raw.priceType,
+    minPrice: raw.minPrice ?? null,
+    maxPrice: raw.maxPrice ?? null,
+    currency: clean(raw.currency),
+    imageUrl: clean(raw.imageUrl),
+    categories,
+    interests,
+    confidence: raw.confidence ?? 0.8
+  };
+}
+
 export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
   const raw =
-    rawEvent.sourceId === "ticketmaster"
-      ? normalizeTicketmasterEvent(rawEvent.raw as TicketmasterRawEvent)
-      : rawEvent.sourceId === "meetup"
-        ? normalizeMeetupEvent(rawEvent)
-      : rawEvent.sourceId === "ics"
-        ? normalizeIcsEvent(rawEvent)
-          : rawEvent.sourceId === "rss"
-          ? normalizeRssEvent(rawEvent)
-        : (rawEvent.raw as NormalizableEvent);
+    rawEvent.sourceId === "curated"
+      ? normalizeCuratedEvent(rawEvent)
+      : rawEvent.sourceId === "ticketmaster"
+        ? normalizeTicketmasterEvent(rawEvent.raw as TicketmasterRawEvent)
+        : rawEvent.sourceId === "meetup"
+          ? normalizeMeetupEvent(rawEvent)
+          : rawEvent.sourceId === "ics"
+            ? normalizeIcsEvent(rawEvent)
+            : rawEvent.sourceId === "rss"
+              ? normalizeRssEvent(rawEvent)
+              : (rawEvent.raw as NormalizableEvent);
   const title = clean(raw.title) ?? "Untitled Event";
   const description = clean(raw.description);
   const venueName = clean(raw.venueName);
@@ -690,7 +738,9 @@ export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
   const neighborhood = clean(raw.neighborhood);
   const categories = [...new Set((raw.categories ?? []).map((entry) => entry.trim().toLowerCase()))];
   const interests =
-    rawEvent.sourceId === "meetup"
+    rawEvent.sourceId === "curated"
+      ? [...new Set([...categories, ...normalizeTagList(raw.interests)])]
+      : rawEvent.sourceId === "meetup"
       ? [...new Set(normalizeTagList(raw.interests))]
       : [...new Set([
           ...classifyInterests({
@@ -744,21 +794,27 @@ export function normalizeRawEvent(rawEvent: RawEvent): ScoutEvent {
     interests,
     confidence:
       raw.confidence ??
-      (rawEvent.sourceType === "social"
-        ? 0.55
-        : rawEvent.sourceType === "ics"
-          ? 0.88
-          : rawEvent.sourceType === "rss"
-            ? 0.78
-            : rawEvent.sourceId === "meetup"
-              ? 0.9
-            : 0.92),
+      (rawEvent.sourceId === "curated"
+        ? 0.8
+        : rawEvent.sourceType === "social"
+          ? 0.55
+          : rawEvent.sourceType === "ics"
+            ? 0.88
+            : rawEvent.sourceType === "rss"
+              ? 0.78
+              : rawEvent.sourceId === "meetup"
+                ? 0.9
+                : 0.92),
     isNewcomerFriendly:
-      rawEvent.sourceId === "meetup"
+      rawEvent.sourceId === "curated"
+        ? raw.isNewcomerFriendly ?? interests.includes("newcomer-friendly")
+        : rawEvent.sourceId === "meetup"
         ? interests.includes("newcomer-friendly")
         : interests.includes("newcomer-friendly"),
     isSoloFriendly:
-      rawEvent.sourceId === "meetup"
+      rawEvent.sourceId === "curated"
+        ? raw.isSoloFriendly ?? interests.includes("solo-friendly")
+        : rawEvent.sourceId === "meetup"
         ? interests.includes("solo-friendly")
         : interests.includes("solo-friendly"),
     originalSources: [

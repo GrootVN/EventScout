@@ -1,0 +1,25 @@
+[
+  {
+    "id": "missing-title",
+    "startDateTime": "2026-06-21T22:00:00.000Z",
+    "city": "Cincinnati",
+    "priceType": "free",
+    "sourceUrl": "https://example.com/curated/missing-title"
+  },
+  {
+    "id": "bad-url",
+    "title": "Bad URL Event",
+    "startDateTime": "2026-06-21T22:00:00.000Z",
+    "city": "Cincinnati",
+    "priceType": "free",
+    "sourceUrl": "notaurl"
+  },
+  {
+    "id": "bad-date",
+    "title": "Bad Date Event",
+    "startDateTime": "not-a-date",
+    "city": "Cincinnati",
+    "priceType": "free",
+    "sourceUrl": "https://example.com/curated/bad-date"
+  }
+]

@@ -3,8 +3,10 @@ import path from "node:path";
 import { dedupeEvents, getDedupeKey, isLikelyDuplicate } from "./dedupe";
 import { normalizeRawEvent } from "./normalize";
 import { validateScoutEvent } from "./schema";
+import { filterSuppressedEvents } from "./suppression";
 import type { OriginalSource, RawEvent, ScoutEvent } from "./types";
 import { env } from "@/lib/config/env";
+import { consumeCuratedProviderDiagnostics } from "@/lib/sources/curatedProvider";
 import { getEnabledProviders } from "@/lib/sources/registry";
 import { consumeTicketmasterProviderDiagnostics } from "@/lib/sources/ticketmasterProvider";
 import { consumeMeetupProviderDiagnostics } from "@/lib/sources/meetupProvider";
@@ -21,6 +23,12 @@ type ProviderSummary = {
   validCount: number;
   droppedCount: number;
   finalContributionCount: number;
+  rawLoadedCount?: number;
+  approvedCount?: number;
+  pendingCount?: number;
+  rejectedCount?: number;
+  suppressedCount?: number;
+  invalidCount?: number;
 };
 
 type DuplicateGroup = {
@@ -67,6 +75,7 @@ export type AggregatorQaReport = {
   city: string;
   cityPreset: CityPresetSummary | null;
   enabledProviders: ProviderSummary[];
+  curatedProvider: ProviderSummary | null;
   rawEventCount: number;
   validNormalizedCount: number;
   droppedInvalidCount: number;
@@ -97,6 +106,11 @@ function escapeHtml(value: string) {
     .replaceAll(">", "&gt;")
     .replaceAll("\"", "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+async function loadSuppressedEventIds() {
+  const { getEventRepository } = await import("@/lib/repository");
+  return getEventRepository().listSuppressedEventIds();
 }
 
 function buildDuplicateGroups(events: ScoutEvent[], dedupedEvents: ScoutEvent[]): DuplicateGroup[] {
@@ -148,7 +162,8 @@ function createProviderSummaries(
   providers: EventSourceProvider[],
   rawEvents: RawEvent[],
   normalizedEvents: ScoutEvent[],
-  dedupedEvents: ScoutEvent[]
+  dedupedEvents: ScoutEvent[],
+  curatedDiagnostics: ReturnType<typeof consumeCuratedProviderDiagnostics>
 ) {
   return providers.map((provider) => {
     const rawCount = rawEvents.filter((event) => event.sourceId === provider.sourceId).length;
@@ -156,6 +171,19 @@ function createProviderSummaries(
     const finalContributionCount = dedupedEvents.filter((event) =>
       event.originalSources.some((source) => source.sourceId === provider.sourceId)
     ).length;
+    const curatedCounts =
+      provider.sourceId === "curated"
+        ? curatedDiagnostics
+        : {
+            rawLoadedCount: undefined,
+            approvedCount: undefined,
+            pendingCount: undefined,
+            rejectedCount: undefined,
+            suppressedCount: undefined,
+            invalidCount: undefined,
+            warnings: [],
+            errors: []
+          };
 
     return {
       sourceId: provider.sourceId,
@@ -164,7 +192,13 @@ function createProviderSummaries(
       rawCount,
       validCount,
       droppedCount: rawCount - validCount,
-      finalContributionCount
+      finalContributionCount,
+      rawLoadedCount: curatedCounts.rawLoadedCount,
+      approvedCount: curatedCounts.approvedCount,
+      pendingCount: curatedCounts.pendingCount,
+      rejectedCount: curatedCounts.rejectedCount,
+      suppressedCount: curatedCounts.suppressedCount,
+      invalidCount: curatedCounts.invalidCount
     };
   });
 }
@@ -224,7 +258,12 @@ export async function generateAggregatorQaReport(
   }
 
   const dedupedEvents = dedupeEvents(normalizedEvents);
-  const duplicateGroups = buildDuplicateGroups(normalizedEvents, dedupedEvents);
+  const suppressedEventIds = await loadSuppressedEventIds();
+  const visibleDedupedEvents = filterSuppressedEvents(dedupedEvents, suppressedEventIds);
+  const duplicateGroups = buildDuplicateGroups(normalizedEvents, visibleDedupedEvents);
+  const curatedDiagnostics = consumeCuratedProviderDiagnostics();
+  const curatedProvider = providers.find((provider) => provider.sourceId === "curated") ?? null;
+  const suppressedFinalCount = dedupedEvents.length - visibleDedupedEvents.length;
 
   if (env.enableTicketmasterProvider && !env.ticketmasterApiKey) {
     warnings.push("Ticketmaster provider is enabled but TICKETMASTER_API_KEY is missing; the provider stays disabled.");
@@ -266,7 +305,16 @@ export async function generateAggregatorQaReport(
     }
   }
 
-  if (dedupedEvents.length === 0) {
+  warnings.push(...curatedDiagnostics.warnings);
+  errors.push(...curatedDiagnostics.errors);
+
+  if (suppressedFinalCount > 0) {
+    warnings.push(
+      `Suppressed ${suppressedFinalCount} event${suppressedFinalCount === 1 ? "" : "s"} from final output.`
+    );
+  }
+
+  if (visibleDedupedEvents.length === 0) {
     warnings.push("Aggregation produced no final events.");
   }
 
@@ -274,14 +322,42 @@ export async function generateAggregatorQaReport(
     generatedAt: new Date().toISOString(),
     city: input.city,
     cityPreset,
-    enabledProviders: createProviderSummaries(providers, rawEvents, normalizedEvents, dedupedEvents),
+    enabledProviders: createProviderSummaries(
+      providers,
+      rawEvents,
+      normalizedEvents,
+      visibleDedupedEvents,
+      curatedDiagnostics
+    ),
+    curatedProvider:
+      curatedProvider && curatedProvider.enabled
+        ? {
+            sourceId: curatedProvider.sourceId,
+            sourceName: curatedProvider.sourceName,
+            sourceType: curatedProvider.sourceType,
+            rawCount: rawEvents.filter((event) => event.sourceId === curatedProvider.sourceId).length,
+            validCount: normalizedEvents.filter((event) => event.sourceId === curatedProvider.sourceId).length,
+            droppedCount:
+              rawEvents.filter((event) => event.sourceId === curatedProvider.sourceId).length -
+              normalizedEvents.filter((event) => event.sourceId === curatedProvider.sourceId).length,
+            finalContributionCount: visibleDedupedEvents.filter((event) =>
+              event.originalSources.some((source) => source.sourceId === curatedProvider.sourceId)
+            ).length,
+            rawLoadedCount: curatedDiagnostics.rawLoadedCount,
+            approvedCount: curatedDiagnostics.approvedCount,
+            pendingCount: curatedDiagnostics.pendingCount,
+            rejectedCount: curatedDiagnostics.rejectedCount,
+            suppressedCount: curatedDiagnostics.suppressedCount,
+            invalidCount: curatedDiagnostics.invalidCount
+          }
+        : null,
     rawEventCount: rawEvents.length,
     validNormalizedCount: normalizedEvents.length,
     droppedInvalidCount,
     dedupedCount: dedupedEvents.length,
-    finalCount: dedupedEvents.length,
+    finalCount: visibleDedupedEvents.length,
     duplicateGroups,
-    events: dedupedEvents.map((event) => ({
+    events: visibleDedupedEvents.map((event) => ({
       id: event.id,
       title: event.title,
       date: event.startDateTime,
@@ -316,6 +392,12 @@ function renderProviderList(providers: ProviderSummary[]) {
           <th>Valid</th>
           <th>Dropped</th>
           <th>Final Contribution</th>
+          <th>Raw Loaded</th>
+          <th>Approved</th>
+          <th>Pending</th>
+          <th>Rejected</th>
+          <th>Suppressed</th>
+          <th>Invalid</th>
         </tr>
       </thead>
       <tbody>
@@ -330,6 +412,12 @@ function renderProviderList(providers: ProviderSummary[]) {
                 <td>${provider.validCount}</td>
                 <td>${provider.droppedCount}</td>
                 <td>${provider.finalContributionCount}</td>
+                <td>${provider.rawLoadedCount ?? "-"}</td>
+                <td>${provider.approvedCount ?? "-"}</td>
+                <td>${provider.pendingCount ?? "-"}</td>
+                <td>${provider.rejectedCount ?? "-"}</td>
+                <td>${provider.suppressedCount ?? "-"}</td>
+                <td>${provider.invalidCount ?? "-"}</td>
               </tr>
             `
           )
@@ -355,6 +443,28 @@ function renderCityPresetSummary(preset: CityPresetSummary | null) {
         <tr><th>ICS Sources</th><td>${preset.icsSourceCount}</td></tr>
         <tr><th>RSS Sources</th><td>${preset.rssSourceCount}</td></tr>
         <tr><th>Ticketmaster Enabled</th><td>${preset.ticketmasterEnabled ? "Yes" : "No"}</td></tr>
+      </tbody>
+    </table>
+  `;
+}
+
+function renderCuratedSummary(provider: ProviderSummary | null) {
+  if (!provider) {
+    return "<p>Curated provider is disabled or has not produced diagnostics yet.</p>";
+  }
+
+  return `
+    <table>
+      <tbody>
+        <tr><th>Source</th><td>${escapeHtml(provider.sourceName)}</td></tr>
+        <tr><th>Source ID</th><td>${escapeHtml(provider.sourceId)}</td></tr>
+        <tr><th>Raw Loaded</th><td>${provider.rawLoadedCount ?? 0}</td></tr>
+        <tr><th>Approved</th><td>${provider.approvedCount ?? 0}</td></tr>
+        <tr><th>Pending</th><td>${provider.pendingCount ?? 0}</td></tr>
+        <tr><th>Rejected</th><td>${provider.rejectedCount ?? 0}</td></tr>
+        <tr><th>Suppressed</th><td>${provider.suppressedCount ?? 0}</td></tr>
+        <tr><th>Invalid</th><td>${provider.invalidCount ?? 0}</td></tr>
+        <tr><th>Final Contribution</th><td>${provider.finalContributionCount}</td></tr>
       </tbody>
     </table>
   `;
@@ -595,6 +705,11 @@ export function renderAggregatorQaHtml(report: AggregatorQaReport) {
       <section>
         <h2>Enabled Providers</h2>
         ${renderProviderList(report.enabledProviders)}
+      </section>
+
+      <section>
+        <h2>Curated Diagnostics</h2>
+        ${renderCuratedSummary(report.curatedProvider)}
       </section>
 
       <section>

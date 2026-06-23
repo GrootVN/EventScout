@@ -1,0 +1,9 @@
+[
+  {
+    "id": "broken-json",
+    "title": "Broken JSON File",
+    "startDateTime": "2026-06-21T22:00:00.000Z",
+    "city": "Cincinnati",
+    "priceType": "free",
+    "sourceUrl": "https://example.com/curated/broken-json"
+  

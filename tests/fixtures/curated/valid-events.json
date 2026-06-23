@@ -1,0 +1,25 @@
+[
+  {
+    "id": "curated-valid-tech",
+    "title": "Cincinnati Tech Meetup at Rhinegeist",
+    "startDateTime": "2026-06-21T22:00:00.000Z",
+    "endDateTime": "2026-06-22T00:00:00.000Z",
+    "city": "Cincinnati",
+    "priceType": "free",
+    "sourceUrl": "https://example.com/curated/valid-tech",
+    "categories": ["tech", "networking"],
+    "status": "approved"
+  },
+  {
+    "id": "curated-valid-coffee",
+    "title": "Neighborhood Welcome Coffee",
+    "startDateTime": "2026-06-23T22:30:00.000Z",
+    "city": "Cincinnati",
+    "priceType": "free",
+    "sourceUrl": "https://example.com/curated/valid-coffee",
+    "sourceName": "Curated Admin Events",
+    "interests": ["newcomer-friendly", "solo-friendly"],
+    "isNewcomerFriendly": true,
+    "isSoloFriendly": true
+  }
+]

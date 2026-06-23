@@ -1,5 +1,6 @@
 import { filterEvents } from "./filters";
 import { normalizeRawEvent } from "./normalize";
+import { filterSuppressedEvents } from "./suppression";
 import { rankEvents } from "./ranking";
 import { validateScoutEvent } from "./schema";
 import type { EventFilters, RankingInput, ScoutEvent } from "./types";
@@ -14,6 +15,11 @@ async function fetchAllProviderEvents(input: FetchEventsInput) {
   );
 
   return settled.flatMap((result) => (result.status === "fulfilled" ? result.value : []));
+}
+
+async function loadSuppressedEventIds() {
+  const { getEventRepository } = await import("@/lib/repository");
+  return getEventRepository().listSuppressedEventIds();
 }
 
 function normalizeValidEvents(rawEvents: Awaited<ReturnType<typeof fetchAllProviderEvents>>) {
@@ -42,7 +48,9 @@ export async function scoutEvents(filters: EventFilters, rankingInput: RankingIn
 
   const normalized = normalizeValidEvents(rawEvents);
   const deduped = dedupeEvents(normalized);
-  const filtered = filterEvents(deduped, filters);
+  const suppressedEventIds = await loadSuppressedEventIds();
+  const unsuppressed = filterSuppressedEvents(deduped, suppressedEventIds);
+  const filtered = filterEvents(unsuppressed, filters);
   return rankEvents(filtered, rankingInput);
 }
 

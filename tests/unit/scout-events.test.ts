@@ -50,6 +50,38 @@ async function importScoutEventsWithProviders(providers: EventSourceProvider[]) 
   return import("../../apps/web/lib/events/service");
 }
 
+async function importCuratedProviderWithEnv(overrides: Record<string, boolean | string> = {}) {
+  vi.resetModules();
+  vi.doMock("@/lib/config/env", () => ({
+    env: {
+      appName: "Event Scout",
+      defaultCity: "Cincinnati",
+      defaultRegion: "OH",
+      defaultCountry: "USA",
+      ticketmasterApiKey: "",
+      meetupAccessToken: "",
+      meetupGraphqlEndpoint: "https://api.meetup.com/gql",
+      defaultCityPreset: "cincinnati",
+      icsSourceUrls: "",
+      rssSourceUrls: "",
+      curatedEventsPath: "apps/web/data/curated-events.json",
+      enableMockProvider: true,
+      enableCommunityMockProvider: true,
+      enableCuratedProvider: true,
+      enableCityPresets: false,
+      enableTicketmasterProvider: false,
+      enableMeetupProvider: false,
+      enableIcsProvider: false,
+      enableRssProvider: false,
+      enableWebsiteProvider: false,
+      enableSocialLeads: false,
+      ...overrides
+    }
+  }));
+
+  return import("../../apps/web/lib/sources/curatedProvider");
+}
+
 async function importTicketmasterProviderWithEnv() {
   vi.resetModules();
   vi.doMock("@/lib/config/env", () => ({
@@ -267,6 +299,49 @@ describe("scoutEvents", () => {
 
     expect(events.some((event) => event.title === "Neighborhood Film on the Lawn")).toBe(true);
     expect(events.some((event) => event.title === "Volunteer River Cleanup Morning")).toBe(true);
+  });
+
+  it("includes curated approved events and merges curated duplicates with mock data", async () => {
+    const { curatedProvider } = await importCuratedProviderWithEnv({
+      enableCuratedProvider: true,
+      curatedEventsPath: "apps/web/data/curated-events.json"
+    });
+    const providers = [curatedProvider, mockProvider];
+
+    const { scoutEvents } = await importScoutEventsWithProviders(providers);
+    const events = await scoutEvents({ city: "Cincinnati" }, { interests: [], userCity: "Cincinnati" });
+
+    expect(events.some((event) => event.originalSources.some((source) => source.sourceId === "curated"))).toBe(true);
+
+    const mergedEvent = events.find((event) =>
+      event.originalSources.some((source) => source.sourceId === "curated") &&
+      event.originalSources.some((source) => source.sourceId === "mock")
+    );
+
+    expect(mergedEvent).toBeDefined();
+    expect(mergedEvent?.originalSources).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ sourceName: "Curated Admin Events" }),
+        expect.objectContaining({ sourceName: "Mock Local Radar" })
+      ])
+    );
+    expect(events.some((event) => event.originalSources.some((source) => source.sourceEventId === "curated-riverside-film-preview"))).toBe(false);
+    expect(events.some((event) => event.originalSources.some((source) => source.sourceEventId === "curated-park-cleanup-rejected"))).toBe(false);
+    expect(events.some((event) => event.originalSources.some((source) => source.sourceEventId === "curated-internal-draft-suppressed"))).toBe(false);
+  });
+
+  it("does not crash when the curated file is missing", async () => {
+    const { curatedProvider } = await importCuratedProviderWithEnv({
+      enableCuratedProvider: true,
+      curatedEventsPath: "tests/fixtures/curated/missing-file.json"
+    });
+    const providers = [curatedProvider, mockProvider];
+
+    const { scoutEvents } = await importScoutEventsWithProviders(providers);
+    const events = await scoutEvents({ city: "Cincinnati" }, { interests: [], userCity: "Cincinnati" });
+
+    expect(events.length).toBeGreaterThan(0);
+    expect(events.some((event) => event.sourceId === "curated")).toBe(false);
   });
 
   it("works with Ticketmaster enabled and merges duplicate events from Ticketmaster and mock data", async () => {

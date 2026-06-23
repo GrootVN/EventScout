@@ -1,0 +1,85 @@
+[
+  {
+    "id": "curated-mixed-tech",
+    "title": "Cincinnati Tech Meetup at Rhinegeist",
+    "startDateTime": "2026-06-21T22:00:00.000Z",
+    "endDateTime": "2026-06-22T00:00:00.000Z",
+    "city": "Cincinnati",
+    "priceType": "free",
+    "sourceUrl": "https://example.com/curated/mixed-tech",
+    "categories": ["tech", "networking"],
+    "status": "approved"
+  },
+  {
+    "id": "curated-mixed-coffee",
+    "title": "Neighborhood Welcome Coffee",
+    "startDateTime": "2026-06-23T22:30:00.000Z",
+    "city": "Cincinnati",
+    "priceType": "free",
+    "sourceUrl": "https://example.com/curated/mixed-coffee",
+    "interests": ["newcomer-friendly", "solo-friendly"],
+    "status": "approved"
+  },
+  {
+    "id": "curated-mixed-brunch",
+    "title": "Board Game Brunch for New Neighbors",
+    "startDateTime": "2026-06-25T15:00:00.000Z",
+    "city": "Cincinnati",
+    "priceType": "paid",
+    "sourceUrl": "https://example.com/curated/mixed-brunch",
+    "status": "approved"
+  },
+  {
+    "id": "curated-mixed-picnic",
+    "title": "City Newcomer Picnic",
+    "startDateTime": "2026-06-26T19:00:00.000Z",
+    "city": "Cincinnati",
+    "priceType": "free",
+    "sourceUrl": "https://example.com/curated/mixed-picnic",
+    "status": "approved"
+  },
+  {
+    "id": "curated-mixed-gallery",
+    "title": "Gallery Walk After Hours",
+    "startDateTime": "2026-06-27T22:00:00.000Z",
+    "city": "Cincinnati",
+    "priceType": "paid",
+    "sourceUrl": "https://example.com/curated/mixed-gallery",
+    "status": "approved"
+  },
+  {
+    "id": "curated-mixed-pending",
+    "title": "Riverside Film Preview",
+    "startDateTime": "2026-06-28T01:00:00.000Z",
+    "city": "Cincinnati",
+    "priceType": "free",
+    "sourceUrl": "https://example.com/curated/mixed-pending",
+    "status": "pending"
+  },
+  {
+    "id": "curated-mixed-rejected",
+    "title": "Park Cleanup Planning Draft",
+    "startDateTime": "2026-06-29T13:00:00.000Z",
+    "city": "Cincinnati",
+    "priceType": "free",
+    "sourceUrl": "https://example.com/curated/mixed-rejected",
+    "status": "rejected"
+  },
+  {
+    "id": "curated-mixed-suppressed",
+    "title": "Internal Draft Event",
+    "startDateTime": "2026-06-30T22:00:00.000Z",
+    "city": "Cincinnati",
+    "priceType": "unknown",
+    "sourceUrl": "https://example.com/curated/mixed-suppressed",
+    "status": "suppressed"
+  },
+  {
+    "id": "curated-mixed-invalid",
+    "title": "",
+    "startDateTime": "not-a-date",
+    "city": "Cincinnati",
+    "priceType": "free",
+    "sourceUrl": "https://example.com/curated/mixed-invalid"
+  }
+]

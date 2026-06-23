@@ -35,6 +35,10 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           Use this page to manage trusted source inventory and review events that should not reach the main discovery
           experience yet.
         </p>
+        <p>
+          Curated admin events are file-backed for now and flow through the same ingestion pipeline when
+          `ENABLE_CURATED_PROVIDER` is enabled.
+        </p>
       </section>
       <div className="admin-grid">
         <ModerationList initialEvents={flaggedEvents} adminToken={key} />

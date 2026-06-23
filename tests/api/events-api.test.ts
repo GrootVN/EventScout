@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 import type { EventSourceProvider } from "../../apps/web/lib/sources/provider";
+import { resetRepositoryForTests } from "../../apps/web/lib/repository";
 
 function makeEvent(id: string, overrides: Record<string, unknown> = {}) {
   return {
@@ -80,15 +81,18 @@ const provider: EventSourceProvider = {
   }
 };
 
-async function getRoute() {
-  vi.resetModules();
+async function getRoute(providers: EventSourceProvider[] = [provider], resetModules = true) {
+  if (resetModules) {
+    vi.resetModules();
+  }
   vi.doMock("@/lib/sources/registry", () => ({
-    getEnabledProviders: () => [provider]
+    getEnabledProviders: () => providers
   }));
   return import("../../apps/web/app/api/events/route");
 }
 
 afterEach(() => {
+  resetRepositoryForTests();
   vi.resetModules();
   vi.clearAllMocks();
 });
@@ -188,5 +192,69 @@ describe("GET /api/events", () => {
 
     expect(payload.data[0]?.originalSources[0]?.sourceName).toBeTruthy();
     expect(payload.data[0]?.originalSources[0]?.sourceUrl).toContain("https://");
+  });
+
+  it("omits suppressed curated events from the public list", async () => {
+    const suppressedEventIds = new Set<string>();
+    const curatedProvider: EventSourceProvider = {
+      sourceId: "curated",
+      sourceName: "Curated Admin Events",
+      sourceType: "community",
+      enabled: true,
+      async fetchEvents() {
+        return [
+          {
+            sourceId: "curated",
+            sourceName: "Curated Admin Events",
+            sourceType: "community" as const,
+            sourceEventId: "curated-suppress-me",
+            sourceUrl: "https://example.com/curated/events/suppress-me",
+            fetchedAt: "2026-06-19T12:00:00.000Z",
+            raw: {
+              id: "curated-suppress-me",
+              title: "Suppressed Curated Event",
+              description: "A curated event that should be hidden after suppression.",
+              startDateTime: "2026-06-30T22:00:00.000Z",
+              city: "Cincinnati",
+              priceType: "free",
+              sourceUrl: "https://example.com/curated/events/suppress-me",
+              categories: ["community"],
+              status: "approved"
+            }
+          }
+        ];
+      }
+    };
+
+    vi.resetModules();
+    vi.doMock("@/lib/repository", () => ({
+      getEventRepository: () => ({
+        listSuppressedEventIds: async () => [...suppressedEventIds],
+        suppressEvent: async (eventId: string) => {
+          suppressedEventIds.add(eventId);
+        }
+      })
+    }));
+    vi.doMock("@/lib/sources/registry", () => ({
+      getEnabledProviders: () => [curatedProvider]
+    }));
+
+    const { suppressEvent } = await import("../../apps/web/lib/event-service");
+    await suppressEvent("curated-suppress-me");
+
+    const { GET } = await import("../../apps/web/app/api/events/route");
+    const response = await GET(
+      new NextRequest("http://localhost:3000/api/events?city=Cincinnati&datePreset=this-month")
+    );
+    const payload = (await response.json()) as {
+      data: Array<{ originalSources: Array<{ sourceEventId: string | null }> }>;
+    };
+
+    expect(response.status).toBe(200);
+    expect(
+      payload.data.some((event) =>
+        event.originalSources.some((source) => source.sourceEventId === "curated-suppress-me")
+      )
+    ).toBe(false);
   });
 });

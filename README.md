@@ -24,6 +24,7 @@ Event Scout is a newcomer-first local discovery app. It helps someone answer: "W
 - A sources page showing enabled and planned providers
 - Aggregator QA artifacts with provider counts and merge visibility
 - A manual Ticketmaster smoke QA path that can write live report artifacts
+- A file-backed curated/admin events provider behind `ENABLE_CURATED_PROVIDER`
 
 ## Quick start
 
@@ -176,6 +177,23 @@ Notes:
 - The admin page shows the moderation queue and trusted source allowlist.
 - The moderation API accepts the token through the `x-admin-token` header or the page query key.
 - When `ADMIN_TOKEN` is empty, the admin tools stay open for local development.
+
+## Curated admin events
+
+Enable the curated provider when you want file-backed admin-approved events to flow through the same discovery pipeline:
+
+```bash
+ENABLE_CURATED_PROVIDER=true
+CURATED_EVENTS_PATH="apps/web/data/curated-events.json"
+npm run qa:aggregator
+```
+
+Notes:
+
+- The provider is disabled by default.
+- Approved records enter the public aggregator; pending, rejected, and suppressed records stay out of the public list.
+- Invalid records are dropped with diagnostics instead of crashing the app.
+- See [docs/CURATED_EVENTS.md](/C:/Users/nguye/Documents/EventScout/docs/CURATED_EVENTS.md) for the file format and QA details.
 
 ## Versioning
 

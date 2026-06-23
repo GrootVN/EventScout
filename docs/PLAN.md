@@ -18,6 +18,7 @@ The repo has been refocused around a newcomer-first discovery experience with:
 - A Cincinnati city preset validation report behind `npm run qa:city-preset`
 - A manual Ticketmaster live smoke QA script for real-key validation
 - A curated/admin source allowlist and moderation queue behind `/admin`
+- A file-backed curated admin events provider behind `ENABLE_CURATED_PROVIDER`
 
 ## Next milestone
 

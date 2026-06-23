@@ -44,7 +44,8 @@ async function importAggregatorQaWithProviders(
   providers: EventSourceProvider[],
   envOverrides: Record<string, boolean | string> = {},
   icsModule: Record<string, unknown> | null = null,
-  meetupModule: Record<string, unknown> | null = null
+  meetupModule: Record<string, unknown> | null = null,
+  curatedModule: Record<string, unknown> | null = null
 ) {
   vi.resetModules();
   vi.doMock("@/lib/config/env", () => ({
@@ -80,7 +81,42 @@ async function importAggregatorQaWithProviders(
   if (meetupModule) {
     vi.doMock("@/lib/sources/meetupProvider", () => meetupModule);
   }
+  if (curatedModule) {
+    vi.doMock("@/lib/sources/curatedProvider", () => curatedModule);
+  }
   return import("../../apps/web/lib/events/aggregatorQa");
+}
+
+async function importCuratedProviderWithEnv(overrides: Record<string, boolean | string> = {}) {
+  vi.resetModules();
+  vi.doMock("@/lib/config/env", () => ({
+    env: {
+      appName: "Event Scout",
+      defaultCity: "Cincinnati",
+      defaultRegion: "OH",
+      defaultCountry: "USA",
+      ticketmasterApiKey: "",
+      meetupAccessToken: "",
+      meetupGraphqlEndpoint: "https://api.meetup.com/gql",
+      defaultCityPreset: "cincinnati",
+      icsSourceUrls: "",
+      rssSourceUrls: "",
+      curatedEventsPath: "apps/web/data/curated-events.json",
+      enableMockProvider: true,
+      enableCommunityMockProvider: true,
+      enableCuratedProvider: true,
+      enableCityPresets: false,
+      enableTicketmasterProvider: false,
+      enableMeetupProvider: false,
+      enableIcsProvider: false,
+      enableRssProvider: false,
+      enableWebsiteProvider: false,
+      enableSocialLeads: false,
+      ...overrides
+    }
+  }));
+
+  return import("../../apps/web/lib/sources/curatedProvider");
 }
 
 async function importTicketmasterProviderWithEnv() {
@@ -339,6 +375,52 @@ describe("generateAggregatorQaReport", () => {
         group.sources.some((source) => source.sourceName === "Ticketmaster" && source.sourceUrl.includes("ticketmaster.com"))
       )
     ).toBe(true);
+  });
+
+  it("includes curated diagnostics, counts, and duplicate groups when enabled", async () => {
+    const curatedModule = await importCuratedProviderWithEnv({
+      enableCuratedProvider: true,
+      curatedEventsPath: "apps/web/data/curated-events.json"
+    });
+    const { generateAggregatorQaReport } = await importAggregatorQaWithProviders(
+      [curatedModule.curatedProvider, mockProvider],
+      {
+        enableCuratedProvider: true,
+        curatedEventsPath: "apps/web/data/curated-events.json"
+      },
+      null,
+      null,
+      curatedModule
+    );
+
+    const report = await generateAggregatorQaReport({ city: "Cincinnati" });
+    const curatedSummary = report.enabledProviders.find((provider) => provider.sourceId === "curated");
+
+    expect(report.curatedProvider).toMatchObject({
+      sourceId: "curated",
+      sourceName: "Curated Admin Events",
+      rawLoadedCount: 8,
+      approvedCount: 5,
+      pendingCount: 1,
+      rejectedCount: 1,
+      suppressedCount: 1,
+      invalidCount: 0
+    });
+    expect(curatedSummary).toMatchObject({
+      rawCount: 5,
+      validCount: 5,
+      droppedCount: 0,
+      finalContributionCount: expect.any(Number),
+      rawLoadedCount: 8,
+      approvedCount: 5,
+      pendingCount: 1,
+      rejectedCount: 1,
+      suppressedCount: 1,
+      invalidCount: 0
+    });
+    expect(report.warnings.some((warning) => warning.includes("Skipped curated event"))).toBe(true);
+    expect(report.duplicateGroups.some((group) => group.sourceNames.includes("Curated Admin Events"))).toBe(true);
+    expect(report.events.some((event) => event.originalSources.some((source) => source.sourceId === "curated"))).toBe(true);
   });
 
   it("includes Meetup in provider counts and duplicate groups when enabled", async () => {
