@@ -1,17 +1,21 @@
 import { NextResponse } from "next/server";
-import { getSourceHealthReport } from "@/lib/sources/health";
+import { canViewDetailedHealth, getPublicHealthSummary, getSourceHealthReport } from "@/lib/sources/health";
 
-export async function GET() {
-  const sourceHealth = getSourceHealthReport();
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const authToken = request.headers.get("x-admin-token") ?? url.searchParams.get("key");
+  const detailed = canViewDetailedHealth(authToken);
+  const summary = getPublicHealthSummary();
+  const health = detailed ? getSourceHealthReport() : summary;
+
   return NextResponse.json({
-    status: "ok",
+    status: detailed ? "ok" : summary.status,
     timestamp: new Date().toISOString(),
-    config: {
-      has_database: Boolean(process.env.DATABASE_URL),
-      has_redis: Boolean(process.env.REDIS_URL),
-      launch_metro_city: process.env.LAUNCH_METRO_CITY ?? "Cincinnati",
-      launch_metro_region: process.env.LAUNCH_METRO_REGION ?? "OH"
-    },
-    sourceHealth
+    mode: detailed ? "detailed" : "summary",
+    health: detailed
+      ? health
+      : {
+          ...health
+        }
   });
 }

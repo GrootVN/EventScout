@@ -5,6 +5,9 @@ async function importHealthWithMocks() {
   vi.doMock("@/lib/config/env", () => ({
     env: {
       adminToken: "secret",
+      enableSampleSubmissions: false,
+      enableSampleTrustedSources: false,
+      enableDetailedHealth: true,
       enableMockProvider: true,
       enableCommunityMockProvider: false,
       enableCuratedProvider: true,
@@ -123,8 +126,9 @@ afterEach(() => {
 
 describe("source health report", () => {
   it("distinguishes ready, warning, needs-config, and disabled providers", async () => {
-    const { getSourceHealthReport } = await importHealthWithMocks();
+    const { canViewDetailedHealth, getPublicHealthSummary, getSourceHealthReport } = await importHealthWithMocks();
     const report = getSourceHealthReport();
+    const summary = getPublicHealthSummary();
 
     expect(report.config.adminTokenConfigured).toBe(true);
     expect(report.config.rssSourceCount).toBe(1);
@@ -178,5 +182,16 @@ describe("source health report", () => {
       ])
     );
     expect(report.errors).toEqual([]);
+    expect(summary).toMatchObject({
+      appVersion: expect.any(String),
+      status: "ok",
+      totals: expect.objectContaining({
+        providerCount: 6,
+        warningProviderCount: 1
+      }),
+      warningCount: 3,
+      errorCount: 0
+    });
+    expect(canViewDetailedHealth(null)).toBe(true);
   });
 });

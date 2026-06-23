@@ -1,9 +1,28 @@
 import { NextRequest } from "next/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-async function importRouteWithMocks() {
+async function importRouteWithHealthMocks(options: { detailed: boolean; runtimeMode?: "development" | "test" | "production" } = { detailed: false }) {
   vi.resetModules();
+  const runtimeMode = options.runtimeMode ?? "production";
+
   vi.doMock("@/lib/sources/health", () => ({
+    canViewDetailedHealth: () => options.detailed,
+    getPublicHealthSummary: () => ({
+      generatedAt: "2026-06-19T12:00:00.000Z",
+      appVersion: "0.12.0",
+      status: "ok",
+      totals: {
+        providerCount: 2,
+        enabledProviderCount: 1,
+        readyProviderCount: 1,
+        warningProviderCount: 0,
+        errorProviderCount: 0,
+        needsConfigProviderCount: 0,
+        disabledProviderCount: 1
+      },
+      warningCount: 0,
+      errorCount: 0
+    }),
     getSourceHealthReport: () => ({
       generatedAt: "2026-06-19T12:00:00.000Z",
       config: {
@@ -31,9 +50,15 @@ async function importRouteWithMocks() {
         disabledProviderCount: 1
       },
       providers: [],
-      warnings: [],
+      warnings: ["Detailed warning"],
       errors: []
     })
+  }));
+  vi.doMock("@/lib/config/runtime", () => ({
+    getRuntimeMode: () => runtimeMode,
+    isProduction: () => runtimeMode === "production",
+    isTest: () => runtimeMode === "test",
+    isDevelopment: () => runtimeMode === "development"
   }));
 
   return import("../../apps/web/app/api/health/route");
@@ -45,16 +70,40 @@ afterEach(() => {
 });
 
 describe("GET /api/health", () => {
-  it("includes source health in the service snapshot", async () => {
-    const { GET } = await importRouteWithMocks();
-    const response = await GET(new NextRequest("http://localhost/api/health"));
+  it("returns a public summary in production without admin authorization", async () => {
+    const { GET } = await importRouteWithHealthMocks({ detailed: false, runtimeMode: "production" });
+    const response = await GET(
+      new NextRequest("http://localhost/api/health", {
+        headers: { "x-admin-token": "wrong" }
+      })
+    );
     const payload = (await response.json()) as {
       status: string;
-      sourceHealth: { totals: { providerCount: number } };
+      mode: string;
+      health: { appVersion: string; warningCount: number; errorCount: number };
     };
 
     expect(response.status).toBe(200);
     expect(payload.status).toBe("ok");
-    expect(payload.sourceHealth.totals.providerCount).toBe(2);
+    expect(payload.mode).toBe("summary");
+    expect(payload.health.appVersion).toBe("0.12.0");
+    expect(payload.health.warningCount).toBe(0);
+    expect(payload.health.errorCount).toBe(0);
+    expect(JSON.stringify(payload)).not.toContain("Detailed warning");
+  });
+
+  it("returns detailed health in development", async () => {
+    const { GET } = await importRouteWithHealthMocks({ detailed: true, runtimeMode: "development" });
+    const response = await GET(new NextRequest("http://localhost/api/health"));
+    const payload = (await response.json()) as {
+      status: string;
+      mode: string;
+      health: { config: { adminTokenConfigured: boolean }; warnings: string[] };
+    };
+
+    expect(response.status).toBe(200);
+    expect(payload.mode).toBe("detailed");
+    expect(payload.health.config.adminTokenConfigured).toBe(true);
+    expect(payload.health.warnings).toEqual(["Detailed warning"]);
   });
 });

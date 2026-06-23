@@ -51,6 +51,12 @@ Users can submit links or event details.
 
 Community submissions must remain pending until an admin approves them. Approved submissions are converted into curated/community events and then enter the public aggregator alongside other trusted sources.
 
+Operational safety notes:
+
+- Admin surfaces must fail closed in production when `ADMIN_TOKEN` is missing.
+- Sample data should stay disabled in production.
+- Public health checks should avoid exposing secrets or detailed provider diagnostics unless authorized.
+
 ## Required provider behavior
 
 Each provider must:

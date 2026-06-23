@@ -1,4 +1,7 @@
+import packageJson from "../../../../package.json";
+import { requireAdminToken } from "@/lib/admin-auth";
 import { env } from "@/lib/config/env";
+import { isProduction } from "@/lib/config/runtime";
 import { getRssSourceConfigs } from "@/config/rss-sources";
 import { getIcsSourceConfigs } from "@/config/ics-sources";
 import { getAllProviders } from "./registry";
@@ -78,6 +81,15 @@ export type SourceHealthReport = {
   errors: string[];
 };
 
+export type PublicHealthSummary = {
+  generatedAt: string;
+  appVersion: string;
+  status: "ok" | "degraded";
+  totals: SourceHealthReport["totals"];
+  warningCount: number;
+  errorCount: number;
+};
+
 type ProviderDiagnosticsSnapshot =
   | CuratedProviderDiagnostics
   | CommunitySubmissionProviderDiagnostics
@@ -86,6 +98,10 @@ type ProviderDiagnosticsSnapshot =
 
 function clean(value: string | null | undefined) {
   return value?.trim() ?? "";
+}
+
+function getAppVersion() {
+  return packageJson.version as string;
 }
 
 function pluralize(count: number, singular: string, plural = `${singular}s`) {
@@ -441,4 +457,29 @@ export function getSourceHealthReport(): SourceHealthReport {
     warnings: entries.flatMap((entry) => entry.warnings),
     errors: entries.flatMap((entry) => entry.errors)
   };
+}
+
+export function getPublicHealthSummary(): PublicHealthSummary {
+  const report = getSourceHealthReport();
+
+  return {
+    generatedAt: report.generatedAt,
+    appVersion: getAppVersion(),
+    status: report.errors.length > 0 ? "degraded" : "ok",
+    totals: report.totals,
+    warningCount: report.warnings.length,
+    errorCount: report.errors.length
+  };
+}
+
+export function canViewDetailedHealth(authToken: string | null | undefined) {
+  if (!isProduction()) {
+    return true;
+  }
+
+  if (!env.enableDetailedHealth) {
+    return false;
+  }
+
+  return requireAdminToken(authToken ?? null);
 }

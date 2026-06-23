@@ -21,7 +21,8 @@ The repo has been refocused around a newcomer-first discovery experience with:
 - A file-backed curated admin events provider behind `ENABLE_CURATED_PROVIDER`
 - A public community submission flow behind `/submit` and `/api/submissions`
 - A source health dashboard behind `/health` and `/api/health`
+- Production safety hardening for admin access, sample data, health visibility, and QA artifact policy
 
 ## Next milestone
 
-M17: Source health alerts.
+M18: Source run persistence/history.

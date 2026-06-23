@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-06-19T12:00:00.000Z",
+  "city": "Cincinnati",
+  "enabledProviders": [
+    {
+      "sourceId": "mock",
+      "sourceName": "Mock Local Radar",
+      "sourceType": "mock",
+      "rawCount": 2,
+      "validCount": 2,
+      "droppedCount": 0,
+      "finalContributionCount": 2
+    }
+  ],
+  "curatedProvider": null,
+  "communitySubmissionsProvider": null,
+  "rawEventCount": 2,
+  "validNormalizedCount": 2,
+  "droppedInvalidCount": 0,
+  "dedupedCount": 2,
+  "finalCount": 2,
+  "duplicateGroups": [],
+  "events": [],
+  "warnings": [],
+  "errors": []
+}

@@ -431,7 +431,7 @@ Status: [x]
 
 ### Next recommended milestone
 
-- M17: Source health alerts
+- M17: Deployment and production safety hardening
 
 ---
 
@@ -459,3 +459,30 @@ Status: [x]
 ### Next recommended milestone
 
 - M15: Community submissions
+
+---
+
+## M17: Deployment and production safety hardening
+
+Status: [x]
+
+### Acceptance criteria
+
+- Admin access fails closed in production when `ADMIN_TOKEN` is missing.
+- Sample submissions and sample trusted sources stay out of production by default.
+- `/api/health` returns a public summary by default and hides detailed diagnostics unless authorized.
+- QA artifacts are ignored instead of being committed as live generated reports.
+- Deployment guidance explains local, staging, and production behavior clearly.
+
+### Required checks
+
+- npm run lint
+- npm run typecheck
+- npm test
+- npm run build
+- npm run qa:aggregator
+- npm run check:env
+
+### Next recommended milestone
+
+- M18: Source run persistence/history

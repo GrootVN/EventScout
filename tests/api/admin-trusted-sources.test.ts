@@ -19,6 +19,28 @@ function importRouteWithMocks(overrides: {
   return import("../../apps/web/app/api/admin/trusted-sources/route");
 }
 
+async function importRouteWithProductionAuth(adminToken = "") {
+  vi.resetModules();
+  vi.doMock("@/lib/config/runtime", () => ({
+    getRuntimeMode: () => "production",
+    isProduction: () => true,
+    isTest: () => false,
+    isDevelopment: () => false
+  }));
+  vi.doMock("@/lib/config/env", () => ({
+    env: {
+      adminToken
+    }
+  }));
+  vi.doMock("@/lib/event-service", () => ({
+    listTrustedSources: async () => [],
+    upsertTrustedSource: async (input: unknown) => input,
+    deactivateTrustedSource: async () => undefined
+  }));
+
+  return import("../../apps/web/app/api/admin/trusted-sources/route");
+}
+
 afterEach(() => {
   vi.resetModules();
   vi.clearAllMocks();
@@ -39,6 +61,14 @@ describe("GET /api/admin/trusted-sources", () => {
 
   it("rejects unauthorized requests", async () => {
     const { GET } = await importRouteWithMocks({ authorized: false });
+
+    const response = await GET(new NextRequest("http://localhost/api/admin/trusted-sources"));
+
+    expect(response.status).toBe(401);
+  });
+
+  it("denies access in production when ADMIN_TOKEN is missing", async () => {
+    const { GET } = await importRouteWithProductionAuth("");
 
     const response = await GET(new NextRequest("http://localhost/api/admin/trusted-sources"));
 

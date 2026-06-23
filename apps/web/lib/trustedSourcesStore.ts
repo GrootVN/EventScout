@@ -1,3 +1,4 @@
+import { env } from "@/lib/config/env";
 import { TrustedSource } from "@eventscout/shared";
 import { slugify } from "@/lib/utils/slug";
 
@@ -83,7 +84,15 @@ function clone(source: TrustedSource): TrustedSource {
   return { ...source };
 }
 
-const trustedSources: TrustedSource[] = [...initialTrustedSources];
+const trustedSources: TrustedSource[] = [];
+
+function shouldSeedSampleTrustedSources() {
+  return env.enableSampleTrustedSources;
+}
+
+if (shouldSeedSampleTrustedSources()) {
+  trustedSources.splice(0, trustedSources.length, ...initialTrustedSources.map(clone));
+}
 
 function findSourceIndex(id: string) {
   return trustedSources.findIndex((source) => source.id === id);

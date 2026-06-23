@@ -1,3 +1,4 @@
+import { env } from "@/lib/config/env";
 import { validateCommunitySubmissionInput } from "./submissionSchema";
 import type { CommunitySubmission, CommunitySubmissionStatus } from "./types";
 
@@ -132,7 +133,14 @@ function seedSubmissions() {
 
 let submissions: CommunitySubmission[] = [];
 let sequence = 1;
-seedSubmissions();
+
+function shouldSeedSampleSubmissions() {
+  return env.enableSampleSubmissions;
+}
+
+if (shouldSeedSampleSubmissions()) {
+  seedSubmissions();
+}
 
 export function listSubmissions(status?: CommunitySubmissionStatus) {
   const filtered = typeof status === "string" ? submissions.filter((submission) => submission.status === status) : submissions;
@@ -210,4 +218,3 @@ export function suppressSubmission(id: string, moderationNote?: string, reviewed
 export function resetSubmissionsForTests() {
   seedSubmissions();
 }
-

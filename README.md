@@ -27,6 +27,7 @@ Event Scout is a newcomer-first local discovery app. It helps someone answer: "W
 - A manual Ticketmaster smoke QA path that can write live report artifacts
 - A file-backed curated/admin events provider behind `ENABLE_CURATED_PROVIDER`
 - A community submission flow with in-memory moderation
+- A deployment guide and environment safety check for production readiness
 
 ## Quick start
 
@@ -47,6 +48,7 @@ cmd /c npm test
 cmd /c npm run build
 cmd /c npm run qa:aggregator
 cmd /c npm run qa:ticketmaster
+cmd /c npm run check:env
 ```
 
 ## Ticketmaster smoke QA
@@ -178,7 +180,7 @@ Notes:
 
 - The admin page shows the moderation queue and trusted source allowlist.
 - The moderation API accepts the token through the `x-admin-token` header or the page query key.
-- When `ADMIN_TOKEN` is empty, the admin tools stay open for local development.
+- When `ADMIN_TOKEN` is empty, the admin tools stay open for local development but fail closed in production.
 
 ## Curated admin events
 
@@ -221,6 +223,10 @@ This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
 - `MINOR`: new features or milestone-sized capability additions
 - `MAJOR`: breaking changes to contracts or structure
 
+## Deployment
+
+See [docs/DEPLOYMENT.md](/C:/Users/nguye/Documents/EventScout/docs/DEPLOYMENT.md) for local, staging, and production guidance, including health behavior, admin safety, and QA artifact policy.
+
 ## Next milestone
 
-Implement M17 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): Source health alerts.
+Implement M18 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): Source run persistence/history.

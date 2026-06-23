@@ -1,4 +1,5 @@
 import { env } from "@/lib/config/env";
+import { isProduction } from "@/lib/config/runtime";
 
 function clean(value: string | null | undefined) {
   return value?.trim() ?? "";
@@ -11,7 +12,7 @@ function getAdminToken() {
 export function requireAdminToken(headerValue: string | null) {
   const adminToken = getAdminToken();
   if (!adminToken) {
-    return true;
+    return !isProduction();
   }
 
   return clean(headerValue) === adminToken;
@@ -20,7 +21,7 @@ export function requireAdminToken(headerValue: string | null) {
 export function isAdminPageAuthorized(queryKey: string | undefined) {
   const adminToken = getAdminToken();
   if (!adminToken) {
-    return true;
+    return !isProduction();
   }
 
   return clean(queryKey) === adminToken;

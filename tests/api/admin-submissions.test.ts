@@ -35,6 +35,48 @@ async function importRoute() {
   return import("../../apps/web/app/api/admin/submissions/route");
 }
 
+async function importRouteWithProductionAuth(adminToken = "") {
+  vi.resetModules();
+  vi.doMock("@/lib/config/runtime", () => ({
+    getRuntimeMode: () => "production",
+    isProduction: () => true,
+    isTest: () => false,
+    isDevelopment: () => false
+  }));
+  vi.doMock("@/lib/config/env", () => ({
+    env: {
+      adminToken,
+      ticketmasterApiKey: "",
+      meetupAccessToken: "",
+      meetupGraphqlEndpoint: "https://api.meetup.com/gql",
+      defaultCity: "Cincinnati",
+      defaultRegion: "OH",
+      defaultCountry: "USA",
+      defaultCityPreset: "cincinnati",
+      icsSourceUrls: "",
+      rssSourceUrls: "",
+      curatedEventsPath: "apps/web/data/curated-events.json",
+      cityPresetQaLiveFetch: false,
+      enableMockProvider: false,
+      enableCommunityMockProvider: false,
+      enableCommunitySubmissionsProvider: true,
+      enableSampleSubmissions: false,
+      enableSampleTrustedSources: false,
+      enableDetailedHealth: false,
+      enableCuratedProvider: false,
+      enableCityPresets: false,
+      enableTicketmasterProvider: false,
+      enableMeetupProvider: false,
+      enableIcsProvider: false,
+      enableRssProvider: false,
+      enableWebsiteProvider: false,
+      enableSocialLeads: false
+    }
+  }));
+
+  return import("../../apps/web/app/api/admin/submissions/route");
+}
+
 afterEach(() => {
   vi.resetModules();
   vi.clearAllMocks();
@@ -48,6 +90,15 @@ describe("GET /api/admin/submissions", () => {
     const response = await GET(new NextRequest("http://localhost/api/admin/submissions"));
 
     expect(response.status).toBe(401);
+  });
+
+  it("denies access in production when ADMIN_TOKEN is missing", async () => {
+    const { GET } = await importRouteWithProductionAuth("");
+    const response = await GET(new NextRequest("http://localhost/api/admin/submissions"));
+    const payload = (await response.json()) as { error?: string };
+
+    expect(response.status).toBe(401);
+    expect(JSON.stringify(payload)).not.toContain("secret-token");
   });
 
   it("returns submissions for authorized requests and supports status filtering", async () => {

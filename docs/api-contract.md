@@ -163,6 +163,27 @@ or `DELETE /api/admin/trusted-sources?id=trusted-domain-example-calendar`.
 
 ## `GET /api/health`
 
-Basic service/config health snapshot for uptime checks.
+Public service health snapshot for uptime checks.
 
-Returns a `sourceHealth` snapshot with provider readiness, configuration notes, warnings/errors, and per-source counters for curated and community submissions when available.
+Default response:
+
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-06-19T12:00:00.000Z",
+  "mode": "summary",
+  "health": {
+    "appVersion": "0.12.0",
+    "status": "ok",
+    "totals": {
+      "providerCount": 6
+    },
+    "warningCount": 0,
+    "errorCount": 0
+  }
+}
+```
+
+In development and test mode, or in production with admin authorization and `ENABLE_DETAILED_HEALTH=true`, the route can return a detailed `health` object with provider readiness, configuration notes, warnings/errors, and per-source counters for curated and community submissions.
+
+The route never exposes secret values.

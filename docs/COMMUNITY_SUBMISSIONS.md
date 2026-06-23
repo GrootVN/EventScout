@@ -40,7 +40,7 @@ The flag is disabled by default. When it is off, the submissions still exist for
 Set `ADMIN_TOKEN` before deploying anything that should be protected.
 
 - When `ADMIN_TOKEN` is set, admin routes require the matching token.
-- When `ADMIN_TOKEN` is empty, the admin tools stay open for local development.
+- When `ADMIN_TOKEN` is empty, the admin tools stay open for local development but fail closed in production.
 
 ## Limitation
 
@@ -48,4 +48,4 @@ The submission store is in-memory only. It resets when the process restarts.
 
 ## Next milestone
 
-M17: Source health alerts.
+M18: Source run persistence/history.

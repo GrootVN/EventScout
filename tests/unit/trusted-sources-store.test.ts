@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   deactivateTrustedSource,
   listTrustedSources,
@@ -7,6 +7,10 @@ import {
 } from "../../apps/web/lib/trustedSourcesStore";
 
 afterEach(() => {
+  resetTrustedSourcesForTests();
+});
+
+beforeEach(() => {
   resetTrustedSourcesForTests();
 });
 
