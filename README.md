@@ -26,7 +26,7 @@ Current stage: post-M18 source reliability and operations layer. M18 source-run 
 - A sources page showing enabled and planned providers
 - A source health dashboard showing readiness, configuration gaps, and recent diagnostics
 - Source-run history for QA and health snapshots, surfaced in `/health` and the admin history API
-- Canonical milestone, provider, release, and test inventory in [docs/CURRENT_STATE.md](/C:/Users/nguye/Documents/EventScout/docs/CURRENT_STATE.md)
+- Canonical milestone, provider, release, and test inventory in [docs/CURRENT_STATE.md](docs/CURRENT_STATE.md)
 - Aggregator QA artifacts with provider counts and merge visibility
 - A manual Ticketmaster smoke QA path that can write live report artifacts
 - A file-backed curated/admin events provider behind `ENABLE_CURATED_PROVIDER`
@@ -151,7 +151,7 @@ Notes:
 - Mock-only mode still works when city presets are disabled.
 - The preset currently ships with Cincinnati-specific source inventory entries, but the current URLs are placeholders or disabled until verified.
 - The source page shows the active preset summary and the preset source bundle.
-- See [docs/CITY_PRESETS.md](/C:/Users/nguye/Documents/EventScout/docs/CITY_PRESETS.md) for the current preset inventory.
+- See [docs/CITY_PRESETS.md](docs/CITY_PRESETS.md) for the current preset inventory.
 
 ## City preset validation
 
@@ -166,7 +166,7 @@ Notes:
 - The report is metadata-only by default and does not fetch remote URLs unless `CITY_PRESET_QA_LIVE_FETCH=true`.
 - Live fetching is opt-in so broken or placeholder sources never become a surprise in normal development.
 - The report is useful for deciding which preset entries should be kept, replaced, disabled, or promoted to verified status.
-- See [docs/CITY_PRESETS.md](/C:/Users/nguye/Documents/EventScout/docs/CITY_PRESETS.md) for the current preset inventory and status labels.
+- See [docs/CITY_PRESETS.md](docs/CITY_PRESETS.md) for the current preset inventory and status labels.
 
 ## Admin moderation
 
@@ -203,7 +203,7 @@ Notes:
 - The provider is disabled by default.
 - Approved records enter the public aggregator; pending, rejected, and suppressed records stay out of the public list.
 - Invalid records are dropped with diagnostics instead of crashing the app.
-- See [docs/CURATED_EVENTS.md](/C:/Users/nguye/Documents/EventScout/docs/CURATED_EVENTS.md) for the file format and QA details.
+- See [docs/CURATED_EVENTS.md](docs/CURATED_EVENTS.md) for the file format and QA details.
 
 ## Community submissions
 
@@ -219,7 +219,7 @@ Notes:
 - Pending submissions do not appear in public discovery until an admin approves them.
 - Approved submissions are converted into community events and enter the same aggregator pipeline as other sources.
 - The moderation store is in-memory only and resets on process restart.
-- See [docs/COMMUNITY_SUBMISSIONS.md](/C:/Users/nguye/Documents/EventScout/docs/COMMUNITY_SUBMISSIONS.md) for the flow, API contract, and limitations.
+- See [docs/COMMUNITY_SUBMISSIONS.md](docs/COMMUNITY_SUBMISSIONS.md) for the flow, API contract, and limitations.
 
 ## Versioning
 
@@ -235,12 +235,12 @@ This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
 
 ## Deployment
 
-See [docs/DEPLOYMENT.md](/C:/Users/nguye/Documents/EventScout/docs/DEPLOYMENT.md) for local, staging, and production guidance, including health behavior, admin safety, source-run history, and QA artifact policy.
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for local, staging, and production guidance, including health behavior, admin safety, source-run history, and QA artifact policy.
 
-See [docs/SOURCE_RUN_HISTORY.md](/C:/Users/nguye/Documents/EventScout/docs/SOURCE_RUN_HISTORY.md) for the storage model and run-history API details.
+See [docs/SOURCE_RUN_HISTORY.md](docs/SOURCE_RUN_HISTORY.md) for the storage model and run-history API details.
 
 ## Next milestone
 
-Implement M19 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): Source health alerts.
+Implement M19 from [docs/MILESTONES.md](docs/MILESTONES.md): Source health alerts.
 
 Not next: recommendations, personalization, UI redesign, Eventbrite, database migration, notifications, CAPTCHA, or production database adapters.

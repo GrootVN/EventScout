@@ -1,6 +1,6 @@
 # Event Scout Milestones
 
-Current stage: post-M18 source reliability and operations layer. M18 source-run history is complete, this release completes M18.1 reconciliation, and M19 is next.
+Current stage: post-M18 source reliability and operations layer. M18 source-run history is complete, M18.1 was a reconciliation/release hygiene milestone, and M19 is next.
 
 Next milestone: M19: Source health alerts.
 
@@ -28,10 +28,12 @@ Not next: recommendations, personalization, UI redesign, Eventbrite, database mi
 | M17: Deployment and production safety hardening | complete | v0.13.0 lineage | `Scripts/check-env.cjs`, `env.ts`, `docs/DEPLOYMENT.md`, QA artifact policy | Security hardening is focused on config gates, not a full security subsystem | Keep `check:env` in CI |
 | M17.1: CI aggregator QA gate | complete | v0.13.0 lineage | CI workflow tests, `tests/unit/ci-workflow.test.ts`, `npm run qa:aggregator` | Live provider smoke remains outside CI | Keep generated artifacts ignored |
 | M18: Source run persistence/history | complete | v0.13.0 | `runHistoryStore.ts`, `runHistoryBuilder.ts`, `/api/admin/source-runs`, `/health`, `docs/SOURCE_RUN_HISTORY.md` | File-backed summary storage; no production monitoring service | Use as foundation for M19 |
-| M18.1: Roadmap, release, and test inventory reconciliation | complete | v0.13.1 | `docs/CURRENT_STATE.md`, this milestone table, aligned README/PLAN/source docs, version metadata | No feature work by design | Tag and push this release after checks |
+| M18.1: Roadmap, release, and test inventory reconciliation | complete | v0.13.1 | `docs/CURRENT_STATE.md`, this milestone table, aligned README/PLAN/source docs, version metadata | Reconciliation/release hygiene only; no product feature work by design | Keep docs/version/test inventory aligned |
 | M19: Source health alerts | next | not tagged | Planned alerting on top of source health and run history | Not implemented in M18.1 | Define alert rules, channels, and non-CI live behavior |
 
 ## Verified Test Inventory
+
+M18.1 aligned roadmap docs, release/version state, provider inventory, and test inventory after M18. It did not add source health alerts or any other new product feature.
 
 Aggregator foundation:
 
@@ -69,5 +71,5 @@ Post-M14 features:
 
 - Current root version: `0.13.1`
 - Current web app version: `0.13.1`
-- Matching release tag for this reconciliation release: `v0.13.1` after final checks, commit, tag, and push
+- Matching release tag for this reconciliation release: `v0.13.1`
 - Highest verified pre-reconciliation tag: `v0.13.0`

@@ -2,7 +2,7 @@
 
 ## Current state
 
-Current stage: post-M18 source reliability and operations layer. M18 source-run history is complete, this release completes M18.1 cleanup/reconciliation, and M19 is next.
+Current stage: post-M18 source reliability and operations layer. M18 source-run history is complete, M18.1 was a reconciliation/release hygiene milestone, and M19 is next.
 
 The repo has been refocused around a newcomer-first discovery experience with:
 

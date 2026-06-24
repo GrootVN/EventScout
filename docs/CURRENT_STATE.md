@@ -1,6 +1,6 @@
 # Current State
 
-Current stage: post-M18 source reliability and operations layer. M18 source-run history is complete, this release completes M18.1 cleanup/reconciliation, and M19 is next.
+Current stage: post-M18 source reliability and operations layer. M18 source-run history is complete, M18.1 was a reconciliation/release hygiene milestone, and M19 is next.
 
 Next milestone: M19: Source health alerts.
 
@@ -12,7 +12,7 @@ Not next: recommendations, personalization, UI redesign, Eventbrite, database mi
 - Web package version: `0.13.1`
 - Package lock root and web versions: `0.13.1`
 - Highest verified pre-reconciliation Git tag: `v0.13.0`
-- Release tag for this milestone: `v0.13.1` after checks, commit, tag, and push
+- Release tag for this milestone: `v0.13.1`
 
 ## Provider Inventory
 
