@@ -2,6 +2,8 @@ import Link from "next/link";
 import { canViewDetailedHealth, getPublicHealthSummary, getSourceHealthReport } from "@/lib/sources/health";
 import { listSourceRuns } from "@/lib/sources/runHistoryStore";
 import { SourceRunHistory } from "@/components/source-run-history";
+import { getCurrentSourceAlerts } from "@/lib/sources/sourceAlerts";
+import type { SourceAlert } from "@/lib/sources/sourceAlertTypes";
 
 function renderList(items: string[], emptyLabel: string) {
   if (items.length === 0) {
@@ -13,6 +15,14 @@ function renderList(items: string[], emptyLabel: string) {
 
 function renderCount(value: number | undefined) {
   return typeof value === "number" ? value : 0;
+}
+
+function renderEvidence(alert: SourceAlert) {
+  if (!alert.evidence || Object.keys(alert.evidence).length === 0) {
+    return null;
+  }
+
+  return <pre>{JSON.stringify(alert.evidence, null, 2)}</pre>;
 }
 
 type HealthPageProps = {
@@ -27,6 +37,7 @@ export default async function HealthPage({ searchParams }: HealthPageProps) {
   const summary = getPublicHealthSummary();
   const report = detailed ? getSourceHealthReport() : null;
   const runs = listSourceRuns(10);
+  const alertResult = getCurrentSourceAlerts();
 
   return (
     <main className="page-shell">
@@ -76,8 +87,67 @@ export default async function HealthPage({ searchParams }: HealthPageProps) {
 
       <SourceRunHistory summary={summary} runs={runs} detailed={detailed} />
 
+      <section className="saved-card">
+        <p className="eyebrow">Source alerts</p>
+        <h2>Active alert summary</h2>
+        <p>
+          Alerts turn source health and recent run history into deterministic checks. Public mode shows counts only;
+          detailed mode shows the actionable alert list.
+        </p>
+        <dl className="meta-grid">
+          <div>
+            <dt>Total active</dt>
+            <dd>{alertResult.summary.total}</dd>
+          </div>
+          <div>
+            <dt>Critical</dt>
+            <dd>{alertResult.summary.critical}</dd>
+          </div>
+          <div>
+            <dt>Warnings</dt>
+            <dd>{alertResult.summary.warning}</dd>
+          </div>
+          <div>
+            <dt>Info</dt>
+            <dd>{alertResult.summary.info}</dd>
+          </div>
+        </dl>
+        {alertResult.summary.hasCritical ? (
+          <p>Critical source alerts are active. Open detailed health with admin authorization to review actions.</p>
+        ) : null}
+        {alertResult.summary.total === 0 ? <p>No active source alerts.</p> : null}
+      </section>
+
       {report ? (
         <>
+          <section className="saved-card">
+            <p className="eyebrow">Alert details</p>
+            <h2>Current source alerts</h2>
+            {alertResult.alerts.length === 0 ? (
+              <p>No active source alerts.</p>
+            ) : (
+              <div className="sources-grid">
+                {alertResult.alerts.map((alert) => (
+                  <article key={alert.id} className="source-card saved-card">
+                    <div className="event-topline">
+                      <strong>{alert.title}</strong>
+                      <span className="score-chip">{alert.severity}</span>
+                    </div>
+                    <p className="eyebrow">
+                      {alert.category}
+                      {alert.providerId ? ` - ${alert.providerId}` : ""}
+                    </p>
+                    <p>{alert.message}</p>
+                    <p>
+                      <strong>Recommended action:</strong> {alert.recommendedAction}
+                    </p>
+                    {renderEvidence(alert)}
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+
           <section className="saved-card">
             <p className="eyebrow">Configuration</p>
             <h2>Environment and source flags</h2>

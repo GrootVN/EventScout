@@ -12,9 +12,12 @@ import { getEnabledProviders } from "@/lib/sources/registry";
 import {
   appendSourceRun,
   consumeSourceRunHistoryWarnings,
-  isSourceRunHistoryEnabled
+  isSourceRunHistoryEnabled,
+  listSourceRuns
 } from "@/lib/sources/runHistoryStore";
 import { buildSourceRunFromAggregatorQa } from "@/lib/sources/runHistoryBuilder";
+import { evaluateSourceAlerts, summarizeSourceAlerts } from "@/lib/sources/sourceAlerts";
+import type { SourceAlertSummary } from "@/lib/sources/sourceAlertTypes";
 import { consumeTicketmasterProviderDiagnostics } from "@/lib/sources/ticketmasterProvider";
 import { consumeMeetupProviderDiagnostics } from "@/lib/sources/meetupProvider";
 import { consumeIcsProviderDiagnostics } from "@/lib/sources/icsProvider";
@@ -94,6 +97,7 @@ export type AggregatorQaReport = {
   finalCount: number;
   duplicateGroups: DuplicateGroup[];
   events: EventRow[];
+  alertSummary: SourceAlertSummary;
   warnings: string[];
   errors: string[];
 };
@@ -352,7 +356,7 @@ export async function generateAggregatorQaReport(
     warnings.push("Aggregation produced no final events.");
   }
 
-  return {
+  const report: AggregatorQaReport = {
     generatedAt: new Date().toISOString(),
     city: input.city,
     cityPreset,
@@ -429,9 +433,21 @@ export async function generateAggregatorQaReport(
         left.sourceName.localeCompare(right.sourceName) || left.sourceUrl.localeCompare(right.sourceUrl)
       )
     })),
+    alertSummary: summarizeSourceAlerts([]),
     warnings,
     errors
   };
+
+  const qaRun = buildSourceRunFromAggregatorQa(report);
+  const alerts = evaluateSourceAlerts({
+    latestRun: qaRun,
+    runHistory: [qaRun, ...listSourceRuns()],
+    now: new Date(report.generatedAt),
+    runHistoryEnabled: isSourceRunHistoryEnabled()
+  });
+  report.alertSummary = summarizeSourceAlerts(alerts);
+
+  return report;
 }
 
 function renderProviderList(providers: ProviderSummary[]) {
@@ -782,7 +798,23 @@ export function renderAggregatorQaHtml(report: AggregatorQaReport) {
         <div class="card"><span class="label">Deduped Count</span><span class="value">${report.dedupedCount}</span></div>
         <div class="card"><span class="label">Final Count</span><span class="value">${report.finalCount}</span></div>
         <div class="card"><span class="label">Duplicate Groups</span><span class="value">${report.duplicateGroups.length}</span></div>
+        <div class="card"><span class="label">Active Alerts</span><span class="value">${report.alertSummary.total}</span></div>
+        <div class="card"><span class="label">Critical Alerts</span><span class="value">${report.alertSummary.critical}</span></div>
+        <div class="card"><span class="label">Warning Alerts</span><span class="value">${report.alertSummary.warning}</span></div>
       </div>
+
+      <section>
+        <h2>Source Alert Summary</h2>
+        <table>
+          <tbody>
+            <tr><th>Total Active</th><td>${report.alertSummary.total}</td></tr>
+            <tr><th>Critical</th><td>${report.alertSummary.critical}</td></tr>
+            <tr><th>Warnings</th><td>${report.alertSummary.warning}</td></tr>
+            <tr><th>Info</th><td>${report.alertSummary.info}</td></tr>
+            <tr><th>Has Critical</th><td>${report.alertSummary.hasCritical ? "Yes" : "No"}</td></tr>
+          </tbody>
+        </table>
+      </section>
 
       <section>
         <h2>City Preset</h2>

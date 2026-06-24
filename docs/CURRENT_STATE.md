@@ -1,8 +1,8 @@
 # Current State
 
-Current stage: post-M18 source reliability and operations layer. M18 source-run history is complete, M18.1 was a reconciliation/release hygiene milestone, and M19 is next.
+Current stage: source reliability and operations layer. M19 source health alerts are implemented as deterministic in-app/API/QA visibility.
 
-Next milestone: M19: Source health alerts.
+Next recommended milestone: real source quality validation, likely Cincinnati source verification/live source validation.
 
 Not next: recommendations, personalization, UI redesign, Eventbrite, database migration, email or Slack notifications, CAPTCHA, full anti-spam work, or a production database adapter.
 
@@ -37,6 +37,8 @@ Eventbrite remains a future candidate provider. It is not implemented in the pro
 - Every provider uses the shared source provider interface and preserves source URL attribution.
 - Filtering, ranking, normalization, dedupe, provider registry, scout aggregation, events API, and aggregator QA are covered by pure/unit/API tests.
 - Ticketmaster, ICS, RSS, Meetup, curated/admin events, community submissions, source health, source-run history, production safety, and QA artifact policy have visible tests.
+- Source health alerts evaluate provider configuration, runtime streaks, freshness, data quality, and production safety signals.
+- Alert summaries are visible in `/health` and aggregator QA; detailed alert data is admin-only through `/api/admin/source-alerts` or detailed health mode.
 - Generated QA artifacts and generated source-run history files are ignored by default.
 - Production safety checks cover `ADMIN_TOKEN`, sample data gates, detailed health visibility, optional live provider config warnings, and local/mock behavior.
 
@@ -47,7 +49,7 @@ Eventbrite remains a future candidate provider. It is not implemented in the pro
 - Meetup is fixture-tested only; there is no live smoke QA or OAuth/token refresh UI.
 - Curated events are file-backed only.
 - Community submissions are in-memory only and have no CAPTCHA, rate limiting, account system, or persistent moderation database.
-- Source health is reporting only; alerts are deferred to M19.
+- Source alerts are visibility-only; email, Slack, webhooks, alert acknowledgement, and database-backed alert history are future work.
 - Eventbrite is not implemented.
 
 ## Standard Checks

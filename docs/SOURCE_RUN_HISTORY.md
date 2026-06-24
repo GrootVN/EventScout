@@ -2,7 +2,7 @@
 
 M18 adds a lightweight source-run history layer so Event Scout can keep summary records of aggregator and health runs over time.
 
-Current status: M18 is complete. M18.1 reconciles docs, release, provider, and test inventory. M19 source health alerts is next.
+Current status: M18 is complete and M19 source health alerts now evaluate source-run history for freshness, streak, drop-rate, and contribution alerts.
 
 ## What is stored
 
@@ -80,4 +80,4 @@ Public access stays summary-only.
 
 ## Why this exists
 
-This milestone is the historical foundation for M19 alerts. It makes trends visible without introducing alerting, cron jobs, or persistent production monitoring infrastructure yet.
+This milestone is the historical foundation for source alerts. It makes trends visible without introducing cron jobs, external notifications, or persistent production monitoring infrastructure.

@@ -1,8 +1,8 @@
 # Event Scout Milestones
 
-Current stage: post-M18 source reliability and operations layer. M18 source-run history is complete, M18.1 was a reconciliation/release hygiene milestone, and M19 is next.
+Current stage: source reliability and operations layer. M19 source health alerts are implemented as deterministic in-app/API/QA visibility.
 
-Next milestone: M19: Source health alerts.
+Next recommended milestone: real source quality validation, likely Cincinnati source verification/live source validation.
 
 Not next: recommendations, personalization, UI redesign, Eventbrite, database migration, notifications, CAPTCHA, or production database adapters.
 
@@ -24,12 +24,12 @@ Not next: recommendations, personalization, UI redesign, Eventbrite, database mi
 | M14: Admin moderation and trusted-source controls | complete | v0.13.0 lineage | `/admin`, `admin-auth.ts`, trusted source store/API, flagged suppression API | Local admin can be open when `ADMIN_TOKEN` is empty; production fails closed | Maintain admin auth tests |
 | M14.1: Curated/admin event ingestion provider | complete | v0.13.0 lineage | `curatedProvider.ts`, `curatedSchema.ts`, `apps/web/data/curated-events.json`, `docs/CURATED_EVENTS.md` | File-backed only; no persistent CRUD editor | Keep approved-only publishing tests |
 | M15: Community submissions | complete | v0.13.0 lineage | `/submit`, `/api/submissions`, admin submissions API, `communitySubmissionProvider.ts`, submission store/schema | In-memory moderation only; no CAPTCHA, rate limiting, accounts, or persistent DB | Add persistence only in a future database milestone |
-| M16: Source health dashboard | complete | v0.13.0 lineage | `/health`, `/api/health`, `source health` logic, public/admin visibility rules | Health is snapshot/reporting only; no alerts yet | M19 adds alerts |
+| M16: Source health dashboard | complete | v0.13.0 lineage | `/health`, `/api/health`, `source health` logic, public/admin visibility rules | Health snapshot/reporting is separate from alert delivery | Maintain public/admin health visibility |
 | M17: Deployment and production safety hardening | complete | v0.13.0 lineage | `Scripts/check-env.cjs`, `env.ts`, `docs/DEPLOYMENT.md`, QA artifact policy | Security hardening is focused on config gates, not a full security subsystem | Keep `check:env` in CI |
 | M17.1: CI aggregator QA gate | complete | v0.13.0 lineage | CI workflow tests, `tests/unit/ci-workflow.test.ts`, `npm run qa:aggregator` | Live provider smoke remains outside CI | Keep generated artifacts ignored |
 | M18: Source run persistence/history | complete | v0.13.0 | `runHistoryStore.ts`, `runHistoryBuilder.ts`, `/api/admin/source-runs`, `/health`, `docs/SOURCE_RUN_HISTORY.md` | File-backed summary storage; no production monitoring service | Use as foundation for M19 |
 | M18.1: Roadmap, release, and test inventory reconciliation | complete | v0.13.1 | `docs/CURRENT_STATE.md`, this milestone table, aligned README/PLAN/source docs, version metadata | Reconciliation/release hygiene only; no product feature work by design | Keep docs/version/test inventory aligned |
-| M19: Source health alerts | next | not tagged | Planned alerting on top of source health and run history | Not implemented in M18.1 | Define alert rules, channels, and non-CI live behavior |
+| M19: Source health alerts | complete | no version bump or tag by instruction | `sourceAlertTypes.ts`, `sourceAlerts.ts`, `/api/admin/source-alerts`, `/health`, aggregator QA alert summary, `docs/SOURCE_ALERTS.md` | In-app/API/QA visibility only; no email/Slack/webhook delivery, acknowledgements, or alert persistence | Next: real source quality validation |
 
 ## Verified Test Inventory
 
@@ -64,6 +64,7 @@ Post-M14 features:
 - Community submissions schema/API/provider: `tests/unit/submission-schema.test.ts`, `tests/unit/submission-store.test.ts`, `tests/unit/submission-to-curated.test.ts`, `tests/api/submissions-api.test.ts`, `tests/api/admin-submissions.test.ts`, `tests/unit/community-submission-provider.test.ts`
 - Source health dashboard logic/API: `tests/unit/source-health.test.ts`, `tests/api/health.test.ts`
 - Source-run history store/stats/builder/API: `tests/unit/source-run-history-store.test.ts`, `tests/unit/source-run-history-stats.test.ts`, `tests/unit/source-run-history-builder.test.ts`, `tests/api/admin-source-runs.test.ts`
+- Source alerts evaluator/API: `tests/unit/source-alerts.test.ts`, `tests/api/admin-source-alerts-api.test.ts`
 - Production env checks: `tests/unit/env-safety.test.ts`
 - QA artifact policy and CI gate: `tests/unit/qa-artifact-policy.test.ts`, `tests/unit/ci-workflow.test.ts`
 
@@ -73,3 +74,4 @@ Post-M14 features:
 - Current web app version: `0.13.1`
 - Matching release tag for this reconciliation release: `v0.13.1`
 - Highest verified pre-reconciliation tag: `v0.13.0`
+- M19 implementation intentionally keeps version/tag unchanged until release tagging is explicitly requested.

@@ -2,7 +2,7 @@
 
 ## Current state
 
-Current stage: post-M18 source reliability and operations layer. M18 source-run history is complete, M18.1 was a reconciliation/release hygiene milestone, and M19 is next.
+Current stage: source reliability and operations layer. M19 source health alerts are implemented as deterministic in-app/API/QA visibility.
 
 The repo has been refocused around a newcomer-first discovery experience with:
 
@@ -24,14 +24,15 @@ The repo has been refocused around a newcomer-first discovery experience with:
 - A public community submission flow behind `/submit` and `/api/submissions`
 - A source health dashboard behind `/health` and `/api/health`
 - Source-run history for QA and health snapshots behind the run-history store and admin API
+- Source health alerts behind `/health`, `/api/admin/source-alerts`, and aggregator QA summary output
 - A canonical current-state inventory in `docs/CURRENT_STATE.md`
 - Production safety hardening for admin access, sample data, health visibility, and QA artifact policy
 - CI now runs `check:env`, `lint`, `typecheck`, `test`, `qa:aggregator`, and `build`
 
 ## Next milestone
 
-M19: Source health alerts.
+Real source quality validation, likely Cincinnati source verification/live source validation.
 
 ## Not next
 
-Recommendations, personalization, UI redesign, Eventbrite, database migration, email/Slack notifications, CAPTCHA, full anti-spam work, and production database adapters are deferred.
+Recommendations, personalization, UI redesign, Eventbrite, database migration, email/Slack/webhook notifications, alert acknowledgement, CAPTCHA, full anti-spam work, and production database adapters are deferred.

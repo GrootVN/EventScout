@@ -75,4 +75,4 @@ The report will show curated load counts, status breakdowns, and duplicate group
 
 ## Next step
 
-M19: Source health alerts. M18 source-run history is complete, and M18.1 reconciles docs, release, and test inventory.
+Real source quality validation. M19 source health alerts are implemented, and curated alerts remain visibility-only until future delivery/acknowledgement work.

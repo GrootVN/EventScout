@@ -2,7 +2,7 @@
 
 Event Scout is easiest to run locally with mock data, but production should fail closed for admin access and keep sample data disabled unless a developer explicitly opts in.
 
-Current stage: post-M18 source reliability and operations layer. M18 source-run history is complete, M18.1 reconciles release/test/docs visibility, and M19 source health alerts is next.
+Current stage: source reliability and operations layer. M19 source health alerts are implemented as in-app/API/QA visibility only; external delivery channels remain future work.
 
 ## Local Development
 
@@ -68,6 +68,7 @@ Production safety defaults:
 - In production, detailed health requires admin authorization and `ENABLE_DETAILED_HEALTH=true`.
 - No secret values are exposed in either mode.
 - `/api/admin/source-runs` returns run history summaries behind admin authorization.
+- `/api/admin/source-alerts` returns deterministic source alerts behind admin authorization.
 
 ## QA Artifact Policy
 
@@ -95,4 +96,4 @@ Production safety defaults:
 
 ## Next Step
 
-M19: Source health alerts
+Real source quality validation, likely Cincinnati source verification/live source validation.

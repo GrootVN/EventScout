@@ -71,7 +71,7 @@ Each provider must:
 
 The source health dashboard should summarize whether each provider is ready, disabled, or missing required configuration, and should surface recent warnings and errors without hiding the original source inventory.
 
-M18 adds source-run history on top of that snapshot so trend questions can be answered before M19 alerting is introduced.
+M18 adds source-run history on top of that snapshot so trend questions can be answered. M19 adds deterministic source alerts for configuration, runtime, freshness, production-safety, and data-quality issues.
 
 ## Implemented provider inventory
 

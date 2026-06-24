@@ -298,6 +298,7 @@ describe("generateAggregatorQaReport", () => {
     expect(report.droppedInvalidCount).toBe(1);
     expect(report.dedupedCount).toBe(1);
     expect(report.finalCount).toBe(1);
+    expect(report.alertSummary.total).toBeGreaterThanOrEqual(0);
     expect(report.duplicateGroups).toHaveLength(1);
     expect(report.duplicateGroups[0]?.size).toBe(2);
     expect(report.duplicateGroups[0]?.sourceNames).toEqual(["Mock A", "Mock B"]);
@@ -944,6 +945,7 @@ describe("generateAggregatorQaReport", () => {
       ticketmasterEnabled: false
     });
     expect(html).toContain("City Preset");
+    expect(html).toContain("Source Alert Summary");
     expect(html).toContain("Cincinnati");
   });
 

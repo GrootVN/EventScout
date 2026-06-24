@@ -11,7 +11,7 @@ Event Scout is a newcomer-first local discovery app. It helps someone answer: "W
 
 ## Current product slice
 
-Current stage: post-M18 source reliability and operations layer. M18 source-run history is complete, this release completes M18.1 roadmap/release/test reconciliation, and M19 is next.
+Current stage: source reliability and operations layer. M19 source health alerts are implemented as in-app/API/QA visibility, and external alert delivery remains future work.
 
 - Mock-data-first event discovery
 - Cross-provider mock aggregation with duplicate source preservation
@@ -26,6 +26,7 @@ Current stage: post-M18 source reliability and operations layer. M18 source-run 
 - A sources page showing enabled and planned providers
 - A source health dashboard showing readiness, configuration gaps, and recent diagnostics
 - Source-run history for QA and health snapshots, surfaced in `/health` and the admin history API
+- Source health alerts surfaced in `/health`, `/api/admin/source-alerts`, and aggregator QA
 - Canonical milestone, provider, release, and test inventory in [docs/CURRENT_STATE.md](docs/CURRENT_STATE.md)
 - Aggregator QA artifacts with provider counts and merge visibility
 - A manual Ticketmaster smoke QA path that can write live report artifacts
@@ -239,8 +240,10 @@ See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for local, staging, and production 
 
 See [docs/SOURCE_RUN_HISTORY.md](docs/SOURCE_RUN_HISTORY.md) for the storage model and run-history API details.
 
+See [docs/SOURCE_ALERTS.md](docs/SOURCE_ALERTS.md) for M19 alert rules, thresholds, API behavior, QA integration, and future delivery-channel limits.
+
 ## Next milestone
 
-Implement M19 from [docs/MILESTONES.md](docs/MILESTONES.md): Source health alerts.
+Recommended next milestone from [docs/MILESTONES.md](docs/MILESTONES.md): real source quality validation, likely Cincinnati source verification/live source validation.
 
 Not next: recommendations, personalization, UI redesign, Eventbrite, database migration, notifications, CAPTCHA, or production database adapters.

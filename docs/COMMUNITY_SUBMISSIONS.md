@@ -48,4 +48,4 @@ The submission store is in-memory only. It resets when the process restarts.
 
 ## Next milestone
 
-M19: Source health alerts. M18 source-run history is complete, and M18.1 reconciles docs, release, and test inventory.
+Real source quality validation. M19 source health alerts are implemented, but CAPTCHA, rate limiting, persistence, and delivery notifications remain future work.
