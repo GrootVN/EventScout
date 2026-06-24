@@ -56,6 +56,7 @@ Operational safety notes:
 - Admin surfaces must fail closed in production when `ADMIN_TOKEN` is missing.
 - Sample data should stay disabled in production.
 - Public health checks should avoid exposing secrets or detailed provider diagnostics unless authorized.
+- Source-run history should store summaries only and stay behind admin-protected detail views in production.
 
 ## Required provider behavior
 
@@ -69,6 +70,8 @@ Each provider must:
 - Respect missing API keys
 
 The source health dashboard should summarize whether each provider is ready, disabled, or missing required configuration, and should surface recent warnings and errors without hiding the original source inventory.
+
+M18 adds source-run history on top of that snapshot so trend questions can be answered before M19 alerting is introduced.
 
 Meetup-specific notes:
 

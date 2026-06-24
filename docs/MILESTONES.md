@@ -511,3 +511,30 @@ Status: [x]
 ### Next recommended milestone
 
 - M18: Source run persistence/history
+
+---
+
+## M18: Source run persistence/history
+
+Status: [x]
+
+### Acceptance criteria
+
+- Aggregator QA appends source-run summaries to a lightweight history store.
+- The history store keeps summaries only and does not persist secrets or raw event payloads.
+- The `/health` page shows recent run history and provider trend summaries.
+- The admin source-run API returns history summaries behind admin authorization.
+- The store is file-backed by default and falls back safely if filesystem writes fail.
+
+### Required checks
+
+- npm run check:env
+- npm run lint
+- npm run typecheck
+- npm test
+- npm run qa:aggregator
+- npm run build
+
+### Next recommended milestone
+
+- M19: Source health alerts

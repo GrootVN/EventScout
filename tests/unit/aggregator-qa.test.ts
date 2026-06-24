@@ -1,3 +1,7 @@
+import { mkdtempSync } from "node:fs";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { EventSourceProvider } from "../../apps/web/lib/sources/provider";
 import sampleTicketmasterEvent from "../fixtures/ticketmaster/sample-event.json";
@@ -973,5 +977,62 @@ describe("generateAggregatorQaReport", () => {
     const report = await generateAggregatorQaReport({ city: "Cincinnati" });
 
     expect(report.warnings.some((warning) => warning.includes("Skipped recurring ICS event"))).toBe(true);
+  });
+
+  it("records source-run history when enabled during QA writes", async () => {
+    const tempDir = mkdtempSync(path.join(tmpdir(), "eventscout-qa-history-"));
+    const historyPath = path.join(tempDir, "source-run-history.json");
+    const outputDir = path.join(tempDir, "qa-results");
+
+    const { writeAggregatorQaReport } = await importAggregatorQaWithProviders(
+      [mockProvider],
+      {
+        enableSourceRunHistory: true,
+        sourceRunHistoryPath: historyPath
+      }
+    );
+
+    const result = await writeAggregatorQaReport(outputDir);
+    const history = JSON.parse(await readFile(historyPath, "utf8")) as {
+      runs: Array<{ id: string; runType: string; overallStatus: string }>;
+    };
+
+    expect(result.report.warnings.some((warning) => warning.includes("source run history"))).toBe(false);
+    expect(history.runs).toHaveLength(1);
+    expect(history.runs[0]).toMatchObject({
+      runType: "aggregator-qa",
+      overallStatus: expect.any(String)
+    });
+  });
+
+  it("does not append source-run history when disabled", async () => {
+    const tempDir = mkdtempSync(path.join(tmpdir(), "eventscout-qa-history-off-"));
+    const historyPath = path.join(tempDir, "source-run-history.json");
+    const outputDir = path.join(tempDir, "qa-results");
+
+    const { writeAggregatorQaReport } = await importAggregatorQaWithProviders([mockProvider], {
+      enableSourceRunHistory: false,
+      sourceRunHistoryPath: historyPath
+    });
+
+    await writeAggregatorQaReport(outputDir);
+
+    await expect(readFile(historyPath, "utf8")).rejects.toThrow();
+  });
+
+  it("surfaces a warning but still completes when history append fails", async () => {
+    const historyPath = mkdtempSync(path.join(tmpdir(), "eventscout-qa-history-fail-"));
+    const outputDir = path.join(historyPath, "qa-results");
+
+    const { writeAggregatorQaReport } = await importAggregatorQaWithProviders([mockProvider], {
+      enableSourceRunHistory: true,
+      sourceRunHistoryPath: historyPath
+    });
+
+    const result = await writeAggregatorQaReport(outputDir);
+
+    expect(result.report.warnings.some((warning) => warning.toLowerCase().includes("source run history"))).toBe(
+      true
+    );
   });
 });

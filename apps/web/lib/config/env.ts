@@ -9,6 +9,16 @@ function readFlag(name: string, fallback: boolean) {
   return value === "true";
 }
 
+function readInteger(name: string, fallback: number) {
+  const value = process.env[name];
+  if (value === undefined) {
+    return fallback;
+  }
+
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
 function clean(value: string | null | undefined) {
   return value?.trim() ?? "";
 }
@@ -36,6 +46,8 @@ export const env = {
   icsSourceUrls: process.env.ICS_SOURCE_URLS ?? "",
   rssSourceUrls: process.env.RSS_SOURCE_URLS ?? "",
   curatedEventsPath: process.env.CURATED_EVENTS_PATH ?? "apps/web/data/curated-events.json",
+  sourceRunHistoryPath: process.env.SOURCE_RUN_HISTORY_PATH ?? ".eventscout/source-run-history.json",
+  sourceRunHistoryLimit: readInteger("SOURCE_RUN_HISTORY_LIMIT", 100),
   cityPresetQaLiveFetch: readFlag("CITY_PRESET_QA_LIVE_FETCH", false),
   enableMockProvider: readFlag("ENABLE_MOCK_PROVIDER", true),
   enableCommunityMockProvider: readFlag("ENABLE_COMMUNITY_MOCK_PROVIDER", true),
@@ -43,6 +55,7 @@ export const env = {
   enableSampleSubmissions: readFlag("ENABLE_SAMPLE_SUBMISSIONS", false),
   enableSampleTrustedSources: readFlag("ENABLE_SAMPLE_TRUSTED_SOURCES", false),
   enableDetailedHealth: readFlag("ENABLE_DETAILED_HEALTH", false),
+  enableSourceRunHistory: readFlag("ENABLE_SOURCE_RUN_HISTORY", !isProduction()),
   enableCuratedProvider: readFlag("ENABLE_CURATED_PROVIDER", false),
   enableCityPresets: readFlag("ENABLE_CITY_PRESETS", false),
   enableTicketmasterProvider: readFlag("ENABLE_TICKETMASTER_PROVIDER", false),

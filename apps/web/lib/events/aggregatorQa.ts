@@ -9,6 +9,12 @@ import { env } from "@/lib/config/env";
 import { consumeCuratedProviderDiagnostics } from "@/lib/sources/curatedProvider";
 import { consumeCommunitySubmissionProviderDiagnostics } from "@/lib/sources/communitySubmissionProvider";
 import { getEnabledProviders } from "@/lib/sources/registry";
+import {
+  appendSourceRun,
+  consumeSourceRunHistoryWarnings,
+  isSourceRunHistoryEnabled
+} from "@/lib/sources/runHistoryStore";
+import { buildSourceRunFromAggregatorQa } from "@/lib/sources/runHistoryBuilder";
 import { consumeTicketmasterProviderDiagnostics } from "@/lib/sources/ticketmasterProvider";
 import { consumeMeetupProviderDiagnostics } from "@/lib/sources/meetupProvider";
 import { consumeIcsProviderDiagnostics } from "@/lib/sources/icsProvider";
@@ -838,6 +844,21 @@ export function renderAggregatorQaHtml(report: AggregatorQaReport) {
 
 export async function writeAggregatorQaReport(outputDir = path.resolve(process.cwd(), "qa-results")) {
   const report = await generateAggregatorQaReport();
+  if (isSourceRunHistoryEnabled()) {
+    consumeSourceRunHistoryWarnings();
+    try {
+      appendSourceRun(buildSourceRunFromAggregatorQa(report));
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : String(error);
+      report.warnings.push(`Failed to append source run history: ${reason}`);
+    }
+
+    const historyWarnings = consumeSourceRunHistoryWarnings();
+    if (historyWarnings.length > 0) {
+      report.warnings.push(...historyWarnings);
+    }
+  }
+
   const html = renderAggregatorQaHtml(report);
 
   await mkdir(outputDir, { recursive: true });

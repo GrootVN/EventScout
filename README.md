@@ -23,6 +23,7 @@ Event Scout is a newcomer-first local discovery app. It helps someone answer: "W
 - A generic RSS/Atom adapter behind `ENABLE_RSS_PROVIDER`
 - A sources page showing enabled and planned providers
 - A source health dashboard showing readiness, configuration gaps, and recent diagnostics
+- Source-run history for QA and health snapshots, surfaced in `/health` and the admin history API
 - Aggregator QA artifacts with provider counts and merge visibility
 - A manual Ticketmaster smoke QA path that can write live report artifacts
 - A file-backed curated/admin events provider behind `ENABLE_CURATED_PROVIDER`
@@ -227,8 +228,10 @@ This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
 
 ## Deployment
 
-See [docs/DEPLOYMENT.md](/C:/Users/nguye/Documents/EventScout/docs/DEPLOYMENT.md) for local, staging, and production guidance, including health behavior, admin safety, and QA artifact policy.
+See [docs/DEPLOYMENT.md](/C:/Users/nguye/Documents/EventScout/docs/DEPLOYMENT.md) for local, staging, and production guidance, including health behavior, admin safety, source-run history, and QA artifact policy.
+
+See [docs/SOURCE_RUN_HISTORY.md](/C:/Users/nguye/Documents/EventScout/docs/SOURCE_RUN_HISTORY.md) for the storage model and run-history API details.
 
 ## Next milestone
 
-Implement M18 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): Source run persistence/history.
+Implement M19 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): Source health alerts.

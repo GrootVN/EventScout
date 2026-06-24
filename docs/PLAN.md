@@ -21,9 +21,10 @@ The repo has been refocused around a newcomer-first discovery experience with:
 - A file-backed curated admin events provider behind `ENABLE_CURATED_PROVIDER`
 - A public community submission flow behind `/submit` and `/api/submissions`
 - A source health dashboard behind `/health` and `/api/health`
+- Source-run history for QA and health snapshots behind the run-history store and admin API
 - Production safety hardening for admin access, sample data, health visibility, and QA artifact policy
 - CI now runs `check:env`, `lint`, `typecheck`, `test`, `qa:aggregator`, and `build`
 
 ## Next milestone
 
-M18: Source run persistence/history.
+M19: Source health alerts.
