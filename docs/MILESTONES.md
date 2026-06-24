@@ -1,540 +1,73 @@
 # Event Scout Milestones
 
-## M1: Project scaffold
-
-Status: [x]
-
-### Acceptance criteria
-
-- Next.js TypeScript app runs locally.
-- Basic layout exists.
-- Homepage renders.
-- CI workflow exists.
-
-### Required checks
-
-- npm run lint
-- npm run typecheck
-- npm run build
-
----
-
-## M2: Event data model and mock seed data
-
-Status: [x]
-
-### Acceptance criteria
-
-- Shared Event type exists.
-- Mock provider returns at least 30 events.
-- Events include title, description, start time, end time, venue, city, category, interests, price, source name, and source URL.
-- App works without external API keys.
-
-### Required tests
-
-- normalize.test.ts
-- mockProvider test
-
----
-
-## M3: Browse and filter events
-
-Status: [x]
-
-### Acceptance criteria
-
-- Homepage shows event cards.
-- User can filter by city.
-- User can filter by date range.
-- User can filter by interest.
-- User can filter by price.
-- Empty state appears when no events match.
-- URL query params reflect filters.
-
-### Required tests
-
-- filters.test.ts
-- event-discovery.spec.ts
-
----
-
-## M4: Event detail and source attribution
-
-Status: [x]
-
-### Acceptance criteria
-
-- Event detail page exists.
-- Original source link is visible.
-- Source badge is visible.
-- Event metadata is displayed clearly.
-- Missing optional fields do not crash the page.
-
-### Required tests
-
-- source-attribution.spec.ts
-
----
-
-## M5: Saved events
-
-Status: [x]
-
-### Acceptance criteria
-
-- User can save event.
-- User can unsave event.
-- Saved events page exists.
-- Saved state persists locally.
-- Missing/deleted event IDs are handled safely.
-
-### Required tests
-
-- saved-events behavior coverage
-
----
-
-## M6: Source provider architecture
-
-Status: [x]
-
-### Acceptance criteria
-
-- Provider interface exists.
-- Provider registry exists.
-- Mock provider implements interface.
-- External providers can be added without changing UI code.
-- Scout API can fetch from enabled providers.
-
-### Required tests
-
-- provider registry test
-- normalize.test.ts
-
----
-
-## M7: Deduplication
-
-Status: [x]
-
-### Acceptance criteria
-
-- Duplicate events from different sources can be merged.
-- Original source list is preserved.
-- Similar title/date/venue events are detected.
-- Dedupe confidence is testable.
-
-### Required tests
-
-- dedupe.test.ts
-- similar-title dedupe coverage
-
----
-
-## M8: Interest classification and ranking
-
-Status: [x]
-
-### Acceptance criteria
-
-- Events receive interest tags.
-- User selected interests affect ranking.
-- Ranking is deterministic and testable.
-- Newcomer-friendly and free/cheap boosts exist.
-
-### Required tests
-
-- classifyInterests.test.ts
-- ranking.test.ts
-
----
-
-## M8.6: Aggregator visual QA report
-
-Status: [x]
-
-### Acceptance criteria
-
-- `npm run qa:aggregator` generates HTML and JSON artifacts under `qa-results/`.
-- Report shows enabled providers, pipeline counts, duplicate groups, event rows, and warnings/errors.
-- Report uses the current mock-backed aggregation flow and does not introduce real providers or recommendation logic.
-
-### Required checks
-
-- npm run qa:aggregator
-
----
-
-## M8.7: Cross-provider mock aggregation
-
-Status: [x]
-
-### Acceptance criteria
-
-- A second mock provider can be enabled independently with `ENABLE_COMMUNITY_MOCK_PROVIDER`.
-- Aggregation merges intentional cross-provider duplicates while preserving all original source metadata.
-- Cross-provider mock tests cover dedupe behavior, provider registry behavior, scout aggregation, and QA report visibility.
-- `npm run qa:aggregator` shows provider-level pipeline counts and duplicate groups with visible source links.
-
-### Required checks
-
-- npm run lint
-- npm run typecheck
-- npm test
-- npm run build
-- npm run qa:aggregator
-
----
-
-## M9: First real source adapter
-
-Status: [x]
-
-### Acceptance criteria
-
-- One real source provider is implemented.
-- Ticketmaster is disabled by default and stays off when the API key is missing.
-- Provider failures do not crash the app.
-- Raw events are normalized into the shared Event model.
-- QA output includes Ticketmaster when the provider is enabled.
-
-### Required tests
-
-- provider test with mocked API response
-- provider disabled/missing-key coverage
-- Ticketmaster normalization coverage
-- aggregation and QA coverage with mocked Ticketmaster data
-
----
-
-## M9.1: Live Ticketmaster smoke QA
-
-Status: [x]
-
-### Acceptance criteria
-
-- A manual smoke QA path can run Ticketmaster with a real key.
-- The script exits cleanly when Ticketmaster is not configured.
-- Live QA artifacts are written to `qa-results/` and kept out of normal commits.
-- The report shows query input, provider status, counts, warnings/errors, and event source details.
-
-### Required checks
-
-- npm run qa:ticketmaster
-
----
-
-## M10: Generic ICS calendar provider
-
-Status: [x]
-
-### Acceptance criteria
-
-- ICS feeds can be enabled behind `ENABLE_ICS_PROVIDER` and `ICS_SOURCE_URLS`.
-- Public calendar events normalize into the shared ScoutEvent shape with original source attribution.
-- Recurring ICS events are skipped with warnings instead of being expanded into many instances.
-- Mock-only mode still works when no ICS configuration is present.
-- README and `.env.example` explain setup and manual QA.
-
-### Required checks
-
-- npm run lint
-- npm run typecheck
-- npm test
-- npm run build
-- npm run qa:aggregator
-
-### Next recommended milestone
-
-- M11: Generic RSS provider
-
----
-
-## M11: Generic RSS provider
-
-Status: [x]
-
-### Acceptance criteria
-
-- RSS and Atom feeds can be enabled behind `ENABLE_RSS_PROVIDER` and `RSS_SOURCE_URLS`.
-- Semi-structured RSS items normalize into the shared ScoutEvent shape with original source attribution.
-- Items without a clear source URL or event date are skipped with warnings instead of being silently misclassified.
-- Mock-only mode still works when no RSS configuration is present.
-- README and `.env.example` explain setup and manual QA.
-
-### Required checks
-
-- npm run lint
-- npm run typecheck
-- npm test
-- npm run build
-- npm run qa:aggregator
-
-### Next recommended milestone
-
-- M12: Local city source preset pack
-
----
-
-## M12: Local city source preset pack
-
-Status: [x]
-
-### Acceptance criteria
-
-- A local city preset can bundle ICS and RSS source configs for Cincinnati.
-- City presets stay disabled by default and do not break mock-only mode.
-- The preset contains at least five configured local sources, including disabled examples.
-- QA shows the active preset summary alongside provider counts.
-- The source page surfaces the active preset bundle and its source inventory.
-
-### Required checks
-
-- npm run lint
-- npm run typecheck
-- npm test
-- npm run build
-- npm run qa:aggregator
-
-### Next recommended milestone
-
-- M12.1: Real Cincinnati source validation
-
----
-
-## M12.1: Real Cincinnati source validation
-
-Status: [x]
-
-### Acceptance criteria
-
-- Cincinnati preset source entries expose clear status metadata.
-- Placeholder sources are disabled by default.
-- A city-preset QA report can be generated in metadata-only mode.
-- Live validation is opt-in and does not run unless explicitly enabled.
-- The report classifies sources as verified, placeholder, disabled, or needs review.
-
-### Required checks
-
-- npm run lint
-- npm run typecheck
-- npm test
-- npm run build
-- npm run qa:aggregator
-- npm run qa:city-preset
-
-### Next recommended milestone
-
-- M13: Meetup provider
-
----
-
-## M13: Meetup provider
-
-Status: [x]
-
-### Acceptance criteria
-
-- Meetup is disabled by default and only enables when both the feature flag and access token are present.
-- Meetup GraphQL responses normalize into the shared ScoutEvent shape with original source attribution preserved.
-- Missing token, malformed records, GraphQL errors, and network failures do not crash aggregation.
-- Mock-only mode still works when Meetup is disabled or misconfigured.
-- Aggregator QA reports show Meetup provider counts, duplicate groups, and source links.
-
-### Required checks
-
-- npm run lint
-- npm run typecheck
-- npm test
-- npm run build
-- npm run qa:aggregator
-
-### Next recommended milestone
-
-- M14: Curated/admin source provider
-
----
-
-## M14: Curated/admin source provider
-
-Status: [x]
-
-### Acceptance criteria
-
-- Admin access is gated by `ADMIN_TOKEN` when configured.
-- The `/admin` page shows a moderation queue and a trusted source allowlist.
-- Trusted sources can be listed, created, and deactivated through the admin API.
-- Flagged events can be listed and suppressed through the admin API.
-- Mock-only mode still works when the admin token is not set.
-
-### Required checks
-
-- npm run lint
-- npm run typecheck
-- npm test
-- npm run build
-- npm run qa:aggregator
-
-### Next recommended milestone
-
-- M15: Community submissions
-
----
-
-## M15: Community submissions
-
-Status: [x]
-
-### Acceptance criteria
-
-- Public submissions create pending records before any moderation decision.
-- Approved submissions enter the public aggregator pipeline.
-- Rejected and suppressed submissions stay out of discovery.
-- The admin moderation queue can review pending submissions.
-- The public submission page explains that items stay hidden until approved.
-- The submission store is in-memory only for this milestone.
-- QA shows approved community submissions when the provider is enabled.
-
-### Required checks
-
-- npm run lint
-- npm run typecheck
-- npm test
-- npm run build
-- npm run qa:aggregator
-
-### Next recommended milestone
-
-- M16: Source health dashboard
-
----
-
-## M16: Source health dashboard
-
-Status: [x]
-
-### Acceptance criteria
-
-- A source health dashboard summarizes provider readiness in one place.
-- The dashboard distinguishes healthy, warning, needs-config, and disabled providers.
-- Provider diagnostics remain available to the dashboard without breaking aggregation.
-- The `/health` page and `/api/health` route expose the same source health snapshot.
-- Mock-only mode still works when health visibility is queried.
-
-### Required checks
-
-- npm run lint
-- npm run typecheck
-- npm test
-- npm run build
-- npm run qa:aggregator
-
-### Next recommended milestone
-
-- M17: Deployment and production safety hardening
-
----
-
-## M14.1: Curated event ingestion provider
-
-Status: [x]
-
-### Acceptance criteria
-
-- A file-backed curated provider can be enabled behind `ENABLE_CURATED_PROVIDER`.
-- Curated records validate strictly before entering the public pipeline.
-- Only approved curated records become public events.
-- Pending, rejected, and suppressed curated records are counted in QA but do not enter discovery.
-- Aggregator QA reports curated load/status diagnostics and curated duplicate groups.
-- Mock-only mode still works when curated ingestion is disabled or misconfigured.
-
-### Required checks
-
-- npm run lint
-- npm run typecheck
-- npm test
-- npm run build
-- npm run qa:aggregator
-
-### Next recommended milestone
-
-- M15: Community submissions
-
----
-
-## M17: Deployment and production safety hardening
-
-Status: [x]
-
-### Acceptance criteria
-
-- Admin access fails closed in production when `ADMIN_TOKEN` is missing.
-- Sample submissions and sample trusted sources stay out of production by default.
-- `/api/health` returns a public summary by default and hides detailed diagnostics unless authorized.
-- QA artifacts are ignored instead of being committed as live generated reports.
-- Deployment guidance explains local, staging, and production behavior clearly.
-
-### Required checks
-
-- npm run lint
-- npm run typecheck
-- npm test
-- npm run build
-- npm run qa:aggregator
-- npm run check:env
-
-### Next recommended milestone
-
-- M18: Source run persistence/history
-
----
-
-## M17.1: CI aggregator QA gate
-
-Status: [x]
-
-### Acceptance criteria
-
-- GitHub Actions runs `npm run qa:aggregator` on each validation pass.
-- Generated QA artifacts remain ignored and do not dirty the repository.
-- CI order stays consistent with the deployment-safety workflow.
-
-### Required checks
-
-- npm run check:env
-- npm run lint
-- npm run typecheck
-- npm test
-- npm run qa:aggregator
-- npm run build
-
-### Next recommended milestone
-
-- M18: Source run persistence/history
-
----
-
-## M18: Source run persistence/history
-
-Status: [x]
-
-### Acceptance criteria
-
-- Aggregator QA appends source-run summaries to a lightweight history store.
-- The history store keeps summaries only and does not persist secrets or raw event payloads.
-- The `/health` page shows recent run history and provider trend summaries.
-- The admin source-run API returns history summaries behind admin authorization.
-- The store is file-backed by default and falls back safely if filesystem writes fail.
-
-### Required checks
-
-- npm run check:env
-- npm run lint
-- npm run typecheck
-- npm test
-- npm run qa:aggregator
-- npm run build
-
-### Next recommended milestone
-
-- M19: Source health alerts
+Current stage: post-M18 source reliability and operations layer. M18 source-run history is complete, this release completes M18.1 reconciliation, and M19 is next.
+
+Next milestone: M19: Source health alerts.
+
+Not next: recommendations, personalization, UI redesign, Eventbrite, database migration, notifications, CAPTCHA, or production database adapters.
+
+## Canonical Roadmap
+
+| Milestone | Status | Version / tag | Key files and features | Known limitations | Next action |
+| --- | --- | --- | --- | --- | --- |
+| M1-M8: Base EventScout app and aggregator foundation | complete | v0.3.0 through v0.8.0 lineage | `apps/web/app`, `apps/web/lib/events/*`, `apps/web/lib/sources/provider.ts`, `apps/web/lib/sources/registry.ts`, mock events, filters, ranking, classification, dedupe, source attribution | Early milestones are summarized because later milestones consolidated the base app | Maintain through regression tests |
+| M8.5: Aggregator hardening | complete | covered before v0.9.0 | `apps/web/lib/events/service.ts`, provider failure handling, normalized aggregation path | No separate milestone doc existed before reconciliation | Maintain through scout and QA tests |
+| M8.6: Visual aggregator QA report | complete | v0.9.0 lineage | `apps/web/lib/events/aggregatorQa.ts`, `Scripts/qa-aggregator.test.ts`, `vitest.qa.config.ts`, `qa-results/` output | Generated reports are ignored; sanitized sample lives under `docs/examples/` | Keep CI QA gate passing |
+| M8.7: Cross-provider mock aggregation | complete | v0.9.0 lineage | `mockProvider`, `communityMockProvider`, dedupe/source preservation tests | Mock-only duplicate coverage is intentional | Maintain default QA coverage |
+| M9: Ticketmaster provider | complete | v0.10.0 lineage | `ticketmasterProvider.ts`, Ticketmaster normalization, registry/env flags, mocked API tests | Disabled by default and requires `TICKETMASTER_API_KEY` | Keep live smoke manual only |
+| M9.1: Ticketmaster live smoke QA | complete | v0.10.0 lineage | `Scripts/qa-ticketmaster.cjs`, `ticketmasterLiveQa.ts`, live report artifact policy | Live smoke is manual and not required in CI | Run only with real key when needed |
+| M10: Generic ICS provider | complete | v0.11.0 lineage | `icsProvider.ts`, `icsParser.ts`, `apps/web/config/ics-sources.ts`, ICS fixtures/tests | Recurring events are skipped instead of expanded | Add real sources through presets |
+| M11: Generic RSS provider | complete | v0.12.0 lineage | `rssProvider.ts`, `rssParser.ts`, `apps/web/config/rss-sources.ts`, RSS fixtures/tests | Requires explicit event dates; feed dates are metadata only | Add verified feeds through presets |
+| M12: Local city source preset pack | complete | v0.12.1 lineage | `apps/web/config/cities/*`, `localPresetProvider.ts`, sources page | Cincinnati entries include placeholders/disabled sources | Promote sources after validation |
+| M12.1: Real city preset validation | complete | v0.12.1 lineage | `Scripts/qa-city-preset.cjs`, `cityPresetQa.ts`, `docs/CITY_PRESETS.md` | Live validation is opt-in | Keep metadata current |
+| M13: Meetup provider | complete | v0.13.0 lineage | `meetupProvider.ts`, Meetup fixtures/tests, registry/env flags | No OAuth or token refresh UI; no live smoke QA required | Keep fixture tests and optional manual validation |
+| M14: Admin moderation and trusted-source controls | complete | v0.13.0 lineage | `/admin`, `admin-auth.ts`, trusted source store/API, flagged suppression API | Local admin can be open when `ADMIN_TOKEN` is empty; production fails closed | Maintain admin auth tests |
+| M14.1: Curated/admin event ingestion provider | complete | v0.13.0 lineage | `curatedProvider.ts`, `curatedSchema.ts`, `apps/web/data/curated-events.json`, `docs/CURATED_EVENTS.md` | File-backed only; no persistent CRUD editor | Keep approved-only publishing tests |
+| M15: Community submissions | complete | v0.13.0 lineage | `/submit`, `/api/submissions`, admin submissions API, `communitySubmissionProvider.ts`, submission store/schema | In-memory moderation only; no CAPTCHA, rate limiting, accounts, or persistent DB | Add persistence only in a future database milestone |
+| M16: Source health dashboard | complete | v0.13.0 lineage | `/health`, `/api/health`, `source health` logic, public/admin visibility rules | Health is snapshot/reporting only; no alerts yet | M19 adds alerts |
+| M17: Deployment and production safety hardening | complete | v0.13.0 lineage | `Scripts/check-env.cjs`, `env.ts`, `docs/DEPLOYMENT.md`, QA artifact policy | Security hardening is focused on config gates, not a full security subsystem | Keep `check:env` in CI |
+| M17.1: CI aggregator QA gate | complete | v0.13.0 lineage | CI workflow tests, `tests/unit/ci-workflow.test.ts`, `npm run qa:aggregator` | Live provider smoke remains outside CI | Keep generated artifacts ignored |
+| M18: Source run persistence/history | complete | v0.13.0 | `runHistoryStore.ts`, `runHistoryBuilder.ts`, `/api/admin/source-runs`, `/health`, `docs/SOURCE_RUN_HISTORY.md` | File-backed summary storage; no production monitoring service | Use as foundation for M19 |
+| M18.1: Roadmap, release, and test inventory reconciliation | complete | v0.13.1 | `docs/CURRENT_STATE.md`, this milestone table, aligned README/PLAN/source docs, version metadata | No feature work by design | Tag and push this release after checks |
+| M19: Source health alerts | next | not tagged | Planned alerting on top of source health and run history | Not implemented in M18.1 | Define alert rules, channels, and non-CI live behavior |
+
+## Verified Test Inventory
+
+Aggregator foundation:
+
+- Filtering: `tests/unit/filters.test.ts`
+- Ranking: `tests/unit/ranking.test.ts`
+- Classification: `tests/unit/classifyInterests.test.ts`
+- Normalization: `tests/unit/normalize.test.ts`
+- Deduplication: `tests/unit/dedupe.test.ts`
+- Provider registry: `tests/unit/provider-registry.test.ts`
+- Scout aggregation: `tests/unit/scout-events.test.ts`
+- Events API: `tests/api/events-api.test.ts`
+- Aggregator QA: `tests/unit/aggregator-qa.test.ts`, `Scripts/qa-aggregator.test.ts`
+
+Real and source providers:
+
+- Ticketmaster provider and normalization: `tests/unit/ticketmaster-provider.test.ts`, `tests/unit/ticketmaster-normalize.test.ts`
+- Ticketmaster live QA artifact path: `tests/unit/ticketmaster-live-qa.test.ts`
+- ICS provider and normalization: `tests/unit/ics-provider.test.ts`, `tests/unit/ics-normalize.test.ts`
+- RSS provider and normalization: `tests/unit/rss-provider.test.ts`, `tests/unit/rss-normalize.test.ts`
+- Meetup provider and normalization: `tests/unit/meetup-provider.test.ts`, `tests/unit/meetup-normalize.test.ts`
+
+Post-M14 features:
+
+- Admin auth: `tests/unit/admin-auth.test.ts`
+- Admin flagged/suppression API: `tests/api/admin-flagged.test.ts`, `tests/unit/suppression.test.ts`
+- Trusted sources store/API: `tests/unit/trusted-sources-store.test.ts`, `tests/api/admin-trusted-sources.test.ts`
+- Curated schema/provider/normalization: `tests/unit/curated-schema.test.ts`, `tests/unit/curated-provider.test.ts`, `tests/unit/curated-normalize.test.ts`
+- Community submissions schema/API/provider: `tests/unit/submission-schema.test.ts`, `tests/unit/submission-store.test.ts`, `tests/unit/submission-to-curated.test.ts`, `tests/api/submissions-api.test.ts`, `tests/api/admin-submissions.test.ts`, `tests/unit/community-submission-provider.test.ts`
+- Source health dashboard logic/API: `tests/unit/source-health.test.ts`, `tests/api/health.test.ts`
+- Source-run history store/stats/builder/API: `tests/unit/source-run-history-store.test.ts`, `tests/unit/source-run-history-stats.test.ts`, `tests/unit/source-run-history-builder.test.ts`, `tests/api/admin-source-runs.test.ts`
+- Production env checks: `tests/unit/env-safety.test.ts`
+- QA artifact policy and CI gate: `tests/unit/qa-artifact-policy.test.ts`, `tests/unit/ci-workflow.test.ts`
+
+## Release Notes
+
+- Current root version: `0.13.1`
+- Current web app version: `0.13.1`
+- Matching release tag for this reconciliation release: `v0.13.1` after final checks, commit, tag, and push
+- Highest verified pre-reconciliation tag: `v0.13.0`

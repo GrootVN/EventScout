@@ -2,6 +2,8 @@
 
 ## Current state
 
+Current stage: post-M18 source reliability and operations layer. M18 source-run history is complete, this release completes M18.1 cleanup/reconciliation, and M19 is next.
+
 The repo has been refocused around a newcomer-first discovery experience with:
 
 - A canonical event model
@@ -22,9 +24,14 @@ The repo has been refocused around a newcomer-first discovery experience with:
 - A public community submission flow behind `/submit` and `/api/submissions`
 - A source health dashboard behind `/health` and `/api/health`
 - Source-run history for QA and health snapshots behind the run-history store and admin API
+- A canonical current-state inventory in `docs/CURRENT_STATE.md`
 - Production safety hardening for admin access, sample data, health visibility, and QA artifact policy
 - CI now runs `check:env`, `lint`, `typecheck`, `test`, `qa:aggregator`, and `build`
 
 ## Next milestone
 
 M19: Source health alerts.
+
+## Not next
+
+Recommendations, personalization, UI redesign, Eventbrite, database migration, email/Slack notifications, CAPTCHA, full anti-spam work, and production database adapters are deferred.

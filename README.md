@@ -11,6 +11,8 @@ Event Scout is a newcomer-first local discovery app. It helps someone answer: "W
 
 ## Current product slice
 
+Current stage: post-M18 source reliability and operations layer. M18 source-run history is complete, this release completes M18.1 roadmap/release/test reconciliation, and M19 is next.
+
 - Mock-data-first event discovery
 - Cross-provider mock aggregation with duplicate source preservation
 - Canonical source-adapter architecture
@@ -24,6 +26,7 @@ Event Scout is a newcomer-first local discovery app. It helps someone answer: "W
 - A sources page showing enabled and planned providers
 - A source health dashboard showing readiness, configuration gaps, and recent diagnostics
 - Source-run history for QA and health snapshots, surfaced in `/health` and the admin history API
+- Canonical milestone, provider, release, and test inventory in [docs/CURRENT_STATE.md](/C:/Users/nguye/Documents/EventScout/docs/CURRENT_STATE.md)
 - Aggregator QA artifacts with provider counts and merge visibility
 - A manual Ticketmaster smoke QA path that can write live report artifacts
 - A file-backed curated/admin events provider behind `ENABLE_CURATED_PROVIDER`
@@ -222,6 +225,10 @@ Notes:
 
 This repo uses Semantic Versioning with tags in the form `vMAJOR.MINOR.PATCH`.
 
+- Current version: `0.13.1`
+- Current release: M18.1 reconciliation
+- Previous verified tag before this reconciliation: `v0.13.0`
+
 - `PATCH`: fixes, hardening, test coverage, internal refactors
 - `MINOR`: new features or milestone-sized capability additions
 - `MAJOR`: breaking changes to contracts or structure
@@ -235,3 +242,5 @@ See [docs/SOURCE_RUN_HISTORY.md](/C:/Users/nguye/Documents/EventScout/docs/SOURC
 ## Next milestone
 
 Implement M19 from [docs/MILESTONES.md](/C:/Users/nguye/Documents/EventScout/docs/MILESTONES.md): Source health alerts.
+
+Not next: recommendations, personalization, UI redesign, Eventbrite, database migration, notifications, CAPTCHA, or production database adapters.

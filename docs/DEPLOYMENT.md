@@ -2,6 +2,8 @@
 
 Event Scout is easiest to run locally with mock data, but production should fail closed for admin access and keep sample data disabled unless a developer explicitly opts in.
 
+Current stage: post-M18 source reliability and operations layer. M18 source-run history is complete, M18.1 reconciles release/test/docs visibility, and M19 source health alerts is next.
+
 ## Local Development
 
 1. Install dependencies.

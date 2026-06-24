@@ -11,8 +11,8 @@ Event Scout should collect events from many sources, but every source must be le
 - Mock provider
 - Ticketmaster
 - Meetup
-- Organizer-connected Eventbrite
 - Curated/admin file-backed events
+- Eventbrite remains a future candidate provider. It is not currently implemented in the provider registry.
 
 ### Tier 2: Public calendar feeds
 
@@ -72,6 +72,23 @@ Each provider must:
 The source health dashboard should summarize whether each provider is ready, disabled, or missing required configuration, and should surface recent warnings and errors without hiding the original source inventory.
 
 M18 adds source-run history on top of that snapshot so trend questions can be answered before M19 alerting is introduced.
+
+## Implemented provider inventory
+
+| Provider | Source ID | Feature flag | Default state | Credentials required | QA status |
+| --- | --- | --- | --- | --- | --- |
+| Mock provider | `mock` | `ENABLE_MOCK_PROVIDER` | enabled | no | unit and aggregator QA |
+| Community mock provider | `community-mock` | `ENABLE_COMMUNITY_MOCK_PROVIDER` | enabled | no | unit and aggregator QA |
+| Ticketmaster provider | `ticketmaster` | `ENABLE_TICKETMASTER_PROVIDER` | disabled | `TICKETMASTER_API_KEY` | fixture-tested plus manual live smoke |
+| ICS provider | `ics` | `ENABLE_ICS_PROVIDER` | disabled | `ICS_SOURCE_URLS` feed config only | fixture-tested |
+| RSS provider | `rss` | `ENABLE_RSS_PROVIDER` | disabled | `RSS_SOURCE_URLS` feed config only | fixture-tested |
+| Meetup provider | `meetup` | `ENABLE_MEETUP_PROVIDER` | disabled | `MEETUP_ACCESS_TOKEN` | fixture-tested only |
+| Curated/admin provider | `curated` | `ENABLE_CURATED_PROVIDER` | disabled | curated JSON path only | fixture-tested and aggregator QA |
+| Community submissions provider | `community-submissions` | `ENABLE_COMMUNITY_SUBMISSIONS_PROVIDER` | disabled | no provider secret; admin moderation uses `ADMIN_TOKEN` when set | unit/API tested and aggregator QA |
+| Website placeholder provider | `website` | `ENABLE_WEBSITE_PROVIDER` | disabled | no | placeholder only, emits no events |
+| Social lead placeholder provider | `social` | `ENABLE_SOCIAL_LEADS` | disabled | no | placeholder only, emits no events |
+
+Every implemented provider is present in `apps/web/lib/sources/registry.ts` and every feature flag appears in `.env.example` and `apps/web/lib/config/env.ts`.
 
 Meetup-specific notes:
 

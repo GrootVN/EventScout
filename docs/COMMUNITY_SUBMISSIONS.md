@@ -48,4 +48,4 @@ The submission store is in-memory only. It resets when the process restarts.
 
 ## Next milestone
 
-M18: Source run persistence/history.
+M19: Source health alerts. M18 source-run history is complete, and M18.1 reconciles docs, release, and test inventory.

@@ -75,4 +75,4 @@ The report will show curated load counts, status breakdowns, and duplicate group
 
 ## Next step
 
-M18: Source run persistence/history.
+M19: Source health alerts. M18 source-run history is complete, and M18.1 reconciles docs, release, and test inventory.

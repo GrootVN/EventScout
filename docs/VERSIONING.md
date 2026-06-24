@@ -18,4 +18,6 @@ Every completed update should:
 
 ## Current baseline
 
-The current baseline for the rebuilt and hardened app is `v0.2.1`.
+The current baseline for the post-M18 source reliability and operations layer is `v0.13.1`.
+
+The previous verified tag before M18.1 reconciliation was `v0.13.0`. M18.1 is a patch-level documentation, release, and test-inventory reconciliation milestone.
