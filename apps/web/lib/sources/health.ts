@@ -5,6 +5,7 @@ import { isProduction } from "@/lib/config/runtime";
 import { getRssSourceConfigs } from "@/config/rss-sources";
 import { getIcsSourceConfigs } from "@/config/ics-sources";
 import { getAllProviders } from "./registry";
+import { getPublicSourceRunHistorySummary } from "./runHistoryStore";
 import {
   snapshotCuratedProviderDiagnostics,
   type CuratedProviderDiagnostics
@@ -88,6 +89,9 @@ export type PublicHealthSummary = {
   totals: SourceHealthReport["totals"];
   warningCount: number;
   errorCount: number;
+  latestRunAt: string | null;
+  latestRunStatus: "success" | "warning" | "error" | null;
+  runHistoryEnabled: boolean;
 };
 
 type ProviderDiagnosticsSnapshot =
@@ -461,6 +465,7 @@ export function getSourceHealthReport(): SourceHealthReport {
 
 export function getPublicHealthSummary(): PublicHealthSummary {
   const report = getSourceHealthReport();
+  const runHistory = getPublicSourceRunHistorySummary();
 
   return {
     generatedAt: report.generatedAt,
@@ -468,7 +473,10 @@ export function getPublicHealthSummary(): PublicHealthSummary {
     status: report.errors.length > 0 ? "degraded" : "ok",
     totals: report.totals,
     warningCount: report.warnings.length,
-    errorCount: report.errors.length
+    errorCount: report.errors.length,
+    latestRunAt: runHistory.latestRunAt,
+    latestRunStatus: runHistory.latestRunStatus,
+    runHistoryEnabled: runHistory.runHistoryEnabled
   };
 }
 

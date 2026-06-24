@@ -9,6 +9,8 @@ describe("QA artifact policy", () => {
 
     expect(gitignore).toContain("qa-results/*.html");
     expect(gitignore).toContain("qa-results/*.json");
+    expect(gitignore).toContain(".eventscout/");
+    expect(gitignore).toContain("source-run-history.json");
     expect(gitignore).not.toContain("docs/examples/aggregator-report.sample.json");
   });
 });

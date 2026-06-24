@@ -13,3 +13,6 @@ apps/web/components/**/*.jsx
 apps/web/lib/**/*.js
 qa-results/*.html
 qa-results/*.json
+.eventscout/
+source-run-history.json
+*.source-runs.json

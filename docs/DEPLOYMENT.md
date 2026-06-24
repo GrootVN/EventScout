@@ -15,6 +15,7 @@ Local defaults:
 - Sample submissions and sample trusted sources stay off unless explicitly enabled.
 - `/api/health` returns a public summary by default.
 - `/health` shows detailed diagnostics in development and test mode.
+- Source-run history is enabled by default in local and test mode, but production should keep the path ignored and rely on filesystem fallback if the host is ephemeral.
 
 Helpful commands:
 
@@ -46,6 +47,7 @@ Provider flags and credentials should only be enabled together when the provider
 - `ENABLE_RSS_PROVIDER` with `RSS_SOURCE_URLS`
 - `ENABLE_CURATED_PROVIDER` with `CURATED_EVENTS_PATH`
 - `ENABLE_COMMUNITY_SUBMISSIONS_PROVIDER` for moderation-driven community events
+- `ENABLE_SOURCE_RUN_HISTORY`, `SOURCE_RUN_HISTORY_PATH`, and `SOURCE_RUN_HISTORY_LIMIT` for source-run summaries
 
 Production safety defaults:
 
@@ -54,6 +56,7 @@ Production safety defaults:
 - Sample trusted sources must stay disabled.
 - Detailed health stays summarized unless admin authorization is provided and detailed health is explicitly enabled.
 - Generated QA reports are ignored and should not be committed.
+- Generated source-run history files are ignored and should not be committed.
 - `npm run check:env:production` is expected to fail until production secrets are configured.
 
 ## Health Behavior
@@ -62,6 +65,7 @@ Production safety defaults:
 - Detailed provider diagnostics are available in development/test mode.
 - In production, detailed health requires admin authorization and `ENABLE_DETAILED_HEALTH=true`.
 - No secret values are exposed in either mode.
+- `/api/admin/source-runs` returns run history summaries behind admin authorization.
 
 ## QA Artifact Policy
 
@@ -76,6 +80,9 @@ Production safety defaults:
 - [ ] sample trusted sources reviewed and disabled if not needed
 - [ ] provider keys configured only when provider is enabled
 - [ ] live QA reports not committed
+- [ ] source-run history path configured or intentionally disabled
+- [ ] generated source-run history files ignored
+- [ ] admin source-run API protected
 - [ ] health endpoint checked
 - [ ] `npm run check:env` passes
 - [ ] `npm run lint` passes
@@ -86,4 +93,4 @@ Production safety defaults:
 
 ## Next Step
 
-M18: Source run persistence/history
+M19: Source health alerts

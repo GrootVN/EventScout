@@ -8,6 +8,7 @@ async function importHealthWithMocks() {
       enableSampleSubmissions: false,
       enableSampleTrustedSources: false,
       enableDetailedHealth: true,
+      enableSourceRunHistory: false,
       enableMockProvider: true,
       enableCommunityMockProvider: false,
       enableCuratedProvider: true,
@@ -190,7 +191,10 @@ describe("source health report", () => {
         warningProviderCount: 1
       }),
       warningCount: 3,
-      errorCount: 0
+      errorCount: 0,
+      latestRunAt: null,
+      latestRunStatus: null,
+      runHistoryEnabled: false
     });
     expect(canViewDetailedHealth(null)).toBe(true);
   });

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { canViewDetailedHealth, getPublicHealthSummary, getSourceHealthReport } from "@/lib/sources/health";
+import { listSourceRuns } from "@/lib/sources/runHistoryStore";
+import { SourceRunHistory } from "@/components/source-run-history";
 
 function renderList(items: string[], emptyLabel: string) {
   if (items.length === 0) {
@@ -24,6 +26,7 @@ export default async function HealthPage({ searchParams }: HealthPageProps) {
   const detailed = canViewDetailedHealth(key);
   const summary = getPublicHealthSummary();
   const report = detailed ? getSourceHealthReport() : null;
+  const runs = listSourceRuns(10);
 
   return (
     <main className="page-shell">
@@ -45,9 +48,7 @@ export default async function HealthPage({ searchParams }: HealthPageProps) {
           <span className="pill">{summary.totals.needsConfigProviderCount} needs config</span>
           <span className="pill">{summary.totals.disabledProviderCount} disabled</span>
         </div>
-        <p className="eyebrow">
-          {summary.status} · version {summary.appVersion} · generated {summary.generatedAt}
-        </p>
+        <p className="eyebrow">{summary.status} - version {summary.appVersion} - generated {summary.generatedAt}</p>
       </section>
 
       <section className="saved-card">
@@ -72,6 +73,8 @@ export default async function HealthPage({ searchParams }: HealthPageProps) {
           </div>
         </dl>
       </section>
+
+      <SourceRunHistory summary={summary} runs={runs} detailed={detailed} />
 
       {report ? (
         <>
@@ -143,7 +146,7 @@ export default async function HealthPage({ searchParams }: HealthPageProps) {
                     <span className="score-chip">{provider.status}</span>
                   </div>
                   <p className="eyebrow">
-                    {provider.sourceType} · {provider.enabled ? "Enabled" : "Disabled"}
+                    {provider.sourceType} - {provider.enabled ? "Enabled" : "Disabled"}
                   </p>
                   <p>{provider.summary}</p>
                   {provider.configNotes.length > 0 ? (

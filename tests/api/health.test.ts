@@ -9,7 +9,7 @@ async function importRouteWithHealthMocks(options: { detailed: boolean; runtimeM
     canViewDetailedHealth: () => options.detailed,
     getPublicHealthSummary: () => ({
       generatedAt: "2026-06-19T12:00:00.000Z",
-      appVersion: "0.12.0",
+      appVersion: "0.13.0",
       status: "ok",
       totals: {
         providerCount: 2,
@@ -21,7 +21,10 @@ async function importRouteWithHealthMocks(options: { detailed: boolean; runtimeM
         disabledProviderCount: 1
       },
       warningCount: 0,
-      errorCount: 0
+      errorCount: 0,
+      latestRunAt: "2026-06-18T08:00:00.000Z",
+      latestRunStatus: "success",
+      runHistoryEnabled: true
     }),
     getSourceHealthReport: () => ({
       generatedAt: "2026-06-19T12:00:00.000Z",
@@ -54,6 +57,13 @@ async function importRouteWithHealthMocks(options: { detailed: boolean; runtimeM
       errors: []
     })
   }));
+  vi.doMock("@/lib/sources/runHistoryStore", () => ({
+    getPublicSourceRunHistorySummary: () => ({
+      latestRunAt: "2026-06-18T08:00:00.000Z",
+      latestRunStatus: "success",
+      runHistoryEnabled: true
+    })
+  }));
   vi.doMock("@/lib/config/runtime", () => ({
     getRuntimeMode: () => runtimeMode,
     isProduction: () => runtimeMode === "production",
@@ -80,15 +90,35 @@ describe("GET /api/health", () => {
     const payload = (await response.json()) as {
       status: string;
       mode: string;
-      health: { appVersion: string; warningCount: number; errorCount: number };
+      health: {
+        appVersion: string;
+        warningCount: number;
+        errorCount: number;
+        latestRunAt: string | null;
+        latestRunStatus: string | null;
+        runHistoryEnabled: boolean;
+      };
+      history: {
+        latestRunAt: string | null;
+        latestRunStatus: string | null;
+        runHistoryEnabled: boolean;
+      };
     };
 
     expect(response.status).toBe(200);
     expect(payload.status).toBe("ok");
     expect(payload.mode).toBe("summary");
-    expect(payload.health.appVersion).toBe("0.12.0");
+    expect(payload.health.appVersion).toBe("0.13.0");
     expect(payload.health.warningCount).toBe(0);
     expect(payload.health.errorCount).toBe(0);
+    expect(payload.health.latestRunAt).toBe("2026-06-18T08:00:00.000Z");
+    expect(payload.health.latestRunStatus).toBe("success");
+    expect(payload.health.runHistoryEnabled).toBe(true);
+    expect(payload.history).toMatchObject({
+      latestRunAt: "2026-06-18T08:00:00.000Z",
+      latestRunStatus: "success",
+      runHistoryEnabled: true
+    });
     expect(JSON.stringify(payload)).not.toContain("Detailed warning");
   });
 

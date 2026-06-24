@@ -116,6 +116,14 @@ Updates a submission status.
 }
 ```
 
+## `GET /api/admin/source-runs`
+
+Returns source-run history summaries for admin users. Supports optional `limit` and `providerId` query parameters.
+
+## `POST /api/admin/source-runs`
+
+Optionally records a health snapshot into run history when admin authorized. Returns the recorded run summary.
+
 ## `GET /api/admin/flagged`
 
 Returns low-confidence or frequently-reported records for moderation.
@@ -173,17 +181,22 @@ Default response:
   "timestamp": "2026-06-19T12:00:00.000Z",
   "mode": "summary",
   "health": {
-    "appVersion": "0.12.0",
+    "appVersion": "0.13.0",
     "status": "ok",
     "totals": {
       "providerCount": 6
     },
     "warningCount": 0,
-    "errorCount": 0
+    "errorCount": 0,
+    "latestRunAt": null,
+    "latestRunStatus": null,
+    "runHistoryEnabled": true
   }
 }
 ```
 
 In development and test mode, or in production with admin authorization and `ENABLE_DETAILED_HEALTH=true`, the route can return a detailed `health` object with provider readiness, configuration notes, warnings/errors, and per-source counters for curated and community submissions.
 
-The route never exposes secret values.
+The route also returns a top-level `history` object with `latestRunAt`, `latestRunStatus`, and `runHistoryEnabled`.
+
+The route never exposes secret values. Detailed run history stays behind admin authorization in production, and the health snapshot only exposes safe latest-run summary fields publicly.
